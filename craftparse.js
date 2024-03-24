@@ -33,7 +33,7 @@ function addCalculateButton() {
 
     // Luodaan "Generoi 480"-nappi
     const generateBtn = document.createElement('button');
-    generateBtn.textContent = 'Generoi 480';
+    generateBtn.textContent = 'Generate 480';
     generateBtn.addEventListener('click', function() {
         // Tyhjennä kaikki aikaisemmat valinnat ja aseta arvot automaattisesti
         setTemplateValues({
