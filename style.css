@@ -21,23 +21,23 @@ body {
     min-height: 100vh;
     flex-direction: column;
     align-items: center;
-    overflow-x: hidden;
 }
 
 .wrapper {
     max-width: 600px;
+    width: 100%;
     margin: 20px auto;
     padding: 20px;
     background: #fff;
     box-shadow: 0px 4px 8px 0px var(--shadow-color);
     border-radius: 8px;
-    position: relative;
+	position: relative;
 }
 
 h3, h4 {
-    color: var(--header-color);
+    color: var(--primary-color);
     cursor: pointer;
-    user-select: none; /* estä tekstivalinta */
+    user-select: none; /* estÃ¤ tekstivalinta */
 }
 
 h3:hover {
@@ -54,8 +54,9 @@ input[type="number"] {
 }
 
 button {
-    background-color: var(--button-bg);
-    color: var(--button-text-color);
+    background-color: var(--primary-color);
+    color: var(
+    --button-text-color);
     border: none;
     padding: 10px 15px;
     text-transform: uppercase;
@@ -63,6 +64,7 @@ button {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
+    color: var(--secondary-color);
 }
 
 button:hover {
@@ -128,9 +130,9 @@ footer p {
 .materials, .items {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* Väli materiaalien/itemien välillä */
+    gap: 20px; /* VÃ¤li materiaalien/itemien vÃ¤lillÃ¤ */
     justify-content: center;
-    margin-bottom: 20px; /* Väli materiaaliluetteloiden ja item-luetteloiden välillä */
+    margin-bottom: 20px; /* VÃ¤li materiaaliluetteloiden ja item-luetteloiden vÃ¤lillÃ¤ */
 }
 
 .material, .item {
@@ -142,7 +144,7 @@ footer p {
 .material img, .item img {
     width: 50px;
     height: 50px;
-    margin-bottom: 5px; /* Väli kuvan ja tekstin välillä */
+    margin-bottom: 5px; /* VÃ¤li kuvan ja tekstin vÃ¤lillÃ¤ */
 }
 .materials > div {
     display: flex;
@@ -242,12 +244,12 @@ button.multiplier-btn {
 
 
 .material-image {
-    width: 50px; /* Säädä tarpeen mukaan */
+    width: 50px; /* SÃ¤Ã¤dÃ¤ tarpeen mukaan */
     cursor: pointer;
     border: 2px solid transparent;
     margin: 5px;
 }
 
 .material-image.selected {
-    border-color: blue; /* Tai muu haluamasi väri */
+    border-color: blue; /* Tai muu haluamasi vÃ¤ri */
 }
