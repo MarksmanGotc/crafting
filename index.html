@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crafting Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="products.js"></script>
+    <script src="materials.js"></script>
+    <script defer src="craftparse.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="manualInput" style="display:none;">
+            <!-- Levelien itemit ja Laske-nappi tulevat tänne -->
+        </div>
+        <div id="results" style="display: none;"></div>
+		
+		<!-- Materiaalien valinta -->
+		<div id="generatebychoice" style="display: none;">
+			<div id="materialsToUseLess" class="material-choices">
+				<h4>Klikkaa materiaalin kuvaa, jota haluat käyttää vähemmän:</h4>
+				<div class="materials-list"></div>
+			</div>
+
+			<div id="materialsToUseMore" class="material-choices">
+				<h4>Klikkaa materiaalin kuvaa, jota haluat käyttää enemmän:</h4>
+				<div class="materials-list"></div>
+			</div>
+
+			<!-- Generoitavien itemien määrä -->
+			<div>
+				<label for="generationAmount">Generoitavien itemien määrä:</label>
+				<input type="number" id="generationAmount">
+			</div>
+
+			<button id="calculateWithPreferences">Laske preferensseillä</button>
+		</div>
+    </div>
+        
+    <footer>
+        <div>
+            <p>Made by; Mark N Killer</p><p>Discord: @Nooxel</p>
+        </div>
+    </footer>
+</body>
+</html>
