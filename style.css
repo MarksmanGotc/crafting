@@ -1,0 +1,253 @@
+:root {
+    --primary-color: #08425a;
+    --secondary-color: #e5dfbc;
+    --light-bg: #f3f3f9;
+    --text-color: #333;
+    --shadow-color: #dadada;
+    --button-bg: #086785;
+    --button-text-color: #fff;
+    --button-bg-hover: #07566c;
+    --input-bg: #e5e5e5;
+    --header-color: #07748A;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--light-bg);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wrapper {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 8px 0px var(--shadow-color);
+    border-radius: 8px;
+	position: relative;
+}
+
+h3, h4 {
+    color: var(--header-color);
+    cursor: pointer;
+    user-select: none; /* estä tekstivalinta */
+}
+
+h3:hover {
+    text-decoration: underline;
+}
+
+input[type="number"] {
+    padding: 5px;
+    margin: 5px 0 15px 0;
+    border: none;
+    border-radius: 4px;
+    width: calc(100% - 10px);
+    background-color: var(--input-bg);
+}
+
+button {
+    background-color: var(--button-bg);
+    color: var(--button-text-color);
+    border: none;
+    padding: 10px 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: var(--button-bg-hover);
+}
+
+footer {
+    margin-top: auto;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 5px 0;
+    font-style: italic;
+}
+
+/* Tulosten tyyli */
+#results {
+    position: relative;
+}
+
+#closeResults {
+    position: absolute;
+    top: -32px;
+    right: -22px;
+    cursor: pointer;
+	background: none;
+}
+#results .items {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#results svg {
+    height: 25px;
+    fill: var(--button-bg);
+    transition: 0.2s;
+}
+
+#results svg:hover {
+    fill: var(--button-bg-hover);
+    transform: rotate(90deg);
+}
+
+#results img {
+    width: 50px;
+    height: 50px;;
+    border-radius: 50%;
+}
+
+.materials {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.materials, .items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Väli materiaalien/itemien välillä */
+    justify-content: center;
+    margin-bottom: 20px; /* Väli materiaaliluetteloiden ja item-luetteloiden välillä */
+}
+
+.material, .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.material img, .item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 5px; /* Väli kuvan ja tekstin välillä */
+}
+.materials > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#results .material {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.materials p, .items p {
+    margin-top: 10px;
+}
+
+
+.items {
+    display: flex;
+    flex-direction: column;
+}
+
+.level-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+	justify-content: center;
+}
+
+.level-group > div {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+.items h3, h4 {
+    cursor: text;
+	font-size: 20px;
+}
+
+h4{
+	margin-bottom: 0;
+	margin-top: 8px;
+}
+
+
+.materials:before {
+    content: "Materials";
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--header-color);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.materials > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    margin: 0 auto;
+    text-align: center;
+    color: var(--header-color);
+    font-weight: bold;
+}
+
+.generate {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+#manualInput button {
+    margin-right: 10px;
+}
+.materials p.name {
+    display: none;
+}
+
+.level-group p.name {
+    margin-bottom: 0px;
+}
+button.multiplier-btn {
+    margin-bottom: 20px;
+}
+
+
+
+.material-image {
+    width: 50px; /* Säädä tarpeen mukaan */
+    cursor: pointer;
+    border: 2px solid transparent;
+    margin: 5px;
+}
+
+.material-image.selected {
+    border-color: blue; /* Tai muu haluamasi väri */
+}
