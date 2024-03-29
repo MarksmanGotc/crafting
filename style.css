@@ -336,6 +336,7 @@ button.multiplier-btn {
 
 .materials p.available-materials {
     color: var(--primary-color);
+    margin-top: 5px;
 }
 
 .materials p {
@@ -344,6 +345,81 @@ button.multiplier-btn {
 
 .missing-input {
     animation: blink-animation 3s ease-in-out infinite;
+}
+
+.spinner-wrap {
+    position: fixed;
+    display: none;
+    background: rgba(255, 255, 255, 0.75);
+    inset: 0;
+    border-radius: 4px;
+    z-index: 5;
+    user-select: none;
+    margin: 0px auto;
+    max-width: 600px;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner-wrap.active {
+    display: flex;
+}
+
+.spinner-wrap .spinner {
+    --color: #000000;
+    position: relative;
+    width: 60px;
+    margin: 0 auto;
+}
+.spinner-wrap .spinner:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+.spinner p {
+    text-align: center;
+}
+.spinner .circular {
+    animation: rotate73451 2s linear infinite;
+    height: 100%;
+    transform-origin: center center;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.spinner .path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke: var(--primary-color);
+    animation: dash0175 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+}
+
+@keyframes rotate73451 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash0175 {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
 }
 
 @keyframes blink-animation {
