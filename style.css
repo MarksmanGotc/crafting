@@ -45,15 +45,15 @@ h3:hover {
 }
 
 input[type="number"] {
-    padding: 5px;
-    margin: 5px 0 15px 0;
-    border: none;
+    background: transparent;
+    padding: 7px 10px;
+    border: 1px solid var(--primary-color);
+    width: 100% !important;
+    box-sizing: border-box;
     border-radius: 4px;
-    width: calc(100% - 10px);
-    background-color: var(--input-bg);
 }
 
-button {
+button, .generate-480 {
     background-color: var(--primary-color);
     color: var(
     --button-text-color);
@@ -65,6 +65,10 @@ button {
     cursor: pointer;
     margin-top: 10px;
     color: var(--secondary-color);
+    width: max-content;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 12px;
 }
 
 button:hover {
@@ -90,7 +94,7 @@ footer p {
     position: relative;
 }
 
-#closeResults {
+#closeResults, #closeMaterials {
     position: absolute;
     top: -32px;
     right: -22px;
@@ -226,7 +230,9 @@ h2 {
     justify-content: center;
     gap: 10px;
 }
-
+#manualInput{
+	display: none;	
+}
 #manualInput button {
     margin-right: 10px;
 }
@@ -243,13 +249,107 @@ button.multiplier-btn {
 
 
 
-.material-image {
-    width: 50px; /* SÃ¤Ã¤dÃ¤ tarpeen mukaan */
-    cursor: pointer;
-    border: 2px solid transparent;
-    margin: 5px;
+#generatebychoice {
+	position: relative;
+	
 }
 
-.material-image.selected {
-    border-color: blue; /* Tai muu haluamasi vÃ¤ri */
+#generatebychoice #closeMaterials svg {
+	height: 20px;
+	
+}
+
+.materials-list img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.materials-list .my-material {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 8px;
+    align-items: center;
+}
+
+.materials-list .my-material > div, .templateAmountWrap {
+    width: 100%;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.materials-list .my-material > div span, .templateAmountWrap label {
+    background: #fff;
+    color: var(--primary-color);
+    position: absolute;
+    z-index: 1;
+    font-size: 14px;
+    top: 8px;
+    left: 6px;
+    padding: 0px 8px;
+    transition: top .3s, left .3s, font-size .3s;
+}
+
+.materials-list .my-material.active span, .templateAmountWrap.active label {
+    top: -5px;
+    left: 3px;
+    font-size: 10px;
+}
+
+.materials-list .my-material > div input::placeholder {
+    color: #fff;
+        transition: color .3s;
+}
+
+.materials-list .my-material.active input::placeholder {
+    color: var(--primary-color);
+}
+
+
+#generatebychoice h4 {
+    margin-bottom: 20px;
+}
+
+.materials-list .my-material > div input {
+    background: transparent;
+    padding: 7px 10px;
+    border: 1px solid var(--primary-color);
+    width: 100% !important;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.templateAmountWrap {
+    margin: 10px 0px;
+}
+
+.templateAmountWrap input::placeholder {
+    color: var(--primary-color);
+}
+
+.materials p.amount {
+    color: #920b0b;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.materials p.available-materials {
+    color: var(--primary-color);
+}
+
+.materials p {
+    font-size: 15px;
+}
+
+.missing-input {
+    animation: blink-animation 3s ease-in-out infinite;
+}
+
+@keyframes blink-animation {
+    0% {border: 1px solid #d52121;}
+    25% {border: 1px solid var(--primary-color); }
+	50% {border: 1px solid #d52121;}
+	75% {border: 1px solid var(--primary-color); }
+    100% {border: 1px solid #d52121;}
 }
