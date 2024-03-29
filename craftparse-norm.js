@@ -1,4 +1,7 @@
 let initialMaterials = {}; 
+const urlParams = new URLSearchParams(window.location.search);
+const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
+
 
 document.addEventListener('DOMContentLoaded', function() {
     createLevelStructure();
@@ -107,9 +110,14 @@ function addCalculateButton() {
             "10": { "Copper Pot": 70, "Padded Armor": 61, "Wool Leggings": 59, "Galoshes": 75, "Velvet Boots": 11, "Mace": 70, "Short Bow": 75, "Pyrite Lament": 59 }
         });
 
-        // Laske materiaalit uusilla arvoilla
+       
         calculateMaterials();
         addMultiplierButtons();
+		if (!isDebugMode){
+			gtag('event', 'generate-480', {
+				'value': 1
+			});
+		}
     });
     generatebychoice.appendChild(generateBtn);
 
@@ -173,6 +181,12 @@ function multiplyValues(multiplier) {
             input.value = parseInt(input.value) * multiplier;
         }
     });
+	if (!isDebugMode){
+		gtag('event', 'generate-480-multiplier', {
+			'event_multiplier_value': multiplier,
+			'value': 1
+		});
+	}
 
     // Kutsu calculateMaterials uudelleen päivitetyillä arvoilla
     calculateMaterials();
@@ -189,6 +203,8 @@ function showResults() {
         top: 0,
         behavior: 'smooth'
     });
+	
+    document.querySelector('.spinner-wrap').classList.remove('active');
 
 }
 
@@ -334,7 +350,14 @@ function calculateMaterials() {
         // Jos kaikkien tasojen määrät ovat samat, lisää "Total templates" -teksti materialsDivin jälkeen
         const totalTemplatesHeader = document.createElement('h2');
         totalTemplatesHeader.textContent = `Total templates: ${new Intl.NumberFormat('en-US').format(levelItemCounts["1"])} pcs`;
-
+	
+		if (!isDebugMode){
+			gtag('event', 'total templates', {
+				'event_templates': levelItemCounts,
+				'value': 1
+			});
+		}
+		
         materialsDiv.after(totalTemplatesHeader);
         totalTemplatesHeader.after(generateDiv); // generateDiv lisätään totalTemplatesHeaderin jälkeen
     } else {
@@ -434,45 +457,81 @@ function createMaterialImageElement(materialName, imgUrl, preference) {
 }
 
 document.getElementById('calculateWithPreferences').addEventListener('click', function() {
+	document.querySelector('.spinner-wrap').classList.add('active');
 	
-	const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
-    const templateAmountInput = document.querySelectorAll('#templateAmount');
-    const allInputs = [...materialInputs, ...templateAmountInput];
-    let isValid = true;
+	setTimeout(() => {
+		const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
+		const templateAmountInput = document.querySelectorAll('#templateAmount');
+		const allInputs = [...materialInputs, ...templateAmountInput];
+		let isValid = true;
 
-    allInputs.forEach(input => {
-        if (!input.value || parseInt(input.value.replace(/,/g, '')) === 0) {
-            isValid = false;
-            input.classList.add('missing-input');
-            setTimeout(() => {
-                input.classList.remove('missing-input');
-            }, 3000);
-        }
-    });
+		allInputs.forEach(input => {
+			if (!input.value || parseInt(input.value.replace(/,/g, '')) === 0) {
+				isValid = false;
+				input.classList.add('missing-input');
+				setTimeout(() => {
+					input.classList.remove('missing-input');
+				}, 3000);
+			}
+		});
 
-    if (!isValid) {
-        return; // Estä laskennan suoritus
-    }
-	
-    let availableMaterials = gatherMaterialsFromInputs();
-	if (Object.keys(initialMaterials).length === 0) {
-        initialMaterials = { ...availableMaterials };
-    }
-    let totalTemplates = parseInt(document.getElementById('templateAmount').value.replace(/,/g, ''));
-    if (isNaN(totalTemplates)) {
-        return;
-    }
+		if (!isValid) {
+			return; // Estä laskennan suoritus
+		}
+		
+		let availableMaterials = gatherMaterialsFromInputs();
+		if (Object.keys(initialMaterials).length === 0) {
+			initialMaterials = { ...availableMaterials };
+		}
+		let totalTemplates = parseInt(document.getElementById('templateAmount').value.replace(/,/g, ''));
+		if (isNaN(totalTemplates)) {
+			return;
+		} else {
+			if (!isDebugMode){ 
+				gtag('event', 'total templates material', {
+					'event_templates': totalTemplates,
+					'value': 1
+				});
+			}
+		}
+		
+		let materialAmounts = Object.values(availableMaterials).map(amount => {
+			// Tarkista, onko arvo merkkijono ja sisältääkö se pilkkuja
+			if (typeof amount === 'string' && amount.includes(',')) {
+				// Muunna merkkijono numeroksi poistamalla pilkut ja käyttämällä parseInt
+				return parseInt(amount.replace(/,/g, ''), 10);
+			} else {
+				// Jos arvo on jo numero tai merkkijono ilman pilkkuja, palauta se sellaisenaan
+				return parseInt(amount, 10);
+			}
+		});
+		
+		if (!isDebugMode){
+			let totalMaterialAmount = materialAmounts.reduce((total, amount) => total + amount, 0);
+			let averageMaterialAmount = materialAmounts.length > 0 ? totalMaterialAmount / materialAmounts.length : 0;
+			let maxMaterialAmount = Math.max(...materialAmounts);
+			let maxMaterialIndex = materialAmounts.findIndex(amount => amount === maxMaterialAmount);
+			let maxMaterialName = Object.keys(availableMaterials)[maxMaterialIndex];
 
-    let productionPlan = calculateProductionPlan(availableMaterials, totalTemplates);
+			gtag('event', 'material analysis', {
+				'average_material_amount': parseInt(averageMaterialAmount),
+				'max_material_amount': maxMaterialAmount,
+				'max_material_name': maxMaterialName,
+				'value': 1
+			});
+		}
 
-	document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
-        input.value = ''; // Nollaa kaikki input-kentät
-    });
-	listSelectedProducts(productionPlan);
-	const calculateBtn = document.querySelector('.calculate-button');
-    if (calculateBtn) {
-        calculateBtn.click(); // Simuloi napin klikkausta
-    }
+		let productionPlan = calculateProductionPlan(availableMaterials, totalTemplates);
+
+		document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
+			input.value = ''; // Nollaa kaikki input-kentät
+		});
+		listSelectedProducts(productionPlan);
+		const calculateBtn = document.querySelector('.calculate-button');
+		if (calculateBtn) {
+			calculateBtn.click(); // Simuloi napin klikkausta
+		}
+	}, 0);
 });
 
 function gatherMaterialsFromInputs() {
