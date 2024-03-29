@@ -39,7 +39,9 @@ function generateMaterialList() {
 		input.id = `my-${materialName.toLowerCase().replace(/\s/g, '-')}`;
 		input.name = `my-${materialName.toLowerCase().replace(/\s/g, '-')}`;
 		input.placeholder = formattedPlaceholder; // Käytä formatoitua placeholderia
-
+		input.pattern = "[0-9]*"; // Sallii vain numerot
+		input.inputMode = "numeric";
+		
 		infoDiv.appendChild(input);
 
         materialDiv.appendChild(infoDiv);
