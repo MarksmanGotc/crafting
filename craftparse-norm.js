@@ -29,16 +29,16 @@ function generateMaterialList() {
         span.textContent = materialName;
         infoDiv.appendChild(span);
 
-        const firstNumber = Math.floor(Math.random() * 4) + 3; // Satunnainen numero välillä 3-6
-		const otherNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join(''); // Generoi kuusi satunnaista numeroa väliltä 0-9 ja liitä ne yhteen merkkijonoksi
-		const formattedPlaceholder = formatPlaceholderWithCommas(`${firstNumber}${otherNumbers}`);
+        //const firstNumber = Math.floor(Math.random() * 4) + 3; // Satunnainen numero välillä 3-6
+		//const otherNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join(''); // Generoi kuusi satunnaista numeroa väliltä 0-9 ja liitä ne yhteen merkkijonoksi
+		//const formattedPlaceholder = formatPlaceholderWithCommas(`${firstNumber}${otherNumbers}`);
 
 		const input = document.createElement('input');
 		input.type = "text";
 		input.className = "numeric-input";
 		input.id = `my-${materialName.toLowerCase().replace(/\s/g, '-')}`;
 		input.name = `my-${materialName.toLowerCase().replace(/\s/g, '-')}`;
-		input.placeholder = formattedPlaceholder; // Käytä formatoitua placeholderia
+		input.placeholder = "value"; // Käytä formatoitua placeholderia
 		input.pattern = "[0-9]*"; // Sallii vain numerot
 		input.inputMode = "numeric";
 		
@@ -459,27 +459,29 @@ function createMaterialImageElement(materialName, imgUrl, preference) {
 }
 
 document.getElementById('calculateWithPreferences').addEventListener('click', function() {
+	const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
+	const templateAmountInput = document.querySelectorAll('#templateAmount');
+	const allInputs = [...materialInputs, ...templateAmountInput];
+	let isValid = true;
+
+	allInputs.forEach(input => {
+		if (!input.value || parseInt(input.value.replace(/,/g, '')) === 0) {
+			isValid = false;
+			input.classList.add('missing-input');
+			setTimeout(() => {
+				input.classList.remove('missing-input');
+			}, 3000);
+		}
+	});
+
+	if (!isValid) {
+		return; // Estä laskennan suoritus
+	}
+	
 	document.querySelector('.spinner-wrap').classList.add('active');
 	
 	setTimeout(() => {
-		const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
-		const templateAmountInput = document.querySelectorAll('#templateAmount');
-		const allInputs = [...materialInputs, ...templateAmountInput];
-		let isValid = true;
-
-		allInputs.forEach(input => {
-			if (!input.value || parseInt(input.value.replace(/,/g, '')) === 0) {
-				isValid = false;
-				input.classList.add('missing-input');
-				setTimeout(() => {
-					input.classList.remove('missing-input');
-				}, 3000);
-			}
-		});
-
-		if (!isValid) {
-			return; // Estä laskennan suoritus
-		}
+		
 		
 		let availableMaterials = gatherMaterialsFromInputs();
 		if (Object.keys(initialMaterials).length === 0) {
