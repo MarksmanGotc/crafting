@@ -116,7 +116,7 @@ function addCalculateButton() {
         calculateMaterials();
         addMultiplierButtons();
 		if (!isDebugMode){
-			gtag('event', 'generate-480', {
+			gtag('event', 'auto_generate', {
 				'value': 1
 			});
 		}
@@ -184,7 +184,7 @@ function multiplyValues(multiplier) {
         }
     });
 	if (!isDebugMode){
-		gtag('event', 'generate-480-multiplier', {
+		gtag('event', 'generate_multiplier', {
 			'event_multiplier_value': multiplier,
 			'value': 1
 		});
@@ -354,8 +354,8 @@ function calculateMaterials() {
         totalTemplatesHeader.textContent = `Total templates: ${new Intl.NumberFormat('en-US').format(levelItemCounts["1"])} pcs`;
 	
 		if (!isDebugMode){
-			gtag('event', 'total templates', {
-				'event_templates': levelItemCounts,
+			gtag('event', 'total_templates', {
+				'event_total_templates': levelItemCounts,
 				'value': 1
 			});
 		}
@@ -492,8 +492,8 @@ document.getElementById('calculateWithPreferences').addEventListener('click', fu
 			return;
 		} else {
 			if (!isDebugMode){ 
-				gtag('event', 'total templates material', {
-					'event_templates': totalTemplates,
+				gtag('event', 'total_material_templates', {
+					'event_material_templates': totalTemplates,
 					'value': 1
 				});
 			}
@@ -517,7 +517,7 @@ document.getElementById('calculateWithPreferences').addEventListener('click', fu
 			let maxMaterialIndex = materialAmounts.findIndex(amount => amount === maxMaterialAmount);
 			let maxMaterialName = Object.keys(availableMaterials)[maxMaterialIndex];
 
-			gtag('event', 'material analysis', {
+			gtag('event', 'material_analytics', {
 				'average_material_amount': parseInt(averageMaterialAmount),
 				'max_material_amount': maxMaterialAmount,
 				'max_material_name': maxMaterialName,
