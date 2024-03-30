@@ -424,9 +424,9 @@ button.multiplier-btn {
 }
 
 @keyframes blink-animation {
-    0% {border: 1px solid #d52121;}
-    25% {border: 1px solid var(--primary-color); }
-	50% {border: 1px solid #d52121;}
-	75% {border: 1px solid var(--primary-color); }
-    100% {border: 1px solid #d52121;}
+    0% {border: 2px solid #d52121;}
+    25% {border: 2px solid var(--primary-color); }
+	50% {border: 2px solid #d52121;}
+	75% {border: 2px solid var(--primary-color); }
+    100% {border: 2px solid #d52121;}
 }
