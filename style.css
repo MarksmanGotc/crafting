@@ -188,6 +188,7 @@ footer p {
     flex-direction: column;
     align-content: center;
     align-items: center;
+    flex: 1 1 20%;
 }
 .items h3, h4 {
     cursor: text;
@@ -242,6 +243,7 @@ h2 {
 }
 
 .level-group p.name {
+    text-align: center;
     margin-bottom: 0px;
 }
 button.multiplier-btn {
