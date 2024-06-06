@@ -6,10 +6,22 @@ let craftItem = {
       "materials": {"Weirwood": 10240, "Kingswood oak": 10240},
       "img": "item/helmet.png"
     },
+	{
+      "name": "Warloard Helm (season 3)",
+      "level": 1,
+      "materials": {"Silk": 6144, "Black Iron": 6144, "Copper bar": 6144},
+      "img": "item/helmet.png"
+    },
     {
       "name": "Leather Vest",
       "level": 1,
       "materials": {"Hide": 10240, "Leather straps": 10240},
+      "img": "item/plate.png"
+    },
+	{
+      "name": "Chestplate (season 3)",
+      "level": 1,
+      "materials": {"Milk of the poppy": 6144, "Hide": 6144, "Ironwood": 6144},
       "img": "item/plate.png"
     },
     {
@@ -19,9 +31,21 @@ let craftItem = {
       "img": "item/pants.png"
     },
 	{
+      "name": "Warlord Pants (season 3)",
+      "level": 1,
+      "materials": {"Kingswood oak": 6144, "Wildfire": 6144, "Hide": 6144},
+      "img": "item/pants.png"
+    },
+	{
       "name": "Straw Sanals",
       "level": 1,
       "materials": {"Hide": 10240, "Leather straps": 10240},
+      "img": "item/shoos.png"
+    },
+	{
+      "name": "Warlord Boots (season 3)",
+      "level": 1,
+      "materials": {"Ironwood": 6144, "Goldenheart wood": 6144, "Wildfire": 6144},
       "img": "item/shoos.png"
     },
     {
@@ -31,9 +55,21 @@ let craftItem = {
       "img": "item/ring.png"
     },
     {
+      "name": "Warlord Ring (season 3)",
+      "level": 1,
+      "materials": {"Weirwood": 6144, "Leather straps": 6144, "Black Iron": 6144},
+      "img": "item/ring.png"
+    },
+    {
       "name": "Dagger",
       "level": 1,
       "materials": {"Ironwood": 10240, "Kingswood oak": 10240},
+      "img": "item/dagger.png"
+    },
+    {
+      "name": "Warlord Sword (season 3)",
+      "level": 1,
+      "materials": {"Ironwood": 6144, "Goldenheart wood": 6144, "Wildfire": 6144},
       "img": "item/dagger.png"
     },
     {
