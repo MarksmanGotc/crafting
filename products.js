@@ -19,7 +19,7 @@ let craftItem = {
       "img": "item/plate.png"
     },
 	{
-      "name": "Chestplate (season 3)",
+      "name": "Warloard Chestplate (season 3)",
       "level": 1,
       "materials": {"Milk of the poppy": 6144, "Hide": 6144, "Ironwood": 6144},
       "img": "item/plate.png"
@@ -78,10 +78,22 @@ let craftItem = {
       "materials": {"Kingswood oak": 15360, "Milk of the poppy": 15360},
       "img": "item/helmet.png"
     },
+	{
+      "name": "Warloard Helm (season 3)",
+      "level": 5,
+      "materials": {"Kingswood oak": 10240, "Wildfire": 10240, "Hide": 10240},
+      "img": "item/helmet.png"
+    },
     {
       "name": "Boiled Leather Shirt",
       "level": 5,
       "materials": {"Hide": 15360, "Dragonglass": 15360},
+      "img": "item/plate.png"
+    },
+	{
+      "name": "Warloard Chestplate (season 3)",
+      "level": 5,
+      "materials": {"Silk": 10240, "Black Iron": 10240, "Copper bar": 10240},
       "img": "item/plate.png"
     },
     {
@@ -90,10 +102,22 @@ let craftItem = {
       "materials": {"Hide": 15360, "Leather straps": 15360},
       "img": "item/pants.png"
     },
+	{
+      "name": "Warloard Pants (season 3)",
+      "level": 5,
+      "materials": {"Weirwood": 10240, "Leather straps": 10240, "Black Iron": 10240},
+      "img": "item/pants.png"
+    },
     {
       "name": "Leather Booties",
       "level": 5,
       "materials": {"Hide": 10240, "Silk": 10240, "Weirwood": 10240},
+      "img": "item/shoos.png"
+    },
+	{
+      "name": "Warloard Boots (season 3)",
+      "level": 5,
+      "materials": {"Milk of the poppy": 10240, "Hide": 10240, "Ironwood": 10240},
       "img": "item/shoos.png"
     },
     {
@@ -102,10 +126,22 @@ let craftItem = {
       "materials": {"Copper bar": 15360, "Milk of the poppy": 15360},
       "img": "item/ring.png"
     },
+	{
+      "name": "Warloard Ring (season 3)",
+      "level": 5,
+      "materials": {"Ironwood": 10240, "Goldenheart wood": 10240, "Wildfire": 10240},
+      "img": "item/ring.png"
+    },
     {
       "name": "Spear",
       "level": 5,
       "materials": {"Leather straps": 15360, "Wildfire": 15360},
+      "img": "item/dagger.png"
+    },
+	{
+      "name": "Warloard Sword (season 3)",
+      "level": 5,
+      "materials": {"Copper bar": 10240, "Dragonglass": 10240, "Leather straps": 10240},
       "img": "item/dagger.png"
     },
     {
@@ -120,6 +156,12 @@ let craftItem = {
       "materials": {"Dragonglass": 20480, "Silk": 20480, "Leather straps": 20480},
       "img": "item/helmet.png"
     },
+	{
+      "name": "Warloard Helm (season 3)",
+      "level": 10,
+      "materials": {"Kingswood oak": 20480, "Wildfire": 20480, "Hide": 20480},
+      "img": "item/helmet.png"
+    },
     {
       "name": "Wool Robe",
       "level": 10,
@@ -130,6 +172,12 @@ let craftItem = {
       "name": "Padded Armor",
       "level": 10,
       "materials": {"Silk": 30720, "Ironwood": 30720},
+      "img": "item/plate.png"
+    },
+	{
+      "name": "Warloard Chestplate (season 3)",
+      "level": 10,
+      "materials": {"Silk": 20480, "Black Iron": 20480, "Copper bar": 20480},
       "img": "item/plate.png"
     },
     {
@@ -144,6 +192,12 @@ let craftItem = {
       "materials": {"Leather straps": 30720, "Milk of the poppy": 30720},
       "img": "item/pants.png"
     },
+	{
+      "name": "Warloard Pants (season 3)",
+      "level": 10,
+      "materials": {"Weirwood": 20480, "Leather straps": 20480, "Black Iron": 20480},
+      "img": "item/pants.png"
+    },
     {
       "name": "Velvet Boots",
       "level": 10,
@@ -154,6 +208,12 @@ let craftItem = {
       "name": "Galoshes",
       "level": 10,
       "materials": {"Weirwood": 30720, "Ironwood": 30720},
+      "img": "item/shoos.png"
+    },
+	{
+      "name": "Warloard Boots (season 3)",
+      "level": 10,
+      "materials": {"Milk of the poppy": 20480, "Hide": 20480, "Ironwood": 20480},
       "img": "item/shoos.png"
     },
     {
@@ -168,6 +228,12 @@ let craftItem = {
       "materials": {"Dragonglass": 30720, "Weirwood": 30720},
       "img": "item/ring.png"
     },
+	{
+      "name": "Warloard Ring (season 3)",
+      "level": 10,
+      "materials": {"Ironwood": 20480, "Goldenheart wood": 20480, "Wildfire": 20480},
+      "img": "item/ring.png"
+    },
     {
       "name": "Mace",
       "level": 10,
@@ -178,6 +244,12 @@ let craftItem = {
       "name": "Short Bow",
       "level": 10,
       "materials": {"Silk": 30720, "Goldenheart wood": 30720},
+      "img": "item/dagger.png"
+    },
+	{
+      "name": "Warloard Sword (season 3)",
+      "level": 10,
+      "materials": {"Copper bar": 20480, "Dragonglass": 20480, "Leather straps": 20480},
       "img": "item/dagger.png"
     }
   ]
