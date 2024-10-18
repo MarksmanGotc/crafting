@@ -46,7 +46,7 @@ let craftItem = {
       "name": "Boiled Leather Shirt",
       "level": 5,
       "materials": {"Hide": 15360, "Dragonglass": 15360},
-      "img": "item/icon_eq_standard_chest_boiledleathershirt"
+      "img": "item/icon_eq_standard_chest_boiledleathershirt.webp"
     },
     {
       "name": "Leather Poleyns",
