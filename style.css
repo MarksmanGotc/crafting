@@ -118,11 +118,16 @@ footer p {
     transform: rotate(90deg);
 }
 
-#results img {
-    width: 50px;
-    height: 50px;;
-    border-radius: 50%;
+#results .level-group img {
+    
+ 	object-fit: scale-down;
 }
+#results img{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
 
 .materials {
     display: flex;
