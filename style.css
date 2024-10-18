@@ -126,7 +126,7 @@ footer p {
 #results img{
 	width: 50px;
 	height: 50px;
-	border-radius: 50%;
+	object-fit: scale-down;
 }
 
 
@@ -270,7 +270,8 @@ button.multiplier-btn {
 .materials-list img {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    /* border-radius: 50%; */
+    object-fit: scale-down;
 }
 
 .materials-list .my-material {
@@ -278,11 +279,11 @@ button.multiplier-btn {
     flex-direction: row;
     padding-bottom: 8px;
     align-items: center;
+    justify-content: space-between;
 }
 
 .materials-list .my-material > div, .templateAmountWrap {
-    width: 100%;
-    margin-left: 10px;
+    max-width: 195px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -330,6 +331,8 @@ button.multiplier-btn {
 
 .templateAmountWrap {
     margin: 10px 0px;
+    width: 100%;
+    max-width: 100%;!;
 }
 
 .templateAmountWrap input::placeholder {
