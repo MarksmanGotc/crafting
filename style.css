@@ -121,6 +121,7 @@ footer p {
 #results .level-group img {
     
  	object-fit: scale-down;
+	border-radius: 0;
 }
 #results img{
 	width: 50px;
