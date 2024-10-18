@@ -1,38 +1,38 @@
 const materials = {
 	"Black Iron": {
-        "img": "materials/black-iron.jpg"
+        "img": "materials/icon_crafting_blackiron.webp"
     },
 	"Copper bar": {
-        "img": "materials/copper-bar.jpg"
+        "img": "materials/icon_crafting_copper_bar.webp"
     },
     "Dragonglass": {
-        "img": "materials/dragonglass.jpg"
+        "img": "materials/icon_crafting_dragonglass.webp"
     },
     "Goldenheart wood": {
-        "img": "materials/goldenheart-wood.jpg"
+        "img": "materials/icon_crafting_goldenheart_wood.webp"
     },
     "Hide": {
-        "img": "materials/hide.jpg"
+        "img": "materials/icon_crafting_hide.webp"
     },
     "Ironwood": {
-        "img": "materials/ironwood.jpg"
+        "img": "materials/icon_crafting_ironwood.webp"
     },
     "Kingswood oak": {
-        "img": "materials/kingswood-oak.jpg"
+        "img": "materials/icon_crafting_kingswood_oak.webp"
     },
     "Leather straps": {
-        "img": "materials/leather-straps.jpg"
+        "img": "materials/icon_crafting_leather_straps.webp"
     },
     "Milk of the poppy": {
-        "img": "materials/milk-of-the-poppy.jpg"
+        "img": "materials/icon_crafting_milk_of_the_poppy.webp"
     },
     "Silk": {
-        "img": "materials/silk.jpg"
+        "img": "materials/icon_crafting_silk.webp"
     },
     "Weirwood": {
-        "img": "materials/weirwood.jpg"
+        "img": "materials/icon_crafting_weir_wood.webp"
     },
     "Wildfire": {
-        "img": "materials/wildfire.jpg"
+        "img": "materials/icon_crafting_wild_fire.webp"
     }
 };
