@@ -426,6 +426,7 @@ button.multiplier-btn {
 .donate-header {
     width: 100%;
     display: flex;
+    justify-content: center;
 }
 
 .donate-header button#openGiftFromHeader {
