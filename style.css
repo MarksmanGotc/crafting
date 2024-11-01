@@ -520,3 +520,12 @@ button.multiplier-btn {
 	75% {border: 2px solid var(--primary-color); }
     100% {border: 2px solid #d52121;}
 }
+
+@media (max-width: 600px) {
+	body {
+		min-height: initial;
+	}
+	footer div {
+		width: max-content;
+	}
+}
