@@ -9,7 +9,33 @@ document.addEventListener('DOMContentLoaded', function() {
     generateMaterialList();
 	formatedInputNumber();
 	inputActive();
+	
+    // Kun footerin sisällä olevaa SVG:tä painetaan
+    document.querySelectorAll('footer svg, #openGiftFromHeader').forEach(element => {
+		element.addEventListener('click', function() {
+			const pageDivs = document.querySelectorAll('.wrapper > div');
+			const giftDiv = document.querySelector('.wrapper .gift');
 
+			pageDivs.forEach(div => {
+				div.style.display = 'none';
+			});
+			giftDiv.style.display = 'flex';
+			gtag('event', 'donate_click', {
+				'event_label_gift': 'Open domnate views'
+			});
+		});
+	});
+
+    document.querySelector('.gift button').addEventListener('click', function() {
+        const pageDivs = document.querySelectorAll('.wrapper > div');
+        const wrapperDiv = document.querySelector('#generatebychoice');
+
+        pageDivs.forEach(div => {
+            div.style.display = 'none';
+        });
+
+        wrapperDiv.style.display = 'block';
+    });
 });
 
 function generateMaterialList() {
