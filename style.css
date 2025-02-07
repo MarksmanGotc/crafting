@@ -489,7 +489,9 @@ button.multiplier-btn {
     color: #08425a;
     padding: 10px 0px;
 }
-
+.level-group .opacity {
+    opacity: 0.5;
+}
 
 @keyframes rotate73451 {
   100% {
