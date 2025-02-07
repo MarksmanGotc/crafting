@@ -434,6 +434,11 @@ function calculateMaterials() {
             });
         }
     });
+	document.querySelectorAll('.level-group > div').forEach(function(item) {
+	  item.addEventListener('click', function() {
+	    this.classList.toggle('opacity');
+	  });
+	});
 
     // Lisää sulje-nappi
     createCloseButton(resultsDiv);
