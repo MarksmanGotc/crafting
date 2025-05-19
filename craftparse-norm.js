@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createLevelStructure();
     addCalculateButton();
     generateMaterialList();
+	addWarlordToggle();
 	formatedInputNumber();
 	inputActive();
 	
@@ -52,12 +53,9 @@ function generateMaterialList() {
 
         const infoDiv = document.createElement('div');
         const span = document.createElement('span');
-        span.textContent = materialName;
+        span.textContent = materialInfo["Orginal-name"] || materialName;
         infoDiv.appendChild(span);
 
-        //const firstNumber = Math.floor(Math.random() * 4) + 3; // Satunnainen numero välillä 3-6
-		//const otherNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join(''); // Generoi kuusi satunnaista numeroa väliltä 0-9 ja liitä ne yhteen merkkijonoksi
-		//const formattedPlaceholder = formatPlaceholderWithCommas(`${firstNumber}${otherNumbers}`);
 
 		const input = document.createElement('input');
 		input.type = "text";
@@ -125,103 +123,7 @@ function addCalculateButton() {
 	calculateBtn.classList.add('calculate-button'); 
     calculateBtn.addEventListener('click', calculateMaterials);
     manualInputDiv.appendChild(calculateBtn);
-
-    // Luodaan "Generoi 480"-nappi
-    const generateBtn = document.createElement('div');
-	generateBtn.classList.add('generate-480')
-    generateBtn.textContent = 'Generate 480';
-    generateBtn.addEventListener('click', function() {
-        // Tyhjennä kaikki aikaisemmat valinnat ja aseta arvot automaattisesti
-        setTemplateValues({
-            "1": { "Flax Legwraps": 214, "Copper Band": 232, "Dagger": 34 },
-            "5": { "Boiled Leather Shirt": 175, "Wool Bandana": 152, "Spear": 153 },
-            "10": { "Copper Pot": 70, "Padded Armor": 61, "Wool Leggings": 59, "Galoshes": 75, "Velvet Boots": 11, "Mace": 70, "Short Bow": 75, "Pyrite Lament": 59 }
-        });
-
-       
-        calculateMaterials();
-        addMultiplierButtons();
-		if (!isDebugMode){
-			gtag('event', 'auto_generate', {
-				'value': 1
-			});
-		}
-    });
-    generatebychoice.appendChild(generateBtn);
-
-    // Luodaan "Generoi materiaalien perusteella"-nappi
-    /*const generateBasedOnMaterialsBtn = document.createElement('button');
-    generateBasedOnMaterialsBtn.textContent = 'Generate based on materials';
-    generateBasedOnMaterialsBtn.addEventListener('click', function() {
-        document.getElementById("manualInput").style.display = "none";
-        document.getElementById("generatebychoice").style.display = "block";
-    });
-	const closeMaterialsBtn = document.getElementById("closeMaterials");
-    if(closeMaterialsBtn) { // Check if the button exists
-        closeMaterialsBtn.addEventListener('click', function() {
-            document.getElementById("manualInput").style.display = "block";
-            document.getElementById("generatebychoice").style.display = "none";
-        });
-    }
-    manualInputDiv.appendChild(generateBasedOnMaterialsBtn);*/
 }
-
-
-
-function addMultiplierButtons() {
-    const resultsDiv = document.getElementById('results');
-    // Etsi olemassa oleva generateDiv tai luo uusi, jos sitä ei löydy
-    let generateDiv = resultsDiv.querySelector('.generate');
-    if (!generateDiv) {
-        generateDiv = document.createElement('div');
-        generateDiv.className = 'generate';
-        // Lisää generateDiv ennen itemeitä mutta materiaalien jälkeen
-        const materialsDiv = resultsDiv.querySelector('.materials');
-        if (materialsDiv.nextSibling) {
-            resultsDiv.insertBefore(generateDiv, materialsDiv.nextSibling);
-        } else {
-            resultsDiv.appendChild(generateDiv);
-        }
-    } else {
-        // Tyhjennä olemassa oleva generateDiv ennen uusien nappien lisäämistä
-        generateDiv.innerHTML = '';
-    }
-
-    // Lisää kerroin-napit generateDiviin
-    const multipliers = [2, 3, 4];
-    multipliers.forEach(multiplier => {
-        const button = document.createElement('button');
-        button.textContent = `x${multiplier}`;
-        button.className = 'multiplier-btn';
-        button.addEventListener('click', () => multiplyValues(multiplier));
-        generateDiv.appendChild(button);
-    });
-}
-
-
-
-
-function multiplyValues(multiplier) {
-	const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
-    document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
-        if (input.value) {
-            input.value = parseInt(input.value) * multiplier;
-        }
-    });
-	if (!isDebugMode){
-		gtag('event', 'generate_multiplier', {
-			'event_multiplier_value': multiplier,
-			'value': 1
-		});
-	}
-
-    // Kutsu calculateMaterials uudelleen päivitetyillä arvoilla
-    calculateMaterials();
-	addMultiplierButtons();
-}
-
-
 
 // Funktio tulosten näyttämiseen (modifioi tämä toimimaan haluamallasi tavalla)
 function showResults() {
@@ -294,8 +196,32 @@ function createLevelStructure() {
     });
 }
 
+function addWarlordToggle() {
+    const wrap = document.querySelector('.templateAmountWrap');
+    const toggleDiv = document.createElement('div');
+    toggleDiv.className = 'warlord-toggle';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = 'includeWarlords';
+    checkbox.checked = true;
+
+    const label = document.createElement('label');
+    label.htmlFor = 'includeWarlords';
+    label.textContent = 'Include CTW items';
+
+    toggleDiv.appendChild(checkbox);
+    toggleDiv.appendChild(label);
+
+    // Lisää toggle <div> heti .templateAmountWrap-divin jälkeen
+    wrap.parentNode.insertBefore(toggleDiv, wrap.nextSibling);
+}
+
+
+
 
 function calculateMaterials() {
+	
     const resultsDiv = document.getElementById('results');
     //resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
 
@@ -314,16 +240,26 @@ function calculateMaterials() {
         levelDiv.querySelectorAll('input[type="number"]').forEach(input => {
             const amount = parseInt(input.value) || 0;
             const productName = input.name;
-            const product = craftItem.products.find(p => p.name === productName);
+            //const product = craftItem.products.find(p => p.name === productName);
+			const product = craftItem.products.find(p => p.name === productName && p.level === level);
+
     
             if (product && amount > 0) {
                 templateCounts[level].push({ name: productName, amount: amount, img: product.img });
     
-                Object.entries(product.materials).forEach(([materialName, requiredAmount]) => {
+                Object.entries(product.materials).forEach(([rawName, requiredAmount]) => {
+					const materialName = Object.keys(materials).find(
+						key => key.toLowerCase().replace(/\s/g, '-') === rawName.toLowerCase().replace(/\s/g, '-')
+					) || rawName;
+
                     if (!materialCounts[materialName]) {
-                        materialCounts[materialName] = { amount: 0, img: materials[materialName].img };
-                    }
-                    materialCounts[materialName].amount += requiredAmount * amount;
+						materialCounts[materialName] = {
+							amount: 0,
+							img: materials[materialName] ? materials[materialName].img : ''
+						};
+					}
+					materialCounts[materialName].amount += requiredAmount * amount;
+
                 });
             }
         });
@@ -342,11 +278,16 @@ function calculateMaterials() {
 		pMatAmount.className = 'amount';
 		pAvailableMaterials.className = 'available-materials';
 		
-		pMatName.textContent = `${materialName}`;
+		//pMatName.textContent = `${materialName}`;
+		pMatName.textContent = materials[materialName]["Orginal-name"] || materialName;
         pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(data.amount)}`;
 		// Laske ja näytä jäljellä oleva materiaalimäärä
-		const normalizedMaterialName = materialName.toLowerCase().replace(/\s+/g, '-'); // Korvaa välilyönnit viivoilla
-		const originalAmount = initialMaterials[normalizedMaterialName] || 0;
+		const matchedKey = Object.keys(initialMaterials).find(
+			key => key.toLowerCase().replace(/\s/g, '-') === materialName.toLowerCase().replace(/\s/g, '-')
+		);
+		const originalAmount = matchedKey ? initialMaterials[matchedKey] : 0;
+
+		
 		if(originalAmount>0){
 			const remainingAmount = originalAmount - data.amount;
 			if(remainingAmount>=0){
@@ -458,16 +399,6 @@ function calculateTotalItemsByLevel(templateCounts) {
     return totalItemsByLevel;
 }
 
-/*
-function getTotalItemsByLevel(templateCounts) {
-    let totalItemsByLevel = {};
-    Object.keys(templateCounts).forEach(level => {
-        // Lasketaan kunkin tason itemien kokonaismäärä
-        totalItemsByLevel[level] = templateCounts[level].reduce((total, item) => total + item.amount, 0);
-    });
-    return totalItemsByLevel;
-}*/
-
 function areAllCountsSame(levelItemCounts) {
     const counts = Object.values(levelItemCounts);
     return counts.every(count => count === counts[0]);
@@ -491,8 +422,9 @@ function createMaterialImageElement(materialName, imgUrl, preference) {
 
 document.getElementById('calculateWithPreferences').addEventListener('click', function() {
 	const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
-	const templateAmountInput = document.querySelectorAll('#templateAmount');
-	const allInputs = [...materialInputs, ...templateAmountInput];
+	const templateAmountInput = document.querySelector('#templateAmount');
+	const allInputs = [...materialInputs, templateAmountInput];
+
 	let isValid = true;
 
 	allInputs.forEach(input => {
@@ -513,11 +445,11 @@ document.getElementById('calculateWithPreferences').addEventListener('click', fu
 	
 	setTimeout(() => {
 		
-		
 		let availableMaterials = gatherMaterialsFromInputs();
 		if (Object.keys(initialMaterials).length === 0) {
 			initialMaterials = { ...availableMaterials };
 		}
+
 		let totalTemplates = parseInt(document.getElementById('templateAmount').value.replace(/,/g, ''));
 		if (isNaN(totalTemplates)) {
 			return;
@@ -570,48 +502,60 @@ document.getElementById('calculateWithPreferences').addEventListener('click', fu
 });
 
 function gatherMaterialsFromInputs() {
-    let materials = {};
+    let materialsInput = {};
     document.querySelectorAll('.my-material input[type="text"]').forEach(input => {
-        const materialName = input.getAttribute('name').replace('my-', '');
+        const id = input.getAttribute('id').replace('my-', '');
+        const materialName = Object.keys(materials).find(name => name.toLowerCase().replace(/\s/g, '-') === id);
         const materialAmount = parseInt(input.value.replace(/,/g, ''), 10);
+        if (!materialName) {
+            return;
+        }
         if (!isNaN(materialAmount)) {
-            materials[materialName] = materialAmount;
+            materialsInput[materialName] = materialAmount;
         }
     });
-    return materials;
+
+    return materialsInput;
 }
+
 
 
 function calculateProductionPlan(availableMaterials, totalTemplates) {
     let productionPlan = { "1": [], "5": [], "10": [] };
+	const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
 
     for (let i = 0; i < totalTemplates; i++) {
         let preferences = getUserPreferences(availableMaterials);
         let productsSelectedThisRound = { "1": null, "5": null, "10": null }; // Tämän kierroksen valitut tuotteet
 
         for (let level of [1, 5, 10]) {
-            const levelProducts = craftItem.products.filter(product => product.level === level);
-            const selectedProduct = selectProductForLevel(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
+            const levelProducts = craftItem.products.filter(product => product.level === level).filter(product => includeWarlords || !product.warlord);
+            //const selectedProduct = selectProductForLevel(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
+			const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
+    
 
-            if (selectedProduct) {
+			
+            if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials)) {
                 productionPlan[level].push(selectedProduct.name);
                 productsSelectedThisRound[level] = selectedProduct; // Tallennetaan valittu tuote
                 updateAvailableMaterials(availableMaterials, selectedProduct); // Päivitetään materiaalien määrä
             } else {
                 // Jos tuotetta ei voi valita, keskeytetään prosessi ja poistetaan edelliset tuotteet
-                if (level > 1) { // Tarkistetaan, että ollaan yli ensimmäisen tason
-                    productionPlan[1].pop(); // Poistetaan viimeisin level 1 tuote
-                    if (level > 5) {
-                        productionPlan[5].pop(); // Poistetaan viimeisin level 5 tuote, jos keskeytys tapahtuu level 10:ssä
-                    }
-					displayUserMessage(`The given materials ran out. <br>Only ${i} templates could be produced.`);
-					
-                }
+                if (level > 1) {
+					if (productsSelectedThisRound[1]) {
+						rollbackMaterials(availableMaterials, productsSelectedThisRound[1]);
+						productionPlan[1].pop();
+					}
+					if (level > 5 && productsSelectedThisRound[5]) {
+						rollbackMaterials(availableMaterials, productsSelectedThisRound[5]);
+						productionPlan[5].pop();
+					}
+}
+
                 return productionPlan; // Palautetaan jo tuotettu tuotantosuunnitelma
             }
         }
     }
-
     return productionPlan; // Kaikki pyydetyt templatet onnistuttiin tuottamaan
 }
 
@@ -630,13 +574,18 @@ function displayUserMessage(message) {
 
 function updateAvailableMaterials(availableMaterials, selectedProduct) {
     Object.entries(selectedProduct.materials).forEach(([material, amountRequired]) => {
-        // Yhtenäistä materiaalin nimi
-        const normalizedMaterial = material.toLowerCase().replace(/ /g, '-');
-        if (availableMaterials[normalizedMaterial] !== undefined) {
-            availableMaterials[normalizedMaterial] -= amountRequired;
-        } 
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+
+        if (matchedKey) {
+            availableMaterials[matchedKey] -= amountRequired;
+        }
     });
 }
+
+
 
 
 
@@ -681,56 +630,76 @@ function getUserPreferences(availableMaterials) {
     return { mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials };
 }
 
+function selectBestAvailableProduct(levelProducts, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials) {
+    // Järjestä tuotteet pisteiden mukaan
+    const candidates = levelProducts
+        .map(product => ({
+            product,
+            score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials)
+        }))
+        .sort((a, b) => b.score - a.score); // suurimmasta pienimpään
 
-function selectProductForLevel(levelProducts, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials) {
-    let selectedProduct = null;
-    let highestScore = -Infinity;
+    // Etsi ensimmäinen tuote, jonka materiaalit riittävät
+    for (const { product } of candidates) {
+        if (canProductBeProduced(product, availableMaterials)) {
+            return product;
+        }
+    }
 
-    levelProducts.forEach(product => {
-        let score = getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials);
-        if (canProductBeProduced(product, availableMaterials) && score > highestScore) {
-            selectedProduct = product;
-            highestScore = score;
-            // Vähennä valitun tuotteen materiaalit jäljellä olevista materiaaleista
-            Object.entries(product.materials).forEach(([material, amountRequired]) => {
-                if (availableMaterials[material] !== undefined) {
-                    availableMaterials[material] -= amountRequired;
-                }
-            });
-			
+    return null; // Mikään tuote ei kelpaa
+}
+
+function rollbackMaterials(availableMaterials, product) {
+
+    Object.entries(product.materials).forEach(([material, amountRequired]) => {
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+
+        if (matchedKey) {
+            availableMaterials[matchedKey] += amountRequired;
         }
     });
-
-    return selectedProduct;
 }
+
+
 
 
 function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials) {
     let score = 0;
     Object.entries(product.materials).forEach(([material, _]) => {
-        let normalizedMaterial = material.toLowerCase().replace(/ /g, "-"); // Oletetaan, että " " korvataan "-"
-        if (mostAvailableMaterials.includes(normalizedMaterial)) {
+        if (mostAvailableMaterials.includes(material)) {
             score += 10;
         }
-        if (secondMostAvailableMaterials.includes(normalizedMaterial)) {
+        if (secondMostAvailableMaterials.includes(material)) {
             score += 5;
         }
-        if (leastAvailableMaterials.includes(normalizedMaterial)) {
+        if (leastAvailableMaterials.includes(material)) {
             score -= 10;
         }
     });
     return score;
 }
 
-
 function canProductBeProduced(product, availableMaterials) {
     return Object.entries(product.materials).every(([material, amountRequired]) => {
-        // Muunna materiaalin nimi yhtenäiseen muotoon
-        const normalizedMaterial = material.toLowerCase().replace(/ /g, "-");
-        const isEnough = availableMaterials[normalizedMaterial] && availableMaterials[normalizedMaterial] >= amountRequired;
-        return isEnough;
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+
+        if (!matchedKey) {
+            return false;
+        }
+
+        return availableMaterials[matchedKey] >= amountRequired;
     });
 }
+
+
+
+
 
 function listSelectedProducts(productionPlan) {
     Object.entries(productionPlan).forEach(([level, productNames]) => {
