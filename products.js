@@ -38,42 +38,42 @@ let craftItem = {
     },
 	
 	{
-      "name": "Warlord helmet",
+      "name": "CTW Helm",
       "level": 1,
       "materials": {"silk": 6144, "black-iron": 6144, "copper-bar": 6144},
       "img": "item/ctw-head.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord plate",
+      "name": "CTW Chestplate",
       "level": 1,
       "materials": {"milk-of-the-poppy": 6144, "hide": 6144, "ironwood": 6144},
       "img": "item/ctw-chest.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord pants",
+      "name": "CTW Pants",
       "level": 1,
       "materials": {"kingswood-oak": 6144, "wildfire": 6144, "hide": 6144},
       "img": "item/ctw-pants.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord dagger",
+      "name": "CTW Sword",
       "level": 1,
       "materials": {"ironwood": 6144, "goldenheart-wood": 6144, "wildfire": 6144},
       "img": "item/ctw-weapon.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord ring",
+      "name": "CTW Ring",
       "level": 1,
       "materials": {"weirwood": 6144, "leather-straps": 6144, "black-iron": 6144},
       "img": "item/ctw-ring.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord shoos",
+      "name": "CTW Boots",
       "level": 1,
       "materials": {"ironwood": 6144, "goldenheart-wood": 6144, "wildfire": 6144},
       "img": "item/ctw-boots.png",
@@ -118,84 +118,84 @@ let craftItem = {
       "img": "item/icon_eq_standard_weapon_spear.webp"
     },	
 	{
-      "name": "Warlord helmet",
+      "name": "CTW Helm",
       "level": 5,
       "materials": {"kingswood-oak": 10240, "wildfire": 10240, "hide": 10240},
       "img": "item/ctw-head.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord plate",
+      "name": "CTW Chestplate",
       "level": 5,
       "materials": {"silk": 10240, "black-iron": 10240, "copper-bar": 10240},
       "img": "item/ctw-chest.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord pants",
+      "name": "CTW Pants",
       "level": 5,
       "materials": {"weirwood": 10240, "leather-straps": 10240, "black-iron": 10240},
       "img": "item/ctw-pants.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord dagger",
+      "name": "CTW Sword",
       "level": 5,
       "materials": {"copper-bar": 10240, "dragonglass": 10240, "leather-straps": 10240},
       "img": "item/ctw-weapon.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord ring",
+      "name": "CTW Ring",
       "level": 5,
       "materials": {"ironwood": 10240, "goldenheart-wood": 10240, "wildfire": 10240},
       "img": "item/ctw-ring.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord shoos",
+      "name": "CTW Boots",
       "level": 5,
       "materials": {"milk-of-the-poppy": 10240, "hide": 10240, "ironwood": 10240},
       "img": "item/ctw-boots.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord helmet",
+      "name": "CTW Helm",
       "level": 10,
       "materials": {"kingswood-oak": 20480, "wildfire": 20480, "hide": 20480},
       "img": "item/ctw-head.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord plate",
+      "name": "CTW Chestplate",
       "level": 10,
       "materials": {"silk": 20480, "black-iron": 20480, "copper-bar": 20480},
       "img": "item/ctw-chest.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord pants",
+      "name": "CTW Pants",
       "level": 10,
       "materials": {"weirwood": 20480, "leather-straps": 20480, "black-iron": 20480},
       "img": "item/ctw-pants.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord dagger",
+      "name": "CTW Sword",
       "level": 10,
       "materials": {"copper-bar": 20480, "dragonglass": 20480, "leather-straps": 20480},
       "img": "item/ctw-weapon.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord ring",
+      "name": "CTW Ring",
       "level": 10,
       "materials": {"ironwood": 20480, "goldenheart-wood": 20480, "wildfire": 20480},
       "img": "item/ctw-ring.png",
 	  "warlord": true
     },
 	{
-      "name": "Warlord shoos",
+      "name": "CTW Boots",
       "level": 10,
       "materials": {"milk-of-the-poppy": 20480, "hide": 20480, "ironwood": 20480},
       "img": "item/ctw-boots.png",
