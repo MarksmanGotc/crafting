@@ -529,7 +529,9 @@ function calculateProductionPlan(availableMaterials, totalTemplates) {
         let productsSelectedThisRound = { "1": null, "5": null, "10": null }; // Tämän kierroksen valitut tuotteet
 
         for (let level of [1, 5, 10]) {
-            const levelProducts = craftItem.products.filter(product => product.level === level).filter(product => includeWarlords || !product.warlord);
+            //const levelProducts = craftItem.products.filter(product => product.level === level).filter(product => includeWarlords || !product.warlord);
+			const levelProducts = craftItem.products.filter(product => product.level === level && (includeWarlords || !product.warlord));
+
             //const selectedProduct = selectProductForLevel(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
 			const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
     
