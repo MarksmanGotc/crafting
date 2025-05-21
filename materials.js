@@ -1,38 +1,50 @@
 const materials = {
-	"Black Iron": {
-        "img": "materials/icon_crafting_blackiron.webp"
+	"black-iron": {
+        "img": "materials/icon_crafting_blackiron.webp",
+		"Orginal-name": "Black Iron"
     },
-	"Copper bar": {
-        "img": "materials/icon_crafting_copper_bar.webp"
+	"copper-bar": {
+        "img": "materials/icon_crafting_copper_bar.webp",
+		"Orginal-name": "Copper Bar"
     },
-    "Dragonglass": {
-        "img": "materials/icon_crafting_dragonglass.webp"
+    "dragonglass": {
+        "img": "materials/icon_crafting_dragonglass.webp",
+		"Orginal-name": "Dragonglass"
     },
-    "Goldenheart wood": {
-        "img": "materials/icon_crafting_goldenheart_wood.webp"
+    "goldenheart-wood": {
+        "img": "materials/icon_crafting_goldenheart_wood.webp",
+		"Orginal-name": "Goldenheart Wood"
     },
-    "Hide": {
-        "img": "materials/icon_crafting_hide.webp"
+    "hide": {
+        "img": "materials/icon_crafting_hide.webp",
+		"Orginal-name": "Hide"
     },
-    "Ironwood": {
-        "img": "materials/icon_crafting_ironwood.webp"
+    "ironwood": {
+        "img": "materials/icon_crafting_ironwood.webp",
+		"Orginal-name": "Ironwood"
     },
-    "Kingswood oak": {
-        "img": "materials/icon_crafting_kingswood_oak.webp"
+    "kingswood-oak": {
+        "img": "materials/icon_crafting_kingswood_oak.webp",
+		"Orginal-name": "Kingswood Oak"
     },
-    "Leather straps": {
-        "img": "materials/icon_crafting_leather_straps.webp"
+    "leather-straps": {
+        "img": "materials/icon_crafting_leather_straps.webp",
+		"Orginal-name": "Leather Straps"
     },
-    "Milk of the poppy": {
-        "img": "materials/icon_crafting_milk_of_the_poppy.webp"
+    "milk-of-the-poppy": {
+        "img": "materials/icon_crafting_milk_of_the_poppy.webp",
+		"Orginal-name": "Milk of the poppy"
     },
-    "Silk": {
-        "img": "materials/icon_crafting_silk.webp"
+    "silk": {
+        "img": "materials/icon_crafting_silk.webp",
+		"Orginal-name": "Silk"
     },
-    "Weirwood": {
-        "img": "materials/icon_crafting_weir_wood.webp"
+    "weirwood": {
+        "img": "materials/icon_crafting_weir_wood.webp",
+		"Orginal-name": "Weirwood"
     },
-    "Wildfire": {
-        "img": "materials/icon_crafting_wild_fire.webp"
+    "wildfire": {
+        "img": "materials/icon_crafting_wild_fire.webp",
+		"Orginal-name": "Wildfire"
     }
 };
