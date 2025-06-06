@@ -223,7 +223,7 @@ function addWarlordToggle() {
 
     const level1Label = document.createElement('label');
     level1Label.htmlFor = 'level1OnlyWarlords';
-    level1Label.textContent = 'Use only CTW items in the level1';
+    level1Label.textContent = 'Use only CTW items for Level 1';
 
     level1Div.appendChild(level1Checkbox);
     level1Div.appendChild(level1Label);
