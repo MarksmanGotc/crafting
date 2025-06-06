@@ -225,6 +225,14 @@ footer div {
 .level-group .opacity {
     opacity: 0.5;
 }
+
+.item-mats {
+    display: none;
+}
+
+.materials p.remaining-to-use {
+    display: none;
+}
 .items h3, h4 {
     cursor: text;
 	font-size: 20px;
