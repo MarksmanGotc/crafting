@@ -53,7 +53,7 @@ function generateMaterialList() {
 
         const infoDiv = document.createElement('div');
         const span = document.createElement('span');
-        span.textContent = materialInfo["Orginal-name"] || materialName;
+        span.textContent = materialInfo["Original-name"] || materialName;
         infoDiv.appendChild(span);
 
 
@@ -198,23 +198,39 @@ function createLevelStructure() {
 
 function addWarlordToggle() {
     const wrap = document.querySelector('.templateAmountWrap');
-    const toggleDiv = document.createElement('div');
-    toggleDiv.className = 'warlord-toggle';
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = 'includeWarlords';
-    checkbox.checked = true;
+    const includeDiv = document.createElement('div');
+    includeDiv.className = 'warlord-toggle';
 
-    const label = document.createElement('label');
-    label.htmlFor = 'includeWarlords';
-    label.textContent = 'Include CTW items';
+    const includeCheckbox = document.createElement('input');
+    includeCheckbox.type = 'checkbox';
+    includeCheckbox.id = 'includeWarlords';
+    includeCheckbox.checked = true;
 
-    toggleDiv.appendChild(checkbox);
-    toggleDiv.appendChild(label);
+    const includeLabel = document.createElement('label');
+    includeLabel.htmlFor = 'includeWarlords';
+    includeLabel.textContent = 'Include CTW items';
+
+    includeDiv.appendChild(includeCheckbox);
+    includeDiv.appendChild(includeLabel);
+
+    const level1Div = document.createElement('div');
+    level1Div.className = 'warlord-toggle';
+
+    const level1Checkbox = document.createElement('input');
+    level1Checkbox.type = 'checkbox';
+    level1Checkbox.id = 'level1OnlyWarlords';
+
+    const level1Label = document.createElement('label');
+    level1Label.htmlFor = 'level1OnlyWarlords';
+    level1Label.textContent = 'Use only CTW items in the level1';
+
+    level1Div.appendChild(level1Checkbox);
+    level1Div.appendChild(level1Label);
 
     // Lisää toggle <div> heti .templateAmountWrap-divin jälkeen
-    wrap.parentNode.insertBefore(toggleDiv, wrap.nextSibling);
+    wrap.parentNode.insertBefore(includeDiv, wrap.nextSibling);
+    includeDiv.parentNode.insertBefore(level1Div, includeDiv.nextSibling);
 }
 
 
@@ -233,6 +249,7 @@ function calculateMaterials() {
 
     const templateCounts = { 1: [], 5: [], 10: [] };
     const materialCounts = {};
+	const remainingUse = {};
     
     // Kerää tiedot kaikista syötetyistä itemeistä
     document.querySelectorAll('div[id^="level-"]').forEach(levelDiv => {
@@ -245,7 +262,7 @@ function calculateMaterials() {
 
     
             if (product && amount > 0) {
-                templateCounts[level].push({ name: productName, amount: amount, img: product.img });
+                templateCounts[level].push({ name: productName, amount: amount, img: product.img, materials: product.materials });
     
                 Object.entries(product.materials).forEach(([rawName, requiredAmount]) => {
 					const materialName = Object.keys(materials).find(
@@ -272,15 +289,19 @@ function calculateMaterials() {
         materialContainer.appendChild(img);
 
         const pMatName = document.createElement('p');
-		const pMatAmount = document.createElement('p');
-		const pAvailableMaterials = document.createElement('p');
-		pMatName.className = 'name';
-		pMatAmount.className = 'amount';
-		pAvailableMaterials.className = 'available-materials';
+        const pMatAmount = document.createElement('p');
+        const pRemaining = document.createElement('p');
+        const pAvailableMaterials = document.createElement('p');
+        pMatName.className = 'name';
+        pMatAmount.className = 'amount';
+        pRemaining.className = 'remaining-to-use';
+        pAvailableMaterials.className = 'available-materials';
 		
 		//pMatName.textContent = `${materialName}`;
-		pMatName.textContent = materials[materialName]["Orginal-name"] || materialName;
+		pMatName.textContent = materials[materialName]["Original-name"] || materialName;
         pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(data.amount)}`;
+		pRemaining.textContent = pMatAmount.textContent;
+        remainingUse[materialName] = data.amount;
 		// Laske ja näytä jäljellä oleva materiaalimäärä
 		const matchedKey = Object.keys(initialMaterials).find(
 			key => key.toLowerCase().replace(/\s/g, '-') === materialName.toLowerCase().replace(/\s/g, '-')
@@ -296,9 +317,11 @@ function calculateMaterials() {
 		}
 		
 		
+        materialContainer.dataset.material = materialName;
         materialContainer.appendChild(pMatName);
-		materialContainer.appendChild(pMatAmount);
-		materialContainer.appendChild(pAvailableMaterials);
+        materialContainer.appendChild(pMatAmount);
+        materialContainer.appendChild(pRemaining);
+        materialContainer.appendChild(pAvailableMaterials);
 
         materialsDiv.appendChild(materialContainer);
     });
@@ -352,7 +375,7 @@ function calculateMaterials() {
             levelGroup.className = 'level-group';
             itemsDiv.appendChild(levelGroup);
 
-            templates.forEach(template => {
+             templates.forEach(template => {
                 const templateDiv = document.createElement('div');
                 const img = document.createElement('img');
                 img.src = template.img;
@@ -360,26 +383,51 @@ function calculateMaterials() {
                 templateDiv.appendChild(img);
 
                 const pTemplateName = document.createElement('p');
-				const pTemplateamount = document.createElement('p');
-				pTemplateName.className = 'name';
-				pTemplateamount.className = 'amount';
-				
-				pTemplateName.textContent = `${template.name}`;
-				pTemplateamount.textContent = `${new Intl.NumberFormat('en-US').format(template.amount)}`;
-				
-				
+                const pTemplateamount = document.createElement('p');
+                pTemplateName.className = 'name';
+                pTemplateamount.className = 'amount';
+
+                pTemplateName.textContent = `${template.name}`;
+                pTemplateamount.textContent = `${new Intl.NumberFormat('en-US').format(template.amount)}`;
+
                 templateDiv.appendChild(pTemplateName);
-				templateDiv.appendChild(pTemplateamount);
+                templateDiv.appendChild(pTemplateamount);
+
+                const matsDiv = document.createElement('div');
+                matsDiv.className = 'item-mats';
+                const materialUsage = {};
+                Object.entries(template.materials).forEach(([mat, amt]) => {
+                    const totalAmt = amt * template.amount;
+                    materialUsage[mat] = totalAmt;
+                    const pLine = document.createElement('p');
+                    pLine.className = 'item-material';
+                    pLine.innerHTML = `${mat} <span>${new Intl.NumberFormat('en-US').format(totalAmt)}</span>`;
+                    matsDiv.appendChild(pLine);
+                });
+                templateDiv.dataset.materials = JSON.stringify(materialUsage);
+                templateDiv.appendChild(matsDiv);
+
+                templateDiv.addEventListener('click', function() {
+                    this.classList.toggle('opacity');
+                    const used = JSON.parse(this.dataset.materials);
+                    const done = this.classList.contains('opacity');
+                    Object.entries(used).forEach(([mat, amt]) => {
+                        if (done) {
+                            remainingUse[mat] -= amt;
+                        } else {
+                            remainingUse[mat] += amt;
+                        }
+                        const target = materialsDiv.querySelector(`div[data-material="${mat}"] .remaining-to-use`);
+                        if (target) {
+                            target.textContent = `-${new Intl.NumberFormat('en-US').format(remainingUse[mat])}`;
+                        }
+                    });
+                });
 
                 levelGroup.appendChild(templateDiv);
             });
         }
     });
-	document.querySelectorAll('.level-group > div').forEach(function(item) {
-	  item.addEventListener('click', function() {
-	    this.classList.toggle('opacity');
-	  });
-	});
 
     // Lisää sulje-nappi
     createCloseButton(resultsDiv);
@@ -452,6 +500,7 @@ document.getElementById('calculateWithPreferences').addEventListener('click', fu
 
 		let totalTemplates = parseInt(document.getElementById('templateAmount').value.replace(/,/g, ''));
 		if (isNaN(totalTemplates)) {
+			document.querySelector('.spinner-wrap').classList.remove('active');
 			return;
 		} else {
 			if (!isDebugMode){ 
@@ -523,6 +572,7 @@ function gatherMaterialsFromInputs() {
 function calculateProductionPlan(availableMaterials, totalTemplates) {
     let productionPlan = { "1": [], "5": [], "10": [] };
 	const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
+    const level1OnlyWarlords = document.getElementById('level1OnlyWarlords')?.checked ?? false;
 
     for (let i = 0; i < totalTemplates; i++) {
         let preferences = getUserPreferences(availableMaterials);
@@ -530,11 +580,20 @@ function calculateProductionPlan(availableMaterials, totalTemplates) {
 
         for (let level of [1, 5, 10]) {
             //const levelProducts = craftItem.products.filter(product => product.level === level).filter(product => includeWarlords || !product.warlord);
-			const levelProducts = craftItem.products.filter(product => product.level === level && (includeWarlords || !product.warlord));
-
+			//const levelProducts = craftItem.products.filter(product => product.level === level && (includeWarlords || !product.warlord));
+            let levelProducts;
+            if (level === 1 && level1OnlyWarlords) {
+                levelProducts = craftItem.products.filter(product => product.level === 1 && product.warlord);
+            } else {
+                levelProducts = craftItem.products.filter(product => product.level === level && (includeWarlords || !product.warlord));
+            }
+			
+			
             //const selectedProduct = selectProductForLevel(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
 			const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials);
     
+	
+	
 
 			
             if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials)) {
