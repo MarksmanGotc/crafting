@@ -19,7 +19,7 @@ let craftItem = {
       "img": "item/icon_eq_standard_pants_flaxlegwraps.webp"
     },
 	{
-      "name": "Straw Sanals",
+      "name": "Straw Sandals",
       "level": 1,
       "materials": {"hide": 10240, "leather-straps": 10240},
       "img": "item/icon_eq_standard_boots_strawsandals.webp"
@@ -59,10 +59,10 @@ let craftItem = {
 	  "warlord": true
     },
 	{
-      "name": "CTW Sword",
+      "name": "CTW Boots",
       "level": 1,
       "materials": {"ironwood": 6144, "goldenheart-wood": 6144, "wildfire": 6144},
-      "img": "item/ctw-weapon.png",
+      "img": "item/ctw-boots.png",
 	  "warlord": true
     },
 	{
@@ -73,13 +73,12 @@ let craftItem = {
 	  "warlord": true
     },
 	{
-      "name": "CTW Boots",
+      "name": "CTW Sword",
       "level": 1,
       "materials": {"ironwood": 6144, "goldenheart-wood": 6144, "wildfire": 6144},
-      "img": "item/ctw-boots.png",
+      "img": "item/ctw-weapon.png",
 	  "warlord": true
     },
-	
 	
     {
       "name": "Wool Bandana",
@@ -139,10 +138,10 @@ let craftItem = {
 	  "warlord": true
     },
 	{
-      "name": "CTW Sword",
+      "name": "CTW Boots",
       "level": 5,
-      "materials": {"copper-bar": 10240, "dragonglass": 10240, "leather-straps": 10240},
-      "img": "item/ctw-weapon.png",
+      "materials": {"milk-of-the-poppy": 10240, "hide": 10240, "ironwood": 10240},
+      "img": "item/ctw-boots.png",
 	  "warlord": true
     },
 	{
@@ -153,54 +152,12 @@ let craftItem = {
 	  "warlord": true
     },
 	{
-      "name": "CTW Boots",
-      "level": 5,
-      "materials": {"milk-of-the-poppy": 10240, "hide": 10240, "ironwood": 10240},
-      "img": "item/ctw-boots.png",
-	  "warlord": true
-    },
-	{
-      "name": "CTW Helm",
-      "level": 10,
-      "materials": {"kingswood-oak": 20480, "wildfire": 20480, "hide": 20480},
-      "img": "item/ctw-head.png",
-	  "warlord": true
-    },
-	{
-      "name": "CTW Chestplate",
-      "level": 10,
-      "materials": {"silk": 20480, "black-iron": 20480, "copper-bar": 20480},
-      "img": "item/ctw-chest.png",
-	  "warlord": true
-    },
-	{
-      "name": "CTW Pants",
-      "level": 10,
-      "materials": {"weirwood": 20480, "leather-straps": 20480, "black-iron": 20480},
-      "img": "item/ctw-pants.png",
-	  "warlord": true
-    },
-	{
       "name": "CTW Sword",
-      "level": 10,
-      "materials": {"copper-bar": 20480, "dragonglass": 20480, "leather-straps": 20480},
+      "level": 5,
+      "materials": {"copper-bar": 10240, "dragonglass": 10240, "leather-straps": 10240},
       "img": "item/ctw-weapon.png",
 	  "warlord": true
     },
-	{
-      "name": "CTW Ring",
-      "level": 10,
-      "materials": {"ironwood": 20480, "goldenheart-wood": 20480, "wildfire": 20480},
-      "img": "item/ctw-ring.png",
-	  "warlord": true
-    },
-	{
-      "name": "CTW Boots",
-      "level": 10,
-      "materials": {"milk-of-the-poppy": 20480, "hide": 20480, "ironwood": 20480},
-      "img": "item/ctw-boots.png",
-	  "warlord": true
-    },	
     {
       "name": "Copper Pot",
       "level": 10,
@@ -272,6 +229,48 @@ let craftItem = {
       "level": 10,
       "materials": {"silk": 30720, "goldenheart-wood": 30720},
       "img": "item/icon_eq_standard_weapon_shortbow.webp"
+    },
+	{
+      "name": "CTW Helm",
+      "level": 10,
+      "materials": {"kingswood-oak": 20480, "wildfire": 20480, "hide": 20480},
+      "img": "item/ctw-head.png",
+	  "warlord": true
+    },
+	{
+      "name": "CTW Chestplate",
+      "level": 10,
+      "materials": {"silk": 20480, "black-iron": 20480, "copper-bar": 20480},
+      "img": "item/ctw-chest.png",
+	  "warlord": true
+    },
+	{
+      "name": "CTW Pants",
+      "level": 10,
+      "materials": {"weirwood": 20480, "leather-straps": 20480, "black-iron": 20480},
+      "img": "item/ctw-pants.png",
+	  "warlord": true
+    },
+	{
+      "name": "CTW Boots",
+      "level": 10,
+      "materials": {"milk-of-the-poppy": 20480, "hide": 20480, "ironwood": 20480},
+      "img": "item/ctw-boots.png",
+	  "warlord": true
+    },
+	{
+      "name": "CTW Ring",
+      "level": 10,
+      "materials": {"ironwood": 20480, "goldenheart-wood": 20480, "wildfire": 20480},
+      "img": "item/ctw-ring.png",
+	  "warlord": true
+    },	
+	{
+      "name": "CTW Sword",
+      "level": 10,
+      "materials": {"copper-bar": 20480, "dragonglass": 20480, "leather-straps": 20480},
+      "img": "item/ctw-weapon.png",
+	  "warlord": true
     }
   ]
 };
