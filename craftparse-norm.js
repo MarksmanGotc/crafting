@@ -205,7 +205,7 @@ function addWarlordToggle() {
     const includeCheckbox = document.createElement('input');
     includeCheckbox.type = 'checkbox';
     includeCheckbox.id = 'includeWarlords';
-    includeCheckbox.checked = true;
+    includeCheckbox.checked = false;
 
     const includeLabel = document.createElement('label');
     includeLabel.htmlFor = 'includeWarlords';
@@ -224,6 +224,7 @@ function addWarlordToggle() {
     const level1Label = document.createElement('label');
     level1Label.htmlFor = 'level1OnlyWarlords';
     level1Label.textContent = 'Use only CTW items for Level 1';
+    level1Checkbox.checked = true; 
 
     level1Div.appendChild(level1Checkbox);
     level1Div.appendChild(level1Label);
