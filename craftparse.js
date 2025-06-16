@@ -47,10 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = JSON.parse(atob(shareParam));
             initialMaterials = data.initialMaterials || {};
             renderResults(data.templates, data.materials);
+            populateInputsFromShare(data);
         } catch (e) {
             console.error('Invalid share data');
         }
-        return;
     }
 	
     // Kun footerin sisällä olevaa SVG:tä painetaan
@@ -179,6 +179,84 @@ function setTemplateValues(templates) {
             }
         });
     });
+}
+
+function populateInputsFromShare(data) {
+    // Fill material amounts
+    if (data.initialMaterials) {
+        Object.entries(data.initialMaterials).forEach(([name, amt]) => {
+            const input = document.getElementById(`my-${slug(name)}`);
+            if (input) {
+                input.value = formatPlaceholderWithCommas(amt);
+                const parent = input.closest('.my-material');
+                if (parent) parent.classList.add('active');
+            }
+        });
+    }
+
+    if (data.templates) {
+        const qualityMap = {
+            1: 'poor',
+            4: 'common',
+            16: 'fine',
+            64: 'exquisite',
+            256: 'epic',
+            1024: 'legendary'
+        };
+
+        Object.entries(data.templates).forEach(([level, items]) => {
+            let total = 0;
+            let quality = null;
+            items.forEach(item => {
+                const selector = `#level-${level}-items input[name="${slug(item.name)}_${item.season}_${slug(item.setName || 'no-set')}"]`;
+                const el = document.querySelector(selector);
+                if (el) {
+                    el.value = item.amount;
+                }
+                total += item.amount;
+                if (!quality && item.multiplier) {
+                    quality = qualityMap[item.multiplier];
+                }
+            });
+            if (total > 0) {
+                const amountInput = document.getElementById(`templateAmount${level}`);
+                if (amountInput) {
+                    amountInput.value = total;
+                    const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+                    if (wrap) wrap.classList.add('active');
+                }
+            }
+            if (quality) {
+                const sel = document.getElementById(`temp${level}`);
+                if (sel) sel.value = quality;
+            }
+        });
+
+        // Estimate gear levels
+        const gearLevels = [];
+        Object.entries(data.templates).forEach(([lvl, items]) => {
+            const levelNum = parseInt(lvl, 10);
+            if (levelNum !== 1 && items.some(it => it.season !== 0 || it.warlord)) {
+                gearLevels.push(levelNum);
+            }
+        });
+
+        const select = document.getElementById('gearMaterialLevels');
+        const dropdown = document.querySelector('#advMaterials .level-dropdown');
+        if (select && dropdown) {
+            Array.from(select.options).forEach(opt => {
+                const isSel = gearLevels.includes(parseInt(opt.value, 10));
+                opt.selected = isSel;
+                const divOpt = dropdown.querySelector(`div[data-value="${opt.value}"]`);
+                if (divOpt) divOpt.classList.toggle('selected', isSel);
+            });
+        }
+    }
+    if (history.replaceState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('share');
+        history.replaceState({}, '', url.pathname + url.search);
+    }
 }
 
 // Oletetaan, että addCalculateButton-funktio on jo määritelty ja se lisää sekä Laske että Generoi 480 -napit
