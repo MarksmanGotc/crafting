@@ -1,1 +1,1269 @@
-let initialMaterials={};const urlParams=new URLSearchParams(window.location.search),isDebugMode=urlParams.has("debug")&&"true"===urlParams.get("debug");function generateMaterialList(){const e=document.querySelector("#yourMaterials .materials-list");e.innerHTML="",Object.entries(materials).forEach((([t,a])=>{const n=document.createElement("div");n.className=`my-material ${t.toLowerCase().replace(/\s/g,"-")}`;const l=document.createElement("img");l.src=a.img,n.appendChild(l);const c=document.createElement("div"),r=document.createElement("span");r.textContent=t,c.appendChild(r);const o=document.createElement("input");o.type="text",o.className="numeric-input",o.id=`my-${t.toLowerCase().replace(/\s/g,"-")}`,o.name=`my-${t.toLowerCase().replace(/\s/g,"-")}`,o.placeholder="value",o.pattern="[0-9]*",o.inputMode="numeric",c.appendChild(o),n.appendChild(c),e.appendChild(n)}))}function formatPlaceholderWithCommas(e){return e.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}function formatedInputNumber(){document.addEventListener("input",(function(e){if(e.target.classList.contains("numeric-input")){let t=e.target.value.replace(/[^0-9,]/g,"").replace(/,/g,"").replace(/\B(?=(\d{3})+(?!\d))/g,",");e.target.value=t}}))}function setTemplateValues(e){document.querySelectorAll('#manualInput input[type="number"]').forEach((e=>{e.value=""})),Object.entries(e).forEach((([e,t])=>{Object.entries(t).forEach((([e,t])=>{const a=document.querySelector(`input[name="${e}"]`);a&&(a.value=t)}))}))}function addCalculateButton(){const e=document.getElementById("manualInput"),t=document.getElementById("generatebychoice"),a=document.createElement("button");a.textContent="Calculate",a.classList.add("calculate-button"),a.addEventListener("click",calculateMaterials),e.appendChild(a);const n=document.createElement("div");n.classList.add("generate-480"),n.textContent="Generate 480",n.addEventListener("click",(function(){setTemplateValues({1:{"Flax Legwraps":214,"Copper Band":232,Dagger:34},5:{"Boiled Leather Shirt":175,"Wool Bandana":152,Spear:153},10:{"Copper Pot":70,"Padded Armor":61,"Wool Leggings":59,Galoshes:75,"Velvet Boots":11,Mace:70,"Short Bow":75,"Pyrite Lament":59}}),calculateMaterials(),addMultiplierButtons(),isDebugMode||gtag("event","auto_generate",{value:1})})),t.appendChild(n)}function addMultiplierButtons(){const e=document.getElementById("results");let t=e.querySelector(".generate");if(t)t.innerHTML="";else{t=document.createElement("div"),t.className="generate";const a=e.querySelector(".materials");a.nextSibling?e.insertBefore(t,a.nextSibling):e.appendChild(t)}[2,3,4].forEach((e=>{const a=document.createElement("button");a.textContent=`x${e}`,a.className="multiplier-btn",a.addEventListener("click",(()=>multiplyValues(e))),t.appendChild(a)}))}function multiplyValues(e){document.getElementById("results").innerHTML="",document.querySelectorAll('#manualInput input[type="number"]').forEach((t=>{t.value&&(t.value=parseInt(t.value)*e)})),isDebugMode||gtag("event","generate_multiplier",{event_multiplier_value:e,value:1}),calculateMaterials(),addMultiplierButtons()}function showResults(){document.getElementById("results").style.display="block",document.getElementById("generatebychoice").style.display="none",window.scrollTo({top:0,behavior:"smooth"}),document.querySelector(".spinner-wrap").classList.remove("active")}function closeResults(){document.getElementById("results").innerHTML="",document.getElementById("results").style.display="none",document.getElementById("generatebychoice").style.display="block"}function createCloseButton(e){const t=document.createElement("button");t.id="closeResults",t.onclick=closeResults,t.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>',e.appendChild(t)}function createLevelStructure(){const e=document.getElementById("manualInput");[1,5,10].forEach((t=>{const a=document.createElement("h3");a.textContent=`Level ${t}`,a.style.cursor="pointer",e.appendChild(a);const n=document.createElement("div");n.id=`level-${t}-items`,n.style.display=1===t?"block":"none",e.appendChild(n),a.addEventListener("click",(()=>{n.style.display="none"===n.style.display?"block":"none"})),craftItem.products.filter((e=>e.level===t)).forEach((e=>{const t=document.createElement("div"),a=document.createElement("label");a.textContent=e.name;const l=document.createElement("input");l.type="number",l.name=e.name,l.placeholder="amount",t.appendChild(a),t.appendChild(l),n.appendChild(t)}))}))}function calculateMaterials(){const e=document.getElementById("results"),t=document.createElement("div");t.className="materials",e.appendChild(t);const a={1:[],5:[],10:[]},n={};document.querySelectorAll('div[id^="level-"]').forEach((e=>{const t=parseInt(e.id.split("-")[1]);e.querySelectorAll('input[type="number"]').forEach((e=>{const l=parseInt(e.value)||0,c=e.name,r=craftItem.products.find((e=>e.name===c));r&&l>0&&(a[t].push({name:c,amount:l,img:r.img}),Object.entries(r.materials).forEach((([e,t])=>{n[e]||(n[e]={amount:0,img:materials[e].img}),n[e].amount+=t*l})))}))})),Object.entries(n).forEach((([e,a])=>{const n=document.createElement("div"),l=document.createElement("img");l.src=a.img,l.alt=e,n.appendChild(l);const c=document.createElement("p"),r=document.createElement("p"),o=document.createElement("p");c.className="name",r.className="amount",o.className="available-materials",c.textContent=`${e}`,r.textContent=`-${new Intl.NumberFormat("en-US").format(a.amount)}`;const s=e.toLowerCase().replace(/\s+/g,"-"),i=initialMaterials[s]||0;if(i>0){const e=i-a.amount;e>=0&&(o.textContent=`${new Intl.NumberFormat("en-US").format(e)}`)}n.appendChild(c),n.appendChild(r),n.appendChild(o),t.appendChild(n)}));const l=document.createElement("div");l.className="generate",t.after(l);const c=calculateTotalItemsByLevel(a),r=areAllCountsSame(c);if(r&&c[1]>0){const e=document.createElement("h2");e.textContent=`Total templates: ${new Intl.NumberFormat("en-US").format(c[1])} pcs`,isDebugMode||gtag("event","total_templates",{event_total_templates:c[1],value:1}),t.after(e),e.after(l)}else t.after(l);const o=document.createElement("div");o.className="items",l.after(o),Object.entries(a).forEach((([e,t])=>{if(t.length>0){const a=document.createElement("h4");a.textContent=r?`Level ${e}`:`Level ${e} (${new Intl.NumberFormat("en-US").format(c[e])} pcs)`,o.appendChild(a);const n=document.createElement("div");n.className="level-group",o.appendChild(n),t.forEach((e=>{const t=document.createElement("div"),a=document.createElement("img");a.src=e.img,a.alt=e.name,t.appendChild(a);const l=document.createElement("p"),c=document.createElement("p");l.className="name",c.className="amount",l.textContent=`${e.name}`,c.textContent=`${new Intl.NumberFormat("en-US").format(e.amount)}`,t.appendChild(l),t.appendChild(c),n.appendChild(t)}))}})),createCloseButton(e),showResults()}function calculateTotalItemsByLevel(e){let t={};return Object.keys(e).forEach((a=>{const n=e[a].reduce(((e,t)=>e+t.amount),0);t[a]=n})),t}function areAllCountsSame(e){const t=Object.values(e);return t.every((e=>e===t[0]))}function createMaterialImageElement(e,t,a){const n=document.createElement("img");return n.src=t,n.alt=e,n.className="material-image",n.dataset.materialName=e,n.dataset.preference=a,n.addEventListener("click",(function(){this.classList.toggle("selected")})),n}function gatherMaterialsFromInputs(){let e={};return document.querySelectorAll('.my-material input[type="text"]').forEach((t=>{const a=t.getAttribute("name").replace("my-",""),n=parseInt(t.value.replace(/,/g,""),10);isNaN(n)||(e[a]=n)})),e}function calculateProductionPlan(e,t){let a={1:[],5:[],10:[]};for(let n=0;n<t;n++){let t=getUserPreferences(e),l={1:null,5:null,10:null};for(let c of[1,5,10]){const r=selectProductForLevel(craftItem.products.filter((e=>e.level===c)),t.mostAvailableMaterials,t.secondMostAvailableMaterials,t.leastAvailableMaterials,e);if(!r)return c>1&&(a[1].pop(),c>5&&a[5].pop(),displayUserMessage(`The given materials ran out. <br>Only ${n} templates could be produced.`)),a;a[c].push(r.name),l[c]=r,updateAvailableMaterials(e,r)}}return a}function displayUserMessage(e){const t=document.getElementById("results"),a=document.createElement("h3");a.innerHTML=e;const n=t.querySelector(".generate");t.insertBefore(a,n)}function updateAvailableMaterials(e,t){Object.entries(t.materials).forEach((([t,a])=>{const n=t.toLowerCase().replace(/ /g,"-");void 0!==e[n]&&(e[n]-=a)}))}function getUserPreferences(e){let t=Object.entries(e).sort(((e,t)=>t[1]-e[1])),a=[...new Set(t.map((([e,t])=>t)))],n=[],l=[],c=[],r=a[0];if(n=t.filter((([e,t])=>t===r)).map((([e,t])=>e)),n.length<4){let e=1;for(;l.length<4-n.length&&e<a.length;){let n=a[e],c=t.filter((([e,t])=>t===n)).map((([e,t])=>e));l.push(...c),e++}l=l.slice(0,4-n.length)}if(n.length+l.length<12){let e=4;n.length+l.length>8&&(e=12-(n.length+l.length));for(let n=a.length-e;n<a.length;n++){let e=a[n];c.push(...t.filter((([t,a])=>a===e)).map((([e,t])=>e)))}c=c.slice(0,e)}return{mostAvailableMaterials:n,secondMostAvailableMaterials:l,leastAvailableMaterials:c}}function selectProductForLevel(e,t,a,n,l){let c=null,r=-1/0;return e.forEach((e=>{let o=getMaterialScore(e,t,a,n);canProductBeProduced(e,l)&&o>r&&(c=e,r=o,Object.entries(e.materials).forEach((([e,t])=>{void 0!==l[e]&&(l[e]-=t)})))})),c}function getMaterialScore(e,t,a,n){let l=0;return Object.entries(e.materials).forEach((([e,c])=>{let r=e.toLowerCase().replace(/ /g,"-");t.includes(r)&&(l+=10),a.includes(r)&&(l+=5),n.includes(r)&&(l-=10)})),l}function canProductBeProduced(e,t){return Object.entries(e.materials).every((([e,a])=>{const n=e.toLowerCase().replace(/ /g,"-");return t[n]&&t[n]>=a}))}function listSelectedProducts(e){Object.entries(e).forEach((([e,t])=>{t.forEach((t=>{const a=document.querySelector(`#level-${e}-items input[name="${t}"]`);a&&(a.value=(parseInt(a.value)||0)+1)}))}))}function inputActive(){document.querySelector(".material-choices").addEventListener("click",(e=>{document.querySelectorAll(".material-choices .my-material").forEach((e=>{""===e.querySelector(".numeric-input").value&&e.classList.remove("active")}));const t=e.target.closest(".my-material");t&&(t.classList.add("active"),t.querySelector(".numeric-input").focus())})),document.querySelectorAll(".material-choices .my-material .numeric-input").forEach((e=>{e.addEventListener("focusout",(()=>{""===e.value&&e.closest(".my-material").classList.remove("active")})),e.addEventListener("focus",(()=>{document.querySelectorAll(".material-choices .my-material").forEach((e=>{""===e.querySelector(".numeric-input").value&&e.classList.remove("active")})),e.closest(".my-material").classList.add("active")}))}));const e=document.querySelector("#templateAmount"),t=document.querySelector(".templateAmountWrap");e.addEventListener("focus",(()=>{t.classList.add("active")})),e.addEventListener("blur",(()=>{e.value||t.classList.remove("active")}))}document.addEventListener("DOMContentLoaded",(function(){createLevelStructure(),addCalculateButton(),generateMaterialList(),formatedInputNumber(),inputActive()})),document.getElementById("calculateWithPreferences").addEventListener("click",(function(){const e=[...document.querySelectorAll('.my-material input[type="text"]'),...document.querySelectorAll("#templateAmount")];let t=!0;e.forEach((e=>{e.value&&0!==parseInt(e.value.replace(/,/g,""))||(t=!1,e.classList.add("missing-input"),setTimeout((()=>{e.classList.remove("missing-input")}),3e3))})),t&&(document.querySelector(".spinner-wrap").classList.add("active"),setTimeout((()=>{let e=gatherMaterialsFromInputs();0===Object.keys(initialMaterials).length&&(initialMaterials={...e});let t=parseInt(document.getElementById("templateAmount").value.replace(/,/g,""));if(isNaN(t))return;isDebugMode||gtag("event","total_material_templates",{event_material_templates:t,value:1});let a=Object.values(e).map((e=>"string"==typeof e&&e.includes(",")?parseInt(e.replace(/,/g,""),10):parseInt(e,10)));if(!isDebugMode){let t=a.reduce(((e,t)=>e+t),0),n=a.length>0?t/a.length:0,l=Math.max(...a),c=a.findIndex((e=>e===l)),r=Object.keys(e)[c];gtag("event","material_analytics",{average_material_amount:parseInt(n),max_material_amount:l,max_material_name:r,value:1})}let n=calculateProductionPlan(e,t);document.querySelectorAll('#manualInput input[type="number"]').forEach((e=>{e.value=""})),listSelectedProducts(n);const l=document.querySelector(".calculate-button");l&&l.click()}),0))}));
+let initialMaterials = {}; 
+const urlParams = new URLSearchParams(window.location.search);
+const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
+
+const LEVELS = [1, 5, 10, 15, 20, 25];
+const allMaterials = Object.values(materials).reduce((acc, season) => {
+    return { ...acc, ...season.mats };
+}, {});
+const materialToSeason = {};
+Object.values(materials).forEach(season => {
+    Object.keys(season.mats).forEach(mat => {
+        materialToSeason[mat] = season.season;
+    });
+});
+let qualityMultipliers = {};
+const WARLORD_PENALTY = 3;
+const BASE_MOST_WEIGHT = 12;
+const BASE_SECOND_WEIGHT = 6;
+const GEAR_MOST_WEIGHT = 6;
+const GEAR_SECOND_WEIGHT = 3;
+const LEFTOVER_WEIGHT_BASE = 7;
+const LEFTOVER_WEIGHT_GEAR = 3;
+const BALANCE_WEIGHT = 0.1;
+let failedLevels = [];
+let requestedTemplates = {};
+let remainingUse = {};
+
+function slug(str) {
+    return (str || '')
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/['"`]/g, '')
+        .replace(/[^a-z0-9-]/g, '');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    createLevelStructure();
+    addCalculateButton();
+        formatedInputNumber();
+        inputActive();
+        initAdvMaterialSection();
+
+    const shareParam = urlParams.get('share');
+    if (shareParam) {
+        try {
+            const data = JSON.parse(atob(shareParam));
+            initialMaterials = data.initialMaterials || {};
+            renderResults(data.templates, data.materials);
+        } catch (e) {
+            console.error('Invalid share data');
+        }
+        return;
+    }
+	
+    // Kun footerin sisällä olevaa SVG:tä painetaan
+    document.querySelectorAll('footer svg, #openGiftFromHeader').forEach(element => {
+		element.addEventListener('click', function() {
+			const pageDivs = document.querySelectorAll('.wrapper > div');
+			const giftDiv = document.querySelector('.wrapper .gift');
+
+			pageDivs.forEach(div => {
+				div.style.display = 'none';
+			});
+			giftDiv.style.display = 'flex';
+			gtag('event', 'donate_click', {
+				'event_label_gift': 'Open domnate views'
+			});
+		});
+	});
+
+    document.querySelector('.gift button').addEventListener('click', function() {
+        const pageDivs = document.querySelectorAll('.wrapper > div');
+        const wrapperDiv = document.querySelector('#generatebychoice');
+
+        pageDivs.forEach(div => {
+            div.style.display = 'none';
+        });
+
+        wrapperDiv.style.display = 'block';
+    });
+
+    const ctwBtn = document.getElementById('ctwInfoBtn');
+    const ctwPopup = document.getElementById('ctwInfoPopup');
+    ctwBtn?.addEventListener('click', () => {
+        if (ctwPopup) {
+            ctwPopup.style.display = 'flex';
+        }
+    });
+    ctwPopup?.addEventListener('click', (e) => {
+        if (e.target === ctwPopup || e.target.closest('.close-popup')) {
+            ctwPopup.style.display = 'none';
+        }
+    });
+
+    const oddsBtn = document.getElementById('oddsInfoBtn');
+    const oddsPopup = document.getElementById('oddsInfoPopup');
+    oddsBtn?.addEventListener('click', () => {
+        if (oddsPopup) {
+            oddsPopup.style.display = 'flex';
+        }
+    });
+    oddsPopup?.addEventListener('click', (e) => {
+        if (e.target === oddsPopup || e.target.closest('.close-popup')) {
+            oddsPopup.style.display = 'none';
+        }
+    });
+
+    const gearBtn = document.getElementById('gearLevelsInfoBtn');
+    const gearPopup = document.getElementById('gearLevelsInfoPopup');
+    gearBtn?.addEventListener('click', () => {
+        if (gearPopup) {
+            gearPopup.style.display = 'flex';
+        }
+    });
+    gearPopup?.addEventListener('click', (e) => {
+        if (e.target === gearPopup || e.target.closest('.close-popup')) {
+            gearPopup.style.display = 'none';
+        }
+    });
+
+    const scaleBtn = document.getElementById('scaleInfoBtn');
+    const scalePopup = document.getElementById('scaleInfoPopup');
+    scaleBtn?.addEventListener('click', () => {
+        if (scalePopup) {
+            scalePopup.style.display = 'flex';
+        }
+    });
+    scalePopup?.addEventListener('click', (e) => {
+        if (e.target === scalePopup || e.target.closest('.close-popup')) {
+            scalePopup.style.display = 'none';
+        }
+    });
+});
+
+function formatPlaceholderWithCommas(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function formatedInputNumber(){
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('numeric-input')) {
+                let inputValue = e.target.value;
+
+                // Salli numerot, pilkut ja pisteet desimaaleille
+                let numericValue = inputValue.replace(/[^0-9.,]/g, '');
+
+                // Erottele desimaaliosa, jos sellainen on
+                let parts = numericValue.split('.');
+                let integerPart = parts[0].replace(/,/g, '');
+                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                e.target.value = parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+            }
+        });
+
+}
+
+function getQualityMultiplier(levelName) {
+    const order = ['poor', 'common', 'fine', 'exquisite', 'epic', 'legendary'];
+    const idx = order.indexOf(levelName.toLowerCase());
+    return Math.pow(4, idx >= 0 ? idx : 0);
+}
+
+
+function setTemplateValues(templates) {
+    // Tyhjennä ensin kaikki aikaisemmat valinnat
+    document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
+        input.value = ''; // Nollaa kaikki input-kentät
+    });
+
+    // Aseta sitten uudet arvot
+    Object.entries(templates).forEach(([level, items]) => {
+        Object.entries(items).forEach(([itemName, amount]) => {
+            const slugName = slug(itemName);
+            const inputElement = document.querySelector(`input[name^="${slugName}_"]`);
+            if (inputElement) {
+                inputElement.value = amount;
+            }
+        });
+    });
+}
+
+// Oletetaan, että addCalculateButton-funktio on jo määritelty ja se lisää sekä Laske että Generoi 480 -napit
+function addCalculateButton() {
+    const manualInputDiv = document.getElementById('manualInput');
+	const generatebychoice = document.getElementById('generatebychoice');
+    
+    const calculateBtn = document.createElement('button');
+    calculateBtn.textContent = 'Calculate';
+	calculateBtn.classList.add('calculate-button'); 
+    calculateBtn.addEventListener('click', calculateMaterials);
+    manualInputDiv.appendChild(calculateBtn);
+}
+
+// Funktio tulosten näyttämiseen (modifioi tämä toimimaan haluamallasi tavalla)
+function showResults() {
+	document.getElementById('results').style.display = 'block';
+	document.getElementById('generatebychoice').style.display = 'none';
+	window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+	
+    document.querySelector('.spinner-wrap').classList.remove('active');
+
+}
+
+function closeResults() {
+	const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
+	document.getElementById('results').style.display = 'none';
+	document.getElementById('generatebychoice').style.display = 'block';
+	initialMaterials = {}; // Reset materials to allow fresh input values
+}
+
+function createCloseButton(parentElement) {
+    const closeButton = document.createElement('button');
+    closeButton.id = 'closeResults';
+    closeButton.onclick = closeResults;
+    closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>`;
+    parentElement.appendChild(closeButton);
+}
+
+function createCopyButton(data) {
+    const copyButton = document.createElement('button');
+    copyButton.id = 'copyLink';
+    copyButton.innerHTML = `Copy this calculation <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M288 240l-96 0c-66.2 0-122 44.7-138.8 105.5C49.9 333.1 48 319.3 48 304c0-70.7 57.3-128 128-128l112 0 24 0c13.3 0 24-10.7 24-24l0-24 0-28.1L456.1 208 336 316.1l0-28.1 0-24c0-13.3-10.7-24-24-24l-24 0zm0 48l0 48 0 16c0 12.6 7.4 24.1 19 29.2s25 3 34.4-5.4l160-144c6.7-6.1 10.6-14.7 10.6-23.8s-3.8-17.7-10.6-23.8l-160-144c-9.4-8.5-22.9-10.6-34.4-5.4s-19 16.6-19 29.2l0 16 0 48-48 0-64 0C78.8 128 0 206.8 0 304c0 78 38.6 126.2 68.7 152.1c4.1 3.5 8.1 6.6 11.7 9.3c3.2 2.4 6.2 4.4 8.9 6.2c4.5 3 8.3 5.1 10.8 6.5c2.5 1.4 5.3 1.9 8.1 1.9c10.9 0 19.7-8.9 19.7-19.7c0-6.8-3.6-13.2-8.3-18.1c-.5-.5-.9-.9-1.4-1.4c-2.4-2.3-5.1-5.1-7.7-8.6c-1.7-2.3-3.4-5-5-7.9c-5.3-9.7-9.5-22.9-9.5-40.2c0-53 43-96 96-96l48 0 48 0z"/></svg>`;
+    copyButton.addEventListener('click', () => {
+        const encoded = btoa(JSON.stringify(data))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+        const url = `${window.location.origin}${window.location.pathname}?share=${encoded}`;
+        navigator.clipboard.writeText(url).then(() => {
+            copyButton.textContent = 'Copied!';
+            setTimeout(() => { copyButton.innerHTML = `Copy this calculation <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M288 240l-96 0c-66.2 0-122 44.7-138.8 105.5C49.9 333.1 48 319.3 48 304c0-70.7 57.3-128 128-128l112 0 24 0c13.3 0 24-10.7 24-24l0-24 0-28.1L456.1 208 336 316.1l0-28.1 0-24c0-13.3-10.7-24-24-24l-24 0zm0 48l0 48 0 16c0 12.6 7.4 24.1 19 29.2s25 3 34.4-5.4l160-144c6.7-6.1 10.6-14.7 10.6-23.8s-3.8-17.7-10.6-23.8l-160-144c-9.4-8.5-22.9-10.6-34.4-5.4s-19 16.6-19 29.2l0 16 0 48-48 0-64 0C78.8 128 0 206.8 0 304c0 78 38.6 126.2 68.7 152.1c4.1 3.5 8.1 6.6 11.7 9.3c3.2 2.4 6.2 4.4 8.9 6.2c4.5 3 8.3 5.1 10.8 6.5c2.5 1.4 5.3 1.9 8.1 1.9c10.9 0 19.7-8.9 19.7-19.7c0-6.8-3.6-13.2-8.3-18.1c-.5-.5-.9-.9-1.4-1.4c-2.4-2.3-5.1-5.1-7.7-8.6c-1.7-2.3-3.4-5-5-7.9c-5.3-9.7-9.5-22.9-9.5-40.2c0-53 43-96 96-96l48 0 48 0z"/></svg>`; }, 2000);
+        });
+    });
+    return copyButton;
+}
+
+function createLevelStructure() {
+    const manualInputDiv = document.getElementById('manualInput');
+    //manualInputDiv.style.display = 'block'; // Aseta näkyväksi
+
+    LEVELS.forEach(level => {
+        const levelHeader = document.createElement('h3');
+        levelHeader.textContent = `Level ${level}`;
+        levelHeader.style.cursor = 'pointer'; // Osoittaa, että elementtiä voi klikata
+        manualInputDiv.appendChild(levelHeader);
+
+        const itemsDiv = document.createElement('div');
+        itemsDiv.id = `level-${level}-items`;
+        // Aseta Level 1 näkyväksi ja muut piiloon
+        if (level === 1) {
+            itemsDiv.style.display = 'block'; // Aseta Level 1 itemit näkyviksi
+        } else {
+            itemsDiv.style.display = 'none'; // Muut tasot piiloon oletuksena
+        }
+        manualInputDiv.appendChild(itemsDiv);
+
+        // Togglea itemsDivin näkyvyyttä klikattaessa
+        levelHeader.addEventListener('click', () => {
+            itemsDiv.style.display = itemsDiv.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Lisää kunkin tason itemit niiden containeriin
+        craftItem.products.filter(product => product.level === level).forEach(product => {
+            const productDiv = document.createElement('div');
+            const label = document.createElement('label');
+            if (product.season === 0) {
+                label.textContent = product.name;
+            } else {
+                label.textContent = `${product.name} - ${product.setName} (S${product.season})`;
+            }
+            const input = document.createElement('input');
+            input.type = 'number';
+            const nameSlug = slug(product.name);
+            const setSlug = slug(product.setName || 'no-set');
+            input.name = `${nameSlug}_${product.season}_${setSlug}`;
+            input.placeholder = 'amount';
+
+            productDiv.appendChild(label);
+            productDiv.appendChild(input);
+            itemsDiv.appendChild(productDiv);
+        });
+    });
+}
+
+function calculateMaterials() {
+	
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
+
+    const materialsDiv = document.createElement('div');
+    materialsDiv.className = 'materials';
+
+    // Täytä materialsDiv materiaalien tiedoilla...
+
+    const templateCounts = { 1: [], 5: [], 10: [], 15: [], 20: [], 25: [] };
+    const materialCounts = {};
+    
+    // Kerää tiedot kaikista syötetyistä itemeistä
+    document.querySelectorAll('div[id^="level-"]').forEach(levelDiv => {
+        const level = parseInt(levelDiv.id.split('-')[1]);
+        levelDiv.querySelectorAll('input[type="number"]').forEach(input => {
+            const amount = parseInt(input.value) || 0;
+            const [nameSlug, seasonStr, setSlug] = input.name.split('_');
+            const season = parseInt(seasonStr, 10);
+            const product = craftItem.products.find(p =>
+                slug(p.name) === nameSlug &&
+                p.level === level &&
+                p.season === season &&
+                slug(p.setName || 'no-set') === setSlug
+            );
+
+    
+            if (product && amount > 0) {
+                templateCounts[level].push({
+                    name: product.name,
+                    amount: amount,
+                    img: product.img,
+                    materials: product.materials,
+                    multiplier: qualityMultipliers[level] || 1,
+                    setName: product.setName,
+                    season: product.season,
+                    warlord: product.warlord || false
+                });
+    
+                Object.entries(product.materials).forEach(([rawName, requiredAmount]) => {
+					const materialName = Object.keys(allMaterials).find(
+						key => key.toLowerCase().replace(/\s/g, '-') === rawName.toLowerCase().replace(/\s/g, '-')
+					) || rawName;
+
+                    if (!materialCounts[materialName]) {
+						materialCounts[materialName] = {
+							amount: 0,
+							img: allMaterials[materialName] ? allMaterials[materialName].img : ''
+						};
+					}
+					const multiplier = qualityMultipliers[level] || 1;
+                materialCounts[materialName].amount += requiredAmount * amount * multiplier;
+                });
+            }
+        });
+    });
+    renderResults(templateCounts, materialCounts);
+}
+
+function renderResults(templateCounts, materialCounts) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
+    const materialsDiv = document.createElement('div');
+    materialsDiv.className = 'materials';
+
+    Object.entries(materialCounts)
+        .sort(([aName], [bName]) => {
+            const seasonA = materialToSeason[aName] || 0;
+            const seasonB = materialToSeason[bName] || 0;
+            if (seasonA !== seasonB) {
+                return seasonA - seasonB;
+            }
+            return aName.localeCompare(bName);
+        })
+        .forEach(([materialName, data]) => {
+            const materialContainer = document.createElement('div');
+            const img = document.createElement('img');
+            img.src = data.img;
+            img.alt = materialName;
+            materialContainer.appendChild(img);
+
+            const pMatName = document.createElement('p');
+            const pMatAmount = document.createElement('p');
+            const pRemaining = document.createElement('p');
+            const pAvailableMaterials = document.createElement('p');
+            const pSeason = document.createElement('p');
+            pMatName.className = 'material-name';
+            pMatAmount.className = 'amount';
+            pRemaining.className = 'remaining-to-use';
+            pAvailableMaterials.className = 'available-materials';
+            pSeason.className = 'season-id';
+
+            let matText = allMaterials[materialName] ? allMaterials[materialName]["Original-name"] || materialName : materialName;
+            const matSeason = materialToSeason[materialName] || 0;
+            if (matSeason !== 0) {
+                pSeason.textContent = `Season ${matSeason}`;
+            }
+            pMatName.textContent = matText;
+            pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(data.amount)}`;
+            pRemaining.textContent = pMatAmount.textContent;
+            remainingUse[materialName] = data.amount;
+            const matchedKey = Object.keys(initialMaterials).find(
+                key => key.toLowerCase().replace(/\s/g, '-') === materialName.toLowerCase().replace(/\s/g, '-')
+            );
+            const originalAmount = matchedKey ? initialMaterials[matchedKey] : 0;
+            if (originalAmount > 0) {
+                const remainingAmount = originalAmount - data.amount;
+                pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(Math.max(remainingAmount, 0))}`;
+            }
+
+            materialContainer.dataset.material = materialName;
+            if (matSeason !== 0) {
+                materialContainer.appendChild(pSeason);
+            }
+            materialContainer.appendChild(pMatName);
+            materialContainer.appendChild(pMatAmount);
+            materialContainer.appendChild(pRemaining);
+            materialContainer.appendChild(pAvailableMaterials);
+
+            materialsDiv.appendChild(materialContainer);
+        });
+
+    if (materialsDiv.children.length === 0) {
+        const msg = document.createElement('h3');
+        msg.textContent = 'No items could be crafted with the available materials';
+        resultsDiv.appendChild(msg);
+        createCloseButton(resultsDiv);
+        showResults();
+        return;
+    }
+
+    resultsDiv.appendChild(materialsDiv);
+
+    const generateDiv = document.createElement('div');
+    generateDiv.className = 'generate';
+    materialsDiv.after(generateDiv);
+
+    const levelItemCounts = calculateTotalItemsByLevel(templateCounts);
+    const allSameCount = areAllCountsSame(levelItemCounts);
+    const totalItems = Object.values(levelItemCounts).reduce((sum, c) => sum + c, 0);
+    const allFailed = totalItems === 0;
+
+    if (allFailed) {
+        const msg = document.createElement('h3');
+        msg.textContent = 'No items could be crafted with the available materials';
+        resultsDiv.appendChild(msg);
+        createCloseButton(resultsDiv);
+        showResults();
+        return;
+    }
+
+    if (allSameCount && levelItemCounts["1"] > 0) {
+        const totalTemplatesHeader = document.createElement('h2');
+        totalTemplatesHeader.textContent = `Total templates: ${new Intl.NumberFormat('en-US').format(levelItemCounts["1"])} pcs`;
+        if (!isDebugMode){
+            gtag('event', 'total_templates', {
+                'event_total_templates': levelItemCounts,
+                'value': 1
+            });
+        }
+        materialsDiv.after(totalTemplatesHeader);
+        totalTemplatesHeader.after(generateDiv);
+    } else {
+        materialsDiv.after(generateDiv);
+    }
+
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'items';
+
+    const itemsInfoBtn = document.createElement('button');
+    itemsInfoBtn.id = 'itemsInfoBtn';
+    itemsInfoBtn.className = 'info-btn';
+    itemsInfoBtn.setAttribute('aria-label', 'Items info');
+    itemsInfoBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>`;
+
+    const itemsInfoPopup = document.createElement('div');
+    itemsInfoPopup.id = 'itemsInfoPopup';
+    itemsInfoPopup.className = 'info-overlay';
+    itemsInfoPopup.innerHTML = `<div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p>Click an item once it is crafted. Completed items fade, making it easy to see what is still missing.</p></div>`;
+
+    itemsInfoBtn.addEventListener('click', () => {
+        itemsInfoPopup.style.display = 'flex';
+    });
+    itemsInfoPopup.addEventListener('click', (e) => {
+        if (e.target === itemsInfoPopup || e.target.closest('.close-popup')) {
+            itemsInfoPopup.style.display = 'none';
+        }
+    });
+
+    // itemsDiv placement adjusted later after copy button
+
+    let firstLevelHeader = true;
+    Object.entries(templateCounts).forEach(([level, templates]) => {
+        const lvl = parseInt(level, 10);
+        if (templates.length > 0 || (failedLevels.includes(lvl) && requestedTemplates[lvl] > 0)) {
+            const levelHeader = document.createElement('h4');
+            levelHeader.textContent = allSameCount ? `Level ${level}` : `Level ${level} (${new Intl.NumberFormat('en-US').format(levelItemCounts[level])} pcs)`;
+
+            if (firstLevelHeader) {
+                const headerWrap = document.createElement('div');
+                headerWrap.className = 'items-header';
+                headerWrap.appendChild(levelHeader);
+                headerWrap.appendChild(itemsInfoBtn);
+                itemsDiv.appendChild(headerWrap);
+                firstLevelHeader = false;
+            } else {
+                itemsDiv.appendChild(levelHeader);
+            }
+
+            const levelGroup = document.createElement('div');
+            levelGroup.className = 'level-group';
+            itemsDiv.appendChild(levelGroup);
+
+            if (templates.length > 0) {
+                templates.forEach(template => {
+                    const templateDiv = document.createElement('div');
+                    templateDiv.classList.add('item');
+                    if (template.warlord) {
+                        templateDiv.classList.add('item-ctw');
+                    }
+                    const img = document.createElement('img');
+                    img.src = template.img;
+                    img.alt = template.name;
+                    templateDiv.appendChild(img);
+
+                    let pSeasonInfo;
+                    let pSetName;
+                    const displaySeason = template.warlord ? 3 : template.season;
+                    if (displaySeason && displaySeason !== 0) {
+                        pSeasonInfo = document.createElement('p');
+                        pSeasonInfo.className = 'season-info';
+                        pSeasonInfo.textContent = `Season ${displaySeason}`;
+
+                        pSetName = document.createElement('p');
+                        pSetName.className = 'set-name';
+                        pSetName.textContent = template.setName || '';
+                    }
+
+                    const pTemplateName = document.createElement('p');
+                    const pTemplateamount = document.createElement('p');
+                    pTemplateName.className = 'name';
+                    pTemplateamount.className = 'amount';
+
+                    pTemplateName.textContent = `${template.name}`;
+                    pTemplateamount.textContent = `${new Intl.NumberFormat('en-US').format(template.amount)}`;
+
+                    if (displaySeason && displaySeason !== 0) {
+                        templateDiv.appendChild(pSeasonInfo);
+                        templateDiv.appendChild(pSetName);
+                    }
+
+                    templateDiv.appendChild(pTemplateName);
+                    templateDiv.appendChild(pTemplateamount);
+
+                    const matsDiv = document.createElement('div');
+                    matsDiv.className = 'item-mats';
+                    const materialUsage = {};
+                    Object.entries(template.materials).forEach(([mat, amt]) => {
+                        const totalAmt = amt * template.amount * (template.multiplier || 1);
+                        materialUsage[mat] = totalAmt;
+                        const pLine = document.createElement('p');
+                        pLine.className = 'item-material';
+                        pLine.innerHTML = `${mat} <span>${new Intl.NumberFormat('en-US').format(totalAmt)}</span>`;
+                        matsDiv.appendChild(pLine);
+                    });
+                    templateDiv.dataset.materials = JSON.stringify(materialUsage);
+                    templateDiv.appendChild(matsDiv);
+
+                    templateDiv.addEventListener('click', function() {
+                        this.classList.toggle('opacity');
+                        const used = JSON.parse(this.dataset.materials);
+                        const done = this.classList.contains('opacity');
+                        Object.entries(used).forEach(([mat, amt]) => {
+                            if (done) {
+                                remainingUse[mat] -= amt;
+                            } else {
+                                remainingUse[mat] += amt;
+                            }
+                            const target = materialsDiv.querySelector(`div[data-material="${mat}"] .remaining-to-use`);
+                            if (target) {
+                                target.textContent = `-${new Intl.NumberFormat('en-US').format(remainingUse[mat])}`;
+                            }
+                        });
+                    });
+
+                    levelGroup.appendChild(templateDiv);
+                });
+            } else {
+                const msg = document.createElement('p');
+                msg.className = 'no-products';
+                msg.textContent = 'No items could be crafted with the available materials';
+                levelGroup.appendChild(msg);
+            }
+        }
+    });
+
+    const shareData = { templates: templateCounts, materials: materialCounts, initialMaterials };
+    const copyBtn = createCopyButton(shareData);
+    generateDiv.after(copyBtn);
+    copyBtn.after(itemsDiv);
+    itemsDiv.after(itemsInfoPopup);
+    createCloseButton(resultsDiv);
+    showResults();
+}
+
+function calculateTotalItemsByLevel(templateCounts) {
+    let totalItemsByLevel = {};
+
+    // Käydään läpi jokainen taso templateCounts-objektissa
+    Object.keys(templateCounts).forEach(level => {
+        // Laske tämän tason kaikkien templatejen määrät yhteen
+        const totalItems = templateCounts[level].reduce((sum, template) => sum + template.amount, 0);
+        totalItemsByLevel[level] = totalItems;
+    });
+
+    return totalItemsByLevel;
+}
+
+function areAllCountsSame(levelItemCounts) {
+    const counts = Object.values(levelItemCounts);
+    return counts.every(count => count === counts[0]);
+}
+
+function createMaterialImageElement(materialName, imgUrl, preference) {
+    const imgElement = document.createElement('img');
+    imgElement.src = imgUrl;
+    imgElement.alt = materialName;
+    imgElement.className = 'material-image';
+    imgElement.dataset.materialName = materialName;
+    imgElement.dataset.preference = preference;
+
+    imgElement.addEventListener('click', function() {
+        this.classList.toggle('selected');
+        // Täällä voit lisätä logiikkaa valintojen tallentamiseen tai käsittelyyn
+    });
+
+    return imgElement;
+}
+
+document.getElementById('calculateWithPreferences').addEventListener('click', function() {
+	const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
+    const templateAmountInputs = LEVELS.map(l => document.querySelector(`#templateAmount${l}`));
+    let isValid = true;
+	let hasValue = false;
+
+	templateAmountInputs.forEach(input => {
+		const val = parseInt(input.value.replace(/,/g, ''), 10);
+		if (!isNaN(val)) {
+				if (val > 0) {
+						hasValue = true;
+				}
+				if (val < 0) {
+						isValid = false;
+						input.classList.add('missing-input');
+						setTimeout(() => {
+								input.classList.remove('missing-input');
+						}, 3000);
+				}
+		}
+	});
+
+	 if (!hasValue) {
+		isValid = false;
+		templateAmountInputs.forEach(input => {
+				input.classList.add('missing-input');
+				setTimeout(() => {
+						input.classList.remove('missing-input');
+				}, 3000);
+		});
+	}
+	if (!isValid) {
+		return; // Estä laskennan suoritus
+	}
+	
+	document.querySelector('.spinner-wrap').classList.add('active');
+	
+	setTimeout(() => {
+		
+		/*let availableMaterials = gatherMaterialsFromInputs();
+		if (Object.keys(initialMaterials).length === 0) {
+			initialMaterials = { ...availableMaterials };
+		}*/
+		
+                let availableMaterials = gatherMaterialsFromInputs();
+                availableMaterials = sanitizeGearMaterials(availableMaterials);
+                if (Object.keys(initialMaterials).length === 0) {
+                                initialMaterials = { ...availableMaterials };
+                } else {
+                                Object.entries(availableMaterials).forEach(([mat, amt]) => {
+                                                if (!(mat in initialMaterials)) {
+                                                                initialMaterials[mat] = amt;
+                                                }
+                                });
+                }
+
+                let templatesByLevel = {};
+                let totalTemplates = 0;
+                LEVELS.forEach(level => {
+                                const val = parseInt(document.getElementById(`templateAmount${level}`).value.replace(/,/g, '')) || 0;
+                                templatesByLevel[level] = val;
+                                requestedTemplates[level] = val;
+                                totalTemplates += val;
+                                const quality = document.getElementById(`temp${level}`).value;
+                                qualityMultipliers[level] = getQualityMultiplier(quality);
+                });
+		if (totalTemplates === 0) {
+				document.querySelector('.spinner-wrap').classList.remove('active');
+				return;
+		} else {
+				if (!isDebugMode){
+						gtag('event', 'total_material_templates', {
+								'event_material_templates': totalTemplates,
+								'value': 1
+						});
+				}
+		}
+		
+		let materialAmounts = Object.values(availableMaterials).map(amount => {
+			// Tarkista, onko arvo merkkijono ja sisältääkö se pilkkuja
+			if (typeof amount === 'string' && amount.includes(',')) {
+				// Muunna merkkijono numeroksi poistamalla pilkut ja käyttämällä parseInt
+				return parseInt(amount.replace(/,/g, ''), 10);
+			} else {
+				// Jos arvo on jo numero tai merkkijono ilman pilkkuja, palauta se sellaisenaan
+				return parseInt(amount, 10);
+			}
+		});
+		
+		if (!isDebugMode){
+			let totalMaterialAmount = materialAmounts.reduce((total, amount) => total + amount, 0);
+			let averageMaterialAmount = materialAmounts.length > 0 ? totalMaterialAmount / materialAmounts.length : 0;
+			let maxMaterialAmount = Math.max(...materialAmounts);
+			let maxMaterialIndex = materialAmounts.findIndex(amount => amount === maxMaterialAmount);
+			let maxMaterialName = Object.keys(availableMaterials)[maxMaterialIndex];
+
+			gtag('event', 'material_analytics', {
+				'average_material_amount': parseInt(averageMaterialAmount),
+				'max_material_amount': maxMaterialAmount,
+				'max_material_name': maxMaterialName,
+				'value': 1
+			});
+		}
+
+                const resultPlan = calculateProductionPlan(availableMaterials, templatesByLevel);
+                failedLevels = resultPlan.failedLevels;
+
+                document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
+                        input.value = ''; // Nollaa kaikki input-kentät
+                });
+                listSelectedProducts(resultPlan.plan);
+                const calculateBtn = document.querySelector('.calculate-button');
+		if (calculateBtn) {
+			calculateBtn.click(); // Simuloi napin klikkausta
+		}
+	}, 0);
+});
+
+function gatherMaterialsFromInputs() {
+    const scaleSelect = document.getElementById('scaleSelect');
+    const scale = scaleSelect ? parseFloat(scaleSelect.value) || 1 : 1;
+    let materialsInput = {};
+    document.querySelectorAll('.my-material input[type="text"]').forEach(input => {
+        const id = input.getAttribute('id').replace('my-', '');
+        const materialName = Object.keys(allMaterials).find(name => name.toLowerCase().replace(/\s/g, '-') === id);
+        const raw = input.value.replace(/,/g, '');
+        const materialAmount = parseFloat(raw);
+        if (!materialName) {
+            return;
+        }
+        if (!isNaN(materialAmount)) {
+            materialsInput[materialName] = materialAmount * scale;
+        }
+    });
+
+    return materialsInput;
+}
+
+function sanitizeGearMaterials(materialsInput) {
+    const cleaned = { ...materialsInput };
+    Object.entries(materialsInput).forEach(([name, amount]) => {
+        const season = materialToSeason[name] || 0;
+        if (season !== 0 && (!amount || amount <= 0)) {
+            delete cleaned[name];
+        }
+    });
+    return cleaned;
+}
+
+function filterProductsByAvailableGear(products, availableMaterials, multiplier = 1) {
+    return products.filter(product => {
+        return Object.entries(product.materials).every(([mat, amt]) => {
+            const normalized = mat.toLowerCase().replace(/\s/g, '-');
+            const season = materialToSeason[normalized] || 0;
+            if (season === 0) {
+                return true;
+            }
+            const matchedKey = Object.keys(availableMaterials).find(key =>
+                key.toLowerCase().replace(/\s/g, '-') === normalized
+            );
+            return matchedKey && availableMaterials[matchedKey] >= amt * multiplier;
+        });
+    });
+}
+
+function calculateProductionPlan(availableMaterials, templatesByLevel) {
+    let productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [] };
+    const failed = new Set();
+    const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
+    const level1OnlyWarlords = document.getElementById('level1OnlyWarlords')?.checked ?? false;
+    const includeLowOdds = document.getElementById('includeLowOdds')?.checked ?? true;
+    const includeMediumOdds = document.getElementById('includeMediumOdds')?.checked ?? true;
+    const gearLevelSelect = document.getElementById('gearMaterialLevels');
+    const allowedGearLevels = gearLevelSelect ? Array.from(gearLevelSelect.selectedOptions).map(o => parseInt(o.value, 10)) : [];
+
+    LEVELS.forEach(level => {
+        if (templatesByLevel[level] <= 0) return;
+        let levelProducts = craftItem.products.filter(p => p.level === level && (includeWarlords || !p.warlord));
+        if (level === 1 && level1OnlyWarlords) {
+            levelProducts = craftItem.products.filter(p => p.level === 1 && p.warlord);
+        }
+        if (!allowedGearLevels.includes(level)) {
+            levelProducts = levelProducts.filter(p => p.season == 0);
+        }
+        levelProducts = levelProducts.filter(p => {
+            if (p.season !== 0 || !p.odds) return true;
+            if (p.odds === 'low') return includeLowOdds;
+            if (p.odds === 'medium') return includeMediumOdds;
+            return true;
+        });
+        const multiplier = qualityMultipliers[level] || 1;
+        levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
+        if (levelProducts.length === 0) {
+            failed.add(level);
+            templatesByLevel[level] = 0;
+        }
+    });
+
+    let remaining = { ...templatesByLevel };
+
+    while (Object.values(remaining).some(v => v > 0)) {
+        let preferences = getUserPreferences(availableMaterials);
+        let anySelected = false;
+
+        for (let level of LEVELS) {
+            if (remaining[level] <= 0) continue;
+            let levelProducts = craftItem.products.filter(p => p.level === level && (includeWarlords || !p.warlord));
+            if (level === 1 && level1OnlyWarlords) {
+                levelProducts = craftItem.products.filter(p => p.level === 1 && p.warlord);
+            }
+            if (!allowedGearLevels.includes(level)) {
+                levelProducts = levelProducts.filter(p => p.season == 0);
+            }
+            levelProducts = levelProducts.filter(p => {
+                if (p.season !== 0 || !p.odds) return true;
+                if (p.odds === 'low') return includeLowOdds;
+                if (p.odds === 'medium') return includeMediumOdds;
+                return true;
+            });
+            const multiplier = qualityMultipliers[level] || 1;
+            levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
+            const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials, multiplier);
+
+            if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials, multiplier)) {
+                productionPlan[level].push({ name: selectedProduct.name, season: selectedProduct.season, setName: selectedProduct.setName, warlord: selectedProduct.warlord });
+                updateAvailableMaterials(availableMaterials, selectedProduct, multiplier);
+                remaining[level]--;
+                anySelected = true;
+            } else {
+                failed.add(level);
+                remaining[level] = 0;
+            }
+        }
+
+        if (!anySelected) break;
+    }
+
+    return { plan: productionPlan, failedLevels: Array.from(failed) };
+}
+
+function displayUserMessage(message) {
+    const resultsDiv = document.getElementById('results');
+    const messageElement = document.createElement('h3');
+    messageElement.innerHTML = message;
+    const generateDiv = resultsDiv.querySelector('.generate');
+
+    // Lisää viesti ennen generateDiviä
+    resultsDiv.insertBefore(messageElement, generateDiv);
+}
+
+
+
+
+function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1) {
+    Object.entries(selectedProduct.materials).forEach(([material, amountRequired]) => {
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+
+        if (matchedKey) {
+            availableMaterials[matchedKey] -= amountRequired * multiplier;
+        }
+    });
+}
+
+
+
+
+
+
+
+function getUserPreferences(availableMaterials) {
+	let sortedMaterials = Object.entries(availableMaterials).sort((a, b) => b[1] - a[1]);
+    let uniqueAmounts = [...new Set(sortedMaterials.map(([_, amount]) => amount))];
+
+    let mostAvailableMaterials = [], secondMostAvailableMaterials = [], leastAvailableMaterials = [];
+
+    // Määritä materiaalit, joita on eniten
+    let maxAmount = uniqueAmounts[0];
+    mostAvailableMaterials = sortedMaterials.filter(([_, amount]) => amount === maxAmount).map(([material, _]) => material);
+
+    if (mostAvailableMaterials.length < 4) {
+        let nextAmountIndex = 1;
+        while (secondMostAvailableMaterials.length < 4 - mostAvailableMaterials.length && nextAmountIndex < uniqueAmounts.length) {
+            let currentAmount = uniqueAmounts[nextAmountIndex];
+            let currentMaterials = sortedMaterials.filter(([_, amount]) => amount === currentAmount).map(([material, _]) => material);
+            secondMostAvailableMaterials.push(...currentMaterials);
+            nextAmountIndex++;
+        }
+        secondMostAvailableMaterials = secondMostAvailableMaterials.slice(0, 4 - mostAvailableMaterials.length);
+    }
+
+    // Määritä materiaalit, joita on vähiten, huomioiden most ja second
+    if (mostAvailableMaterials.length + secondMostAvailableMaterials.length < 12) {
+        let leastAmountsNeeded = 4;
+        if (mostAvailableMaterials.length + secondMostAvailableMaterials.length > 8) {
+            leastAmountsNeeded = 12 - (mostAvailableMaterials.length + secondMostAvailableMaterials.length);
+        }
+
+        let leastIndexStart = uniqueAmounts.length - leastAmountsNeeded;
+        for (let i = leastIndexStart; i < uniqueAmounts.length; i++) {
+            let currentAmount = uniqueAmounts[i];
+            leastAvailableMaterials.push(...sortedMaterials.filter(([_, amount]) => amount === currentAmount).map(([material, _]) => material));
+        }
+        leastAvailableMaterials = leastAvailableMaterials.slice(0, leastAmountsNeeded);
+    }
+
+    return { mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials };
+}
+
+function selectBestAvailableProduct(levelProducts, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier = 1) {
+    // Järjestä tuotteet pisteiden mukaan
+    const candidates = levelProducts
+        .map(product => ({
+            product,
+			score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier)
+        }))
+        .sort((a, b) => b.score - a.score); // suurimmasta pienimpään
+
+    // Etsi ensimmäinen tuote, jonka materiaalit riittävät
+    for (const { product } of candidates) {
+        if (canProductBeProduced(product, availableMaterials, multiplier)) {
+            return product;
+        }
+    }
+
+    return null; // Mikään tuote ei kelpaa
+}
+
+function rollbackMaterials(availableMaterials, product, multiplier = 1) {
+
+    Object.entries(product.materials).forEach(([material, amountRequired]) => {
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+
+        if (matchedKey) {
+            availableMaterials[matchedKey] += amountRequired * multiplier;
+        }
+    });
+}
+
+function computeBaseUsageStd(materialsState) {
+    const remaining = [];
+    Object.entries(initialMaterials).forEach(([material, _]) => {
+        const normalized = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(materialsState).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalized
+        );
+        if (matchedKey && materialToSeason[normalized] === 0) {
+            remaining.push(materialsState[matchedKey]);
+        }
+    });
+    if (remaining.length === 0) {
+        return 0;
+    }
+    const mean = remaining.reduce((a, b) => a + b, 0) / remaining.length;
+    const variance = remaining.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / remaining.length;
+    return Math.sqrt(variance);
+}
+
+function computeBalancePenalty(product, availableMaterials, multiplier = 1) {
+    const predicted = { ...availableMaterials };
+    Object.entries(product.materials).forEach(([material, amt]) => {
+        const normalized = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(predicted).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalized
+        );
+        if (matchedKey) {
+            predicted[matchedKey] -= amt * multiplier;
+        }
+    });
+    return computeBaseUsageStd(predicted);
+}
+
+function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier = 1) {
+    let score = 0;
+    Object.entries(product.materials).forEach(([material, _]) => {
+        const season = materialToSeason[material] || 0;
+        const isGear = season !== 0;
+        if (mostAvailableMaterials.includes(material)) {
+            score += isGear ? GEAR_MOST_WEIGHT : BASE_MOST_WEIGHT;
+        }
+        if (secondMostAvailableMaterials.includes(material)) {
+            score += isGear ? GEAR_SECOND_WEIGHT : BASE_SECOND_WEIGHT;
+        }
+        if (leastAvailableMaterials.includes(material)) {
+            score -= 10;
+        }
+    });
+    if (product.warlord) {
+        score -= WARLORD_PENALTY;
+    }
+
+    Object.entries(product.materials).forEach(([material, amount]) => {
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+        if (matchedKey) {
+            const season = materialToSeason[normalizedMaterial] || 0;
+            const weight = season === 0 ? LEFTOVER_WEIGHT_BASE : LEFTOVER_WEIGHT_GEAR;
+            const available = availableMaterials[matchedKey];
+            const remaining = available - amount * multiplier;
+            if (available > 0) {
+                score -= (remaining / available) * weight;
+            }
+        }
+    });
+	
+	const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
+    score -= balancePenalty * BALANCE_WEIGHT;
+	
+    return score;
+}
+
+function canProductBeProduced(product, availableMaterials, multiplier = 1) {
+    return Object.entries(product.materials).every(([material, amountRequired]) => {
+        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
+        const matchedKey = Object.keys(availableMaterials).find(key =>
+            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
+        );
+
+        if (!matchedKey) {
+            return false;
+        }
+
+        return availableMaterials[matchedKey] >= amountRequired * multiplier;
+    });
+}
+
+
+
+
+
+function listSelectedProducts(productionPlan) {
+    Object.entries(productionPlan).forEach(([level, products]) => {
+        products.forEach(({ name, season, setName }) => {
+            const selector = `#level-${level}-items input[name="${slug(name)}_${season}_${slug(setName || 'no-set')}"]`;
+            const inputElement = document.querySelector(selector);
+            if (inputElement) {
+                inputElement.value = (parseInt(inputElement.value) || 0) + 1;
+            }
+        });
+    });
+}
+
+
+function inputActive(){
+
+	document.addEventListener('click', (e) => {
+        const clickedDiv = e.target.closest('.my-material');
+        if (clickedDiv && !e.target.closest('.level-checkboxes')) {
+            document.querySelectorAll('.my-material').forEach(div => {
+                const inp = div.querySelector('.numeric-input');
+                if (div !== clickedDiv && inp && inp.value === '') {
+                    div.classList.remove('active');
+                }
+            });
+            clickedDiv.classList.add('active');
+            const input = clickedDiv.querySelector('.numeric-input');
+            if (input) input.focus();
+        }
+    });
+
+	document.addEventListener('focusout', (e) => {
+        if (e.target.classList.contains('numeric-input')) {
+            if (e.target.value === '') {
+                const parent = e.target.closest('.my-material');
+                if (parent) parent.classList.remove('active');
+            }
+        }
+    }, true);
+	
+	document.addEventListener('focusin', (e) => {
+        if (e.target.classList.contains('numeric-input')) {
+            document.querySelectorAll('.my-material').forEach(div => {
+                const inp = div.querySelector('.numeric-input');
+                if (inp && inp.value === '' && div !== e.target.closest('.my-material')) {
+                    div.classList.remove('active');
+                }
+            });
+            e.target.closest('.my-material').classList.add('active');
+        }
+    });		
+
+	// Uusi osa: käsittele kaikki templateAmount-inputit tasoittain (1,5,10,...)
+	const levels = [1, 5, 10, 15, 20, 25];
+	levels.forEach(level => {
+		const input = document.querySelector(`#templateAmount${level}`);
+		const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+
+		if (input && wrap) {
+			input.addEventListener('focus', () => {
+				wrap.classList.add('active');
+			});
+
+			input.addEventListener('blur', () => {
+				if (!input.value) {
+					wrap.classList.remove('active');
+				}
+			});
+		}
+	});
+}
+
+function initAdvMaterialSection() {
+    const toggle = document.getElementById('toggleAdvMaterials');
+    const container = document.getElementById('advMaterials');
+    if (!toggle || !container || typeof seasons === 'undefined') return;
+
+    toggle.addEventListener('click', () => {
+        const isHidden = container.style.display === 'none';
+        container.style.display = isHidden ? 'block' : 'none';
+        toggle.classList.toggle('open', isHidden);
+    });
+
+    const seasonData = seasons.filter(s => s.season !== 0).sort((a, b) => b.season - a.season);
+
+    const arrowSvg = '<svg class="toggle-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>';
+
+    seasonData.forEach(season => {
+        const header = document.createElement('h4');
+        header.innerHTML = `Season ${season.season}${arrowSvg}`;
+        container.appendChild(header);
+
+        const seasonDiv = document.createElement('div');
+        seasonDiv.style.display = 'none';
+        container.appendChild(seasonDiv);
+
+        header.addEventListener('click', () => {
+            const isHidden = seasonDiv.style.display === 'none';
+            seasonDiv.style.display = isHidden ? 'block' : 'none';
+            header.classList.toggle('open', isHidden);
+        });
+
+        season.sets.forEach(set => {
+            const matKey = set.setMat
+                .toLowerCase()
+                .replace(/'s/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/[^a-z0-9-]/g, '');
+            const matInfo = materials[season.season] && materials[season.season].mats[matKey];
+            if (!matInfo) return;
+
+            const matDiv = document.createElement('div');
+            matDiv.className = `my-material ${matKey}`;
+
+            const img = document.createElement('img');
+            img.src = matInfo.img;
+            matDiv.appendChild(img);
+
+            const inner = document.createElement('div');
+            const span = document.createElement('span');
+            span.textContent = matInfo["Original-name"] || set.setMat;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'numeric-input';
+            input.id = `my-${matKey}`;
+            input.name = `my-${matKey}`;
+            input.placeholder = 'value';
+            input.pattern = '[0-9]*';
+            input.inputMode = 'numeric';
+            inner.appendChild(span);
+            inner.appendChild(input);
+            matDiv.appendChild(inner);
+
+            seasonDiv.appendChild(matDiv);
+        });
+    });
+
+    const infoHeader = document.createElement('div');
+    infoHeader.className = 'section-title';
+    const infoInner = document.createElement('div');
+    infoInner.className = 'checkbox-header';
+    const infoSpan = document.createElement('span');
+    infoSpan.textContent = 'Gear materials at levels';
+    const infoBtn = document.createElement('button');
+    infoBtn.id = 'gearLevelsInfoBtn';
+    infoBtn.className = 'info-btn';
+    infoBtn.setAttribute('aria-label', 'Gear materials info');
+    infoBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>';
+    infoInner.appendChild(infoSpan);
+    infoInner.appendChild(infoBtn);
+    infoHeader.appendChild(infoInner);
+    container.appendChild(infoHeader);
+
+    const infoPopup = document.createElement('div');
+    infoPopup.id = 'gearLevelsInfoPopup';
+    infoPopup.className = 'info-overlay';
+    infoPopup.innerHTML = '<div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path></svg></button><p>Select the levels where gear set materials may be used. Other levels craft only with basic materials, allowing you to save gear materials for later levels.</p></div>';
+    container.appendChild(infoPopup);
+
+    const levelWrap = document.createElement('div');
+    levelWrap.className = 'level-select-container';
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'level-dropdown';
+    const select = document.createElement('select');
+    select.id = 'gearMaterialLevels';
+    select.multiple = true;
+    select.style.display = 'none';
+
+    [5,10,15,20,25].forEach(l => {
+        const optionDiv = document.createElement('div');
+        optionDiv.dataset.value = l;
+        optionDiv.textContent = l;
+        if (![5,10,15].includes(l)) {
+            optionDiv.classList.add('selected');
+        }
+        dropdown.appendChild(optionDiv);
+
+        const opt = document.createElement('option');
+        opt.value = l;
+        opt.textContent = l;
+        if (![5,10,15].includes(l)) {
+            opt.selected = true;
+        }
+        select.appendChild(opt);
+    });
+
+    dropdown.addEventListener('click', e => {
+        const value = e.target.dataset.value;
+        if (!value) return;
+        e.target.classList.toggle('selected');
+        Array.from(select.options).forEach(opt => {
+            if (opt.value === value) {
+                opt.selected = !opt.selected;
+            }
+        });
+    });
+
+    levelWrap.appendChild(dropdown);
+    levelWrap.appendChild(select);
+    container.appendChild(levelWrap);
+}
