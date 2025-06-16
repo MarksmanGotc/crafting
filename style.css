@@ -127,6 +127,19 @@ footer div {
     background: none;
     width: max-content;
 }
+#copyLink {
+    position: absolute;
+    top: -32px;
+    right: 40px;
+    cursor: pointer;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 10px 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 4px;
+}
 #results .items {
     margin-bottom: 10px;
     display: flex;
