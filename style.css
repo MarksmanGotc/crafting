@@ -24,16 +24,171 @@ body {
     overflow-x: hidden;
 }
 
-.warlord-toggle label {
-    top: 1px;
-    left: 25px;
-    padding: 0;
-    user-select: none;
+[class^="leveltmp"] {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 0px;
+    column-gap: 10px;
 }
 
+.leveltmp1 {
+    margin-top: 15px;
+}
+.temps {
+    padding: 0;
+    height: 34px;
+    background: transparent;
+    padding: 7px 10px;
+    border: 1px solid var(--primary-color);
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+select#scaleSelect {
+	width: 100%;
+	margin-top: 10px;
+}
+select#scaleSelect option {
+	text-align: center;
+}
+.material-choices .materials-list {
+	margin-top: 10px;
+}
 .warlord-toggle {
     position: relative;
     margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.warlord-toggle ~ p.odds-info {
+    margin-bottom: -5px;
+    font-size: 15px;
+}
+.warlord-toggle ~ p.odds-info span {
+    display: block;
+    font-size: 13px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.section-title:before {
+    content: "";
+    background: var(--button-bg-hover);
+    width: 100%;
+    position: absolute;
+    height: 2px;
+}
+
+.checkbox-header {
+    background: #fff;
+    z-index: 1;
+    display: flex;
+}
+
+.items-header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    align-items: center;
+    margin-top: 8px;
+}
+.items-header h4 {
+    margin: 0;
+}
+.items-header button#itemsInfoBtn {
+    position: absolute;
+    right: 0;
+    height: 20px;
+    width: 20px;
+    margin: 0 6px 0 0;
+}
+
+.items-header button#itemsInfoBtn svg:hover {
+    transform: rotate(0deg);
+    fill: var(--button-bg-hover);
+}
+
+.items-header button#itemsInfoBtn svg {
+    fill: var(--primary-color);
+}
+
+.section-title span {
+    position: relative;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.info-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 5px;
+    margin-top: 0px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    fill: var(--primary-color);
+    width: 16px;
+    height: 16px;
+}
+
+.info-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.info-overlay .info-content {
+    background: #fff;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    box-shadow: 0px 4px 8px 0px var(--shadow-color);
+    padding: 20px;
+    max-width: 400px;
+    position: relative;
+    font-size: 14px;
+}
+
+.info-overlay .close-popup {
+    position: absolute;
+    background: none;
+    cursor: pointer;
+    top: 0px;
+    right: 0;
+    float: right;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    z-index: 10;
+}
+
+button.info-btn:hover {
+    background: initial;
+}
+
+.info-overlay .close-popup svg {
+	max-width: 20px;
+	fill: var(--button-bg-hover);
+	height: 20px;
+}
+
+.info-overlay .close-popup:hover svg {
+    transform: rotate(90deg);
+    transition: 0.2s;
 }
 
 .wrapper {
@@ -65,7 +220,7 @@ input[type="number"] {
     border-radius: 4px;
 }
 
-button, .generate-480 {
+button {
     background-color: var(--primary-color);
     color: var(
     --button-text-color);
@@ -78,7 +233,7 @@ button, .generate-480 {
     margin-top: 10px;
     color: var(--secondary-color);
     width: 100%;
-    display: inline-block;
+    display: block;
     margin-right: 10px;
     font-size: 12px;
 }
@@ -124,21 +279,37 @@ footer div {
     top: -32px;
     right: -22px;
     cursor: pointer;
-    background: none;
-    width: max-content;
+        background: none;
+        width: max-content;
 }
 #copyLink {
-    position: absolute;
-    top: -32px;
-    right: 40px;
+    font-size: 14px;
     cursor: pointer;
-    background: var(--primary-color);
-    color: var(--secondary-color);
+    background: initial;
+    color: var(--primary-color);
     border: none;
-    padding: 10px 15px;
-    text-transform: uppercase;
+    display: flex;
     font-weight: bold;
-    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+}
+#results #copyLink svg {
+    fill: var(--primary-color);
+    padding-left: 10px;
+    height: 18px;
+}
+#results #copyLink svg:hover {
+	transform: rotate(0deg);
+	fill: initial;
+}
+div#results h3 ~ #closeResults {
+    margin: 0;
+    top: -40px;
+    right: -20px;
+}
+div#results h3 ~ #copyLink {
+    top: -40px;
+    right: 20px;
 }
 #results .items {
     margin-bottom: 10px;
@@ -182,6 +353,7 @@ footer div {
     gap: 20px; /* VÃ¤li materiaalien/itemien vÃ¤lillÃ¤ */
     justify-content: center;
     margin-bottom: 20px; /* VÃ¤li materiaaliluetteloiden ja item-luetteloiden vÃ¤lillÃ¤ */
+    align-items: stretch;
 }
 
 .material, .item {
@@ -194,11 +366,6 @@ footer div {
     width: 50px;
     height: 50px;
     margin-bottom: 5px; /* VÃ¤li kuvan ja tekstin vÃ¤lillÃ¤ */
-}
-.materials > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 #results .material {
@@ -224,27 +391,20 @@ footer div {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
-	justify-content: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .level-group > div {
     display: flex;
     flex-direction: column;
+    cursor: pointer;
     align-items: center;
-	cursor: pointer;
     flex: 1 1 20%;
     justify-content: space-between;
 }
 .level-group .opacity {
     opacity: 0.5;
-}
-
-.item-mats {
-    display: none;
-}
-
-.materials p.remaining-to-use {
-    display: none;
 }
 .items h3, h4 {
     cursor: text;
@@ -272,8 +432,32 @@ h4{
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 70px;
+    max-width: calc(100% / 6);
+    flex: 1 1 10%;
+    justify-content: space-between;
 }
+
+@media only screen and (max-width: 620px) {
+  .materials > div {
+  flex: 1 1 20%;
+  max-width: initial;
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  .materials > div {
+  flex: 1 1 25%;
+  max-width: initial;
+  }
+}
+
+@media only screen and (max-width: 325px) {
+  .materials > div {
+  flex: 1 1 30%;
+  max-width: initial;
+  }
+}
+
 
 h2 {
     margin: 0 auto;
@@ -294,19 +478,39 @@ h2 {
 #manualInput button {
     margin-right: 10px;
 }
-.materials p.name {
-    display: none;
+
+.materials p.material-name {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-color);
+    margin-bottom: 0;
+}
+.materials p.season-id {
+    text-align: center;
+    margin: 0;
+    font-style: italic;
 }
 
 .level-group p.name {
     text-align: center;
     margin-bottom: 0px;
 }
+.level-group p.set-name,
+.level-group p.season-info {
+    text-align: center;
+    margin: 0;
+	font-size: 14px;
+}
+.level-group p.season-info {
+    font-style: italic;
+    margin-bottom: 4px;
+}
+
 button.multiplier-btn {
     margin-bottom: 20px;
 }
-
-
 
 #generatebychoice {
 	position: relative;
@@ -319,23 +523,24 @@ button.multiplier-btn {
 }
 
 .materials-list img {
-    width: 50px;
-    height: 50px;
-    /* border-radius: 50%; */
+    width: 45px;
+    min-width: 45px;
+    height: 45px;
     object-fit: scale-down;
+    box-sizing: border-box;
 }
 
 .materials-list .my-material {
     display: flex;
     flex-direction: row;
     padding-bottom: 8px;
-    column-gap: 8px;
+    column-gap: 17px;
     align-items: center;
     justify-content: space-between;
 }
 
 .materials-list .my-material > div, .templateAmountWrap {
-    max-width: 195px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -367,6 +572,80 @@ button.multiplier-btn {
     color: var(--primary-color);
 }
 
+#advMaterials select {
+    padding: 7px 10px;
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    border-radius: 4px;
+    height: 31px;
+    width: 110px;
+    box-sizing: border-box;
+}
+
+#advMaterials h4 {
+	margin: 10px 0;
+	cursor: pointer;
+	color: var(--primary-color);
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	font-size: 16px;
+}
+
+.adv-toggle {
+    margin-top: 35px;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+
+.toggle-arrow {
+    width: 0.8em;
+    height: 0.8em;
+    margin-left: 5px;
+    transition: transform 0.2s ease;
+    fill: currentColor;
+}
+
+.adv-toggle.open .toggle-arrow,
+#advMaterials h4.open .toggle-arrow {
+    transform: rotate(180deg);
+}
+
+
+.level-select-container {
+    margin-top: 10px;
+}
+.level-select-container p{
+	margin-bottom: 5px;
+}
+
+.level-dropdown {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+.level-dropdown div {
+    padding: 5px 10px;
+    border: 1px solid #d5d5d5;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    background: #d5d5d5;
+}
+
+.level-dropdown div.selected {
+    background: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+}
 
 #generatebychoice h4 {
     margin-bottom: 20px;
@@ -382,7 +661,6 @@ button.multiplier-btn {
 }
 
 .templateAmountWrap {
-    margin: 10px 0px;
     width: 100%;
     max-width: 100%;!;
 }
@@ -408,6 +686,14 @@ button.multiplier-btn {
 
 .missing-input {
     animation: blink-animation 3s ease-in-out infinite;
+}
+
+.item-mats {
+    display: none;
+}
+
+.materials p.remaining-to-use {
+    display: none;
 }
 
 .spinner-wrap {
@@ -505,6 +791,7 @@ button.multiplier-btn {
     position: absolute;
     top: -18px;
     right: -18px;
+    width: 40px;
 }
 
 .gift button.close:hover svg {
@@ -566,4 +853,80 @@ button.multiplier-btn {
 	footer div {
 		width: max-content;
 	}
+}
+
+/* Custom animated checkbox */
+.checkbox-wrapper-30 .checkbox {
+  --bg: #fff;
+  --brdr: #d1d6ee;
+  --brdr-actv: #1e2235;
+  --brdr-hovr: #bbc1e1;
+  --size: 1;
+  --dur: calc((var(--size, 2)/2) * 1s);
+  display: inline-block;
+  width: calc(var(--size, 1) * 20px);
+  position: relative;
+}
+.checkbox-wrapper-30 .checkbox:after {
+  content: "";
+  width: 100%;
+  padding-top: 100%;
+  display: block;
+}
+.checkbox-wrapper-30 .checkbox > * {
+  position: absolute;
+}
+.checkbox-wrapper-30 .checkbox input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  background-color: var(--bg);
+  border-radius: calc(var(--size, 1) * 4px);
+  border: calc(var(--newBrdr, var(--size, 1)) * 1px) solid;
+  color: var(--newBrdrClr, var(--brdr));
+  outline: none;
+  margin: 0;
+  padding: 0;
+  transition: all calc(var(--dur) / 3) linear;
+}
+.checkbox-wrapper-30 .checkbox input:hover,
+.checkbox-wrapper-30 .checkbox input:checked {
+  --newBrdr: calc(var(--size, 1) * 2);
+}
+.checkbox-wrapper-30 .checkbox input:hover {
+  --newBrdrClr: var(--brdr-hovr);
+}
+.checkbox-wrapper-30 .checkbox input:checked {
+  --newBrdrClr: var();
+  --newBrdrClr: var(--primary-color);
+}
+.checkbox-wrapper-30 .checkbox input:checked + svg {
+  --dashArray: 16 93;
+  --dashOffset: 109;
+}
+.checkbox-wrapper-30 .checkbox svg {
+  fill: none;
+  left: 0;
+  pointer-events: none;
+  stroke: var(--stroke, var(--border-active));
+  stroke-dasharray: var(--dashArray, 93);
+  stroke-dashoffset: var(--dashOffset, 94);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px;
+  top: 0;
+  transition: stroke-dasharray var(--dur), stroke-dashoffset var(--dur);
+}
+.checkbox-wrapper-30 .checkbox svg,
+.checkbox-wrapper-30 .checkbox input {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.checkbox-wrapper-30 label {
+  cursor: pointer;
+  margin-left: 8px;
+  user-select: none;
+  font-size: 14px;
 }
