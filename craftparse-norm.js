@@ -164,21 +164,6 @@ function createCloseButton(parentElement) {
     parentElement.appendChild(closeButton);
 }
 
-function createShareButton(parentElement, templates) {
-    const shareButton = document.createElement('button');
-    shareButton.id = 'copyLink';
-    shareButton.textContent = 'Copy';
-    shareButton.addEventListener('click', () => {
-        const encoded = btoa(encodeURIComponent(JSON.stringify(templates)));
-        const url = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-        navigator.clipboard.writeText(url).then(() => {
-            shareButton.textContent = 'Copied!';
-            setTimeout(() => shareButton.textContent = 'Copy', 2000);
-        });
-    });
-    parentElement.appendChild(shareButton);
-}
-
 function createLevelStructure() {
     const manualInputDiv = document.getElementById('manualInput');
     //manualInputDiv.style.display = 'block'; // Aseta näkyväksi
@@ -456,16 +441,7 @@ function calculateMaterials() {
         }
     });
 
-    const shareTemplates = { "1": {}, "5": {}, "10": {} };
-    Object.entries(templateCounts).forEach(([lvl, arr]) => {
-        shareTemplates[lvl] = {};
-        arr.forEach(t => {
-            shareTemplates[lvl][t.name] = t.amount;
-        });
-    });
 
-    createShareButton(resultsDiv, shareTemplates);
-    // Lisää sulje-nappi
     createCloseButton(resultsDiv);
     showResults();
 }
