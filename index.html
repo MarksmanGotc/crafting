@@ -12,10 +12,16 @@
 	<meta property="og:description" content="Discover a versatile tool designed to optimize your material management and production planning. This website offers an intuitive solution for handling materials, providing real-time calculations and plans that support effective decision-making and resource management">
 	<meta property="og:site_name" content="Crafting calculator">
 	<link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="style.css?v=2">
-    <script src="products.js?v=2"></script>
-    <script src="materials.js?v=2"></script>
-    <script defer src="craftparse-norm.js?v=2"></script>
+    <link rel="stylesheet" href="style.css?v=1.115">
+	<script src="seasons/season0.js"></script>
+	<script src="seasons/season8.js"></script>
+	<script src="seasons/season9.js"></script>
+	<script src="seasons/season10.js"></script>
+	<script src="seasons/season11.js"></script>
+	<script src="seasons/season12.js"></script>
+    <script src="products.js"></script>
+    <script src="materials.js"></script>
+    <script defer src="craftparse.js?v=1.111"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-3KDS4M7C1F"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
@@ -36,17 +42,171 @@
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M190.5 68.8L225.3 128l-1.3 0-72 0c-22.1 0-40-17.9-40-40s17.9-40 40-40l2.2 0c14.9 0 28.8 7.9 36.3 20.8zM64 88c0 14.4 3.5 28 9.6 40L32 128c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l448 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-41.6 0c6.1-12 9.6-25.6 9.6-40c0-48.6-39.4-88-88-88l-2.2 0c-31.9 0-61.5 16.9-77.7 44.4L256 85.5l-24.1-41C215.7 16.9 186.1 0 154.2 0L152 0C103.4 0 64 39.4 64 88zm336 0c0 22.1-17.9 40-40 40l-72 0-1.3 0 34.8-59.2C329.1 55.9 342.9 48 357.8 48l2.2 0c22.1 0 40 17.9 40 40zM32 288l0 176c0 26.5 21.5 48 48 48l144 0 0-224L32 288zM288 512l144 0c26.5 0 48-21.5 48-48l0-176-192 0 0 224z"/></svg>
 				</button>
 			</div>
-			<div id="yourMaterials" class="material-choices">
-				<h4>Your materials:</h4>
-				<div class="materials-list"></div>
+                        <div class="section-title"><div class="checkbox-header"><span>Scale</span><button id="scaleInfoBtn" class="info-btn" aria-label="Scale info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+                                </button></div></div>
+                        <div id="scaleInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p><b>Normal (1:1)</b> This means materials are entered exactly as they are. For example, if you have 12,500,000 units of a material, you need to enter 12,500,000.<br><br><b>Million Scale (1:1,000,000)</b> In this mode, material amounts are scaled by one million. This means entering 10 will be interpreted as 10,000,000. It’s a convenient way to work with large numbers without typing all the zeros. <br><br><i>The selected scale applies to both Basic and Gear materials.</i></p></div></div>
+                        <select id="scaleSelect" class="temps">
+                                <option value="1">Normal (1:1)</option>
+                                <option value="1000000">Million Scale (1:1,000,000)</option>
+                        </select>
+
+                        <div id="yourMaterials" class="material-choices">
+                                <div class="section-title"><div class="checkbox-header"><span>Your materials</span></div></div>
+                                <div class="materials-list">
+					<div class="my-material black-iron"><img src="materials/icon_crafting_blackiron.webp"><div><span>Black Iron</span><input type="text" class="numeric-input" id="my-black-iron" name="my-black-iron" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material copper-bar"><img src="materials/icon_crafting_copper_bar.webp"><div><span>Copper bar</span><input type="text" class="numeric-input" id="my-copper-bar" name="my-copper-bar" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material dragonglass"><img src="materials/icon_crafting_dragonglass.webp"><div><span>Dragonglass</span><input type="text" class="numeric-input" id="my-dragonglass" name="my-dragonglass" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material goldenheart-wood"><img src="materials/icon_crafting_goldenheart_wood.webp"><div><span>Goldenheart wood</span><input type="text" class="numeric-input" id="my-goldenheart-wood" name="my-goldenheart-wood" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material hide"><img src="materials/icon_crafting_hide.webp"><div><span>Hide</span><input type="text" class="numeric-input" id="my-hide" name="my-hide" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material ironwood"><img src="materials/icon_crafting_ironwood.webp"><div><span>Ironwood</span><input type="text" class="numeric-input" id="my-ironwood" name="my-ironwood" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material kingswood-oak"><img src="materials/icon_crafting_kingswood_oak.webp"><div><span>Kingswood oak</span><input type="text" class="numeric-input" id="my-kingswood-oak" name="my-kingswood-oak" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material leather-straps"><img src="materials/icon_crafting_leather_straps.webp"><div><span>Leather straps</span><input type="text" class="numeric-input" id="my-leather-straps" name="my-leather-straps" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material milk-of-the-poppy"><img src="materials/icon_crafting_milk_of_the_poppy.webp"><div><span>Milk of the poppy</span><input type="text" class="numeric-input" id="my-milk-of-the-poppy" name="my-milk-of-the-poppy" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material silk"><img src="materials/icon_crafting_silk.webp"><div><span>Silk</span><input type="text" class="numeric-input" id="my-silk" name="my-silk" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material weirwood"><img src="materials/icon_crafting_weir_wood.webp"><div><span>Weirwood</span><input type="text" class="numeric-input" id="my-weirwood" name="my-weirwood" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="my-material wildfire"><img src="materials/icon_crafting_wild_fire.webp"><div><span>Wildfire</span><input type="text" class="numeric-input" id="my-wildfire" name="my-wildfire" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+				</div>
 			</div>
+			
 
 			<!-- Generoitavien itemien määrä -->
-			<div class="templateAmountWrap">
-				<label for="templateAmount">Enter number of templates</label>
-				<input type="number" id="templateAmount" placeholder="120">
+                        <div class="section-title"><div class="checkbox-header"><span>Enter number of templates</span></div></div>
+			<div class="leveltmp1">
+				<div class="templateAmountWrap">
+					<label for="templateAmount1">level 1</label>
+					<input type="number" id="templateAmount1" placeholder="120" min="0">
+				</div>
+				<select name="temp1" id="temp1" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite">Exquisite</option>
+					<option value="epic">Epic</option>
+					<option value="legendary" selected>Legendary</option>
+				</select>
 			</div>
-
+			<div class="leveltmp5">
+				<div class="templateAmountWrap">
+					<label for="templateAmount5">level 5</label>
+					<input type="number" id="templateAmount5" placeholder="120" min="0">
+				</div>
+				<select name="temp5" id="temp5" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite">Exquisite</option>
+					<option value="epic">Epic</option>
+					<option value="legendary" selected>Legendary</option>
+				</select>
+			</div>
+			<div class="leveltmp10">
+				<div class="templateAmountWrap">
+					<label for="templateAmount10">level 10</label>
+					<input type="number" id="templateAmount10" placeholder="120" min="0">
+				</div>
+				<select name="temp10" id="temp10" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite">Exquisite</option>
+					<option value="epic">Epic</option>
+					<option value="legendary" selected>Legendary</option>
+				</select>
+			</div>
+			<div class="leveltmp15">
+				<div class="templateAmountWrap">
+					<label for="templateAmount15">level 15</label>
+					<input type="number" id="templateAmount15" placeholder="120" min="0">
+				</div>
+				<select name="temp15" id="temp15" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite" selected>Exquisite</option>
+					<option value="epic">Epic</option>
+					<option value="legendary">Legendary</option>
+				</select>
+			</div>
+			<div class="leveltmp20">
+				<div class="templateAmountWrap">
+					<label for="templateAmount20">level 20</label>
+					<input type="number" id="templateAmount20" placeholder="120" min="0">
+				</div>
+				<select name="temp20" id="temp20" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite" selected>Exquisite</option>
+					<option value="epic">Epic</option>
+					<option value="legendary">Legendary</option>
+				</select>
+			</div>
+			<div class="leveltmp25">
+				<div class="templateAmountWrap">
+					<label for="templateAmount25">level 25</label>
+					<input type="number" id="templateAmount25" placeholder="120" min="0">
+				</div>
+				<select name="temp25" id="temp25" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite" selected>Exquisite</option>
+					<option value="epic">Epic</option>
+					<option value="legendary">Legendary</option>
+				</select>
+			</div>
+			
+                        <div class="section-title"><div class="checkbox-header"><span>Ceremonial Targaryen Warlord</span><button id="ctwInfoBtn" class="info-btn" aria-label="CTW info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+                        </button></div></div>
+                        <div id="ctwInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+					<path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+				</svg></button><p><b>Only for Level 1</b>: Level 1 templates will exclusively use Ceremonial Targ items. This is more material-efficient as these items are cheaper to produce.<br><br>
+			<b>Use when needed</b>: Ceremonial Targaryen Warlord items can be used at any level when material constraints make it beneficial. This does not force their use, but allows it as needed.</p></div></div>
+                        <div class="warlord-toggle checkbox-wrapper-30">
+                            <span class="checkbox">
+                                <input type="checkbox" id="level1OnlyWarlords" checked>
+                                <svg><use xlink:href="#checkbox-30"></use></svg>
+                            </span>
+                            <label for="level1OnlyWarlords">Only for Level 1</label>
+                        </div>
+                        <div class="warlord-toggle checkbox-wrapper-30">
+                            <span class="checkbox">
+                                <input type="checkbox" id="includeWarlords">
+                                <svg><use xlink:href="#checkbox-30"></use></svg>
+                            </span>
+                            <label for="includeWarlords">Use when needed</label>
+                        </div>
+                        <div class="section-title"><div class="checkbox-header"><span>Odds</span><button id="oddsInfoBtn" class="info-btn" aria-label="Odds info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+                        </button></div></div>
+                        <div id="oddsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+					<path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+				</svg></button><p><b>Odds</b>: There are three tiers. The normal level is always included by default. You can choose to include the lower levels based on your preferences. Odds affect the Season 0 and Ceremonial Targaryen Warlord items, and only apply at levels 15, 20, and 25.</p></div></div>
+                        <div class="warlord-toggle checkbox-wrapper-30">
+                            <span class="checkbox">
+                                <input type="checkbox" id="includeLowOdds">
+                                <svg><use xlink:href="#checkbox-30"></use></svg>
+                            </span>
+                            <label for="includeLowOdds">Include low odds items</label>
+                        </div>
+                        <div class="warlord-toggle checkbox-wrapper-30">
+                            <span class="checkbox">
+                                <input type="checkbox" id="includeMediumOdds">
+                                <svg><use xlink:href="#checkbox-30"></use></svg>
+                            </span>
+                            <label for="includeMediumOdds">Include medium odds items</label>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                            <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                            </symbol>
+                        </svg>
+                        <p id="toggleAdvMaterials" class="adv-toggle">Also use gear materials
+                            <svg class="toggle-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                        </p>
+			<div id="advMaterials" class="materials-list" style="display:none;"></div>
 			<button id="calculateWithPreferences">Calculate</button>
 		</div>
         <div id="results" style="display: none;"></div>
