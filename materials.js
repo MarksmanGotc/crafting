@@ -172,7 +172,7 @@ const materials = {
 			},
 			"cloth-of-silver": {
 				"img": "materials/season4/cloth-of-silver.png",
-				"Original-name": "Cloth of Silver"
+				"Original-name": "Cloth-of-Silver"
 			},
 			"composite-cloth": {
 				"img": "materials/season4/composite-cloth.png",
