@@ -1978,9 +1978,9 @@ const season4 = {
 			  "level": 10,
 			  "img": "item/season4/usurper/head.png",
 			  "materials": {
-				"stag-hide": 10,
-				"ironwood": 10,
-				"milk-of-the-poppy": 10
+				"stag-hide": 20,
+				"ironwood": 20,
+				"milk-of-the-poppy": 20
 			  }
 			},
 			{
@@ -1988,9 +1988,9 @@ const season4 = {
 			  "level": 10,
 			  "img": "item/season4/usurper/chest.png",
 			  "materials": {
-				"stag-hide": 10,
-				"weirwood": 10,
-				"copper-bar": 10
+				"stag-hide": 20,
+				"weirwood": 20,
+				"copper-bar": 20
 			  }
 			},
 			{
@@ -1998,9 +1998,9 @@ const season4 = {
 			  "level": 10,
 			  "img": "item/season4/usurper/pants.png",
 			  "materials": {
-				"stag-hide": 10,
-				"dragonglass": 10,
-				"silk": 10
+				"stag-hide": 20,
+				"dragonglass": 20,
+				"silk": 20
 			  }
 			},
 			{
@@ -2008,9 +2008,9 @@ const season4 = {
 			  "level": 10,
 			  "img": "item/season4/usurper/boots.png",
 			  "materials": {
-				"stag-hide": 10,
-				"wildfire": 10,
-				"kingswood-oak": 10
+				"stag-hide": 20,
+				"wildfire": 20,
+				"kingswood-oak": 20
 			  }
 			},
 			{
@@ -2018,9 +2018,9 @@ const season4 = {
 			  "level": 10,
 			  "img": "item/season4/usurper/ring.png",
 			  "materials": {
-				"stag-hide": 10,
-				"goldenheart-wood": 10,
-				"hide": 10
+				"stag-hide": 20,
+				"goldenheart-wood": 20,
+				"hide": 20
 			  }
 			},
 			{
@@ -2028,9 +2028,9 @@ const season4 = {
 			  "level": 10,
 			  "img": "item/season4/usurper/weapon.png",
 			  "materials": {
-				"stag-hide": 10,
-				"leather-straps": 10,
-				"black-iron": 10
+				"stag-hide": 20,
+				"leather-straps": 20,
+				"black-iron": 20
 			  }
 			},
 			{
