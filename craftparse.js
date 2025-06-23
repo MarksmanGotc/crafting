@@ -891,13 +891,15 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
         if (!allowedGearLevels.includes(level)) {
             levelProducts = levelProducts.filter(p => p.season == 0);
         }
+        const multiplier = qualityMultipliers[level] || 1;
+        const isLegendary = multiplier >= 1024;
         levelProducts = levelProducts.filter(p => {
-            if (p.season !== 0 || !p.odds) return true;
+            const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
+            if (!applyOdds || !p.odds) return true;
             if (p.odds === 'low') return includeLowOdds;
             if (p.odds === 'medium') return includeMediumOdds;
             return true;
         });
-        const multiplier = qualityMultipliers[level] || 1;
         levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
         if (levelProducts.length === 0) {
             failed.add(level);
@@ -920,13 +922,15 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
             if (!allowedGearLevels.includes(level)) {
                 levelProducts = levelProducts.filter(p => p.season == 0);
             }
+            const multiplier = qualityMultipliers[level] || 1;
+            const isLegendary = multiplier >= 1024;
             levelProducts = levelProducts.filter(p => {
-                if (p.season !== 0 || !p.odds) return true;
+                const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
+                if (!applyOdds || !p.odds) return true;
                 if (p.odds === 'low') return includeLowOdds;
                 if (p.odds === 'medium') return includeMediumOdds;
                 return true;
             });
-            const multiplier = qualityMultipliers[level] || 1;
             levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
             const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials, multiplier);
 

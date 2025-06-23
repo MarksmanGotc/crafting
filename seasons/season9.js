@@ -106,7 +106,7 @@ const season9 = {
 			  "img": "item/season9/thenn-tribal/boots.png"
 			},
 			{
-			  "name": "Macrame Ring",
+			  "name": "Bronze Ring",
 			  "level": 10,
 			  "materials": {
 				"bronze-discs": 20,
@@ -166,7 +166,7 @@ const season9 = {
 			  "img": "item/season9/thenn-tribal/boots.png"
 			},
 			{
-			  "name": "Macrame Ring",
+			  "name": "Bronze Ring",
 			  "level": 15,
 			  "materials": {
 				"bronze-discs": 120,
@@ -230,7 +230,7 @@ const season9 = {
 			  "img": "item/season9/thenn-tribal/boots.png"
 			},
 			{
-			  "name": "Macrame Ring",
+			  "name": "Bronze Ring",
 			  "level": 20,
 			  "materials": {
 				"bronze-discs": 400,
@@ -296,7 +296,7 @@ const season9 = {
 			  "img": "item/season9/thenn-tribal/boots.png"
 			},
 			{
-			  "name": "Macrame Ring",
+			  "name": "Bronze Ring",
 			  "level": 25,
 			  "materials": {
 				"bronze-discs": 1200,
@@ -1059,7 +1059,7 @@ const season9 = {
 			  "img": "item/season9/chainbreaker/pants.png"
 			},
 			{
-			  "name": "Cuffed Boots",
+			  "name": "Wrapped Boots",
 			  "level": 10,
 			  "materials": {
 				"liberator-silk": 20,
@@ -1120,7 +1120,7 @@ const season9 = {
 			  "img": "item/season9/chainbreaker/pants.png"
 			},
 			{
-			  "name": "Cuffed Boots",
+			  "name": "Wrapped Boots",
 			  "level": 15,
 			  "materials": {
 				"liberator-silk": 120,
@@ -1184,7 +1184,7 @@ const season9 = {
 			  "img": "item/season9/chainbreaker/pants.png"
 			},
 			{
-			  "name": "Cuffed Boots",
+			  "name": "Wrapped Boots",
 			  "level": 20,
 			  "materials": {
 				"liberator-silk": 400,
@@ -1251,7 +1251,7 @@ const season9 = {
 			  "img": "item/season9/chainbreaker/pants.png"
 			},
 			{
-			  "name": "Cuffed Boots",
+			  "name": "Wrapped Boots",
 			  "level": 25,
 			  "materials": {
 				"liberator-silk": 1200,
