@@ -701,7 +701,6 @@ const season7 = {
 			  },
 			  "img": "item/season7/winter-survivor/weapon.png"
 			},
-
 			{
 			  "name": "Iron Crest",
 			  "level": 10,
@@ -762,7 +761,6 @@ const season7 = {
 			  },
 			  "img": "item/season7/winter-survivor/weapon.png"
 			},
-
 			{
 			  "name": "Iron Crest",
 			  "level": 15,
@@ -823,7 +821,6 @@ const season7 = {
 			  },
 			  "img": "item/season7/winter-survivor/weapon.png"
 			},
-
 			{
 			  "name": "Iron Crest",
 			  "level": 20,
@@ -890,7 +887,6 @@ const season7 = {
 			  },
 			  "img": "item/season7/winter-survivor/weapon.png"
 			},
-
 			{
 			  "name": "Iron Crest",
 			  "level": 25,
@@ -1921,66 +1917,6 @@ const season7 = {
 			  "name": "Spotless Helm",
 			  "level": 5,
 			  "materials": {
-				"untarnished-leather": 5,
-				"copper-bar": 5,
-				"silk": 5
-			  },
-			  "img": "item/season7/fledgling-squire/head.png"
-			},
-			{
-			  "name": "Padded Jerkin",
-			  "level": 5,
-			  "materials": {
-				"untarnished-leather": 5,
-				"milk-of-the-poppy": 5,
-				"hide": 5
-			  },
-			  "img": "item/season7/fledgling-squire/chest.png"
-			},
-			{
-			  "name": "Padded Trousers",
-			  "level": 5,
-			  "materials": {
-				"untarnished-leather": 5,
-				"black-iron": 5,
-				"wildfire": 5
-			  },
-			  "img": "item/season7/fledgling-squire/pants.png"
-			},
-			{
-			  "name": "Pristine Boots",
-			  "level": 5,
-			  "materials": {
-				"untarnished-leather": 5,
-				"goldenheart-wood": 5,
-				"leather-straps": 5
-			  },
-			  "img": "item/season7/fledgling-squire/boots.png"
-			},
-			{
-			  "name": "Blade Ring",
-			  "level": 5,
-			  "materials": {
-				"untarnished-leather": 5,
-				"weirwood": 5,
-				"copper-bar": 5
-			  },
-			  "img": "item/season7/fledgling-squire/ring.png"
-			},
-			{
-			  "name": "Immaculate Sword",
-			  "level": 5,
-			  "materials": {
-				"untarnished-leather": 5,
-				"dragonglass": 5,
-				"ironwood": 5
-			  },
-			  "img": "item/season7/fledgling-squire/weapon.png"
-			},
-			{
-			  "name": "Spotless Helm",
-			  "level": 10,
-			  "materials": {
 				"untarnished-leather": 10,
 				"copper-bar": 10,
 				"silk": 10
@@ -1989,7 +1925,7 @@ const season7 = {
 			},
 			{
 			  "name": "Padded Jerkin",
-			  "level": 10,
+			  "level": 5,
 			  "materials": {
 				"untarnished-leather": 10,
 				"milk-of-the-poppy": 10,
@@ -1999,7 +1935,7 @@ const season7 = {
 			},
 			{
 			  "name": "Padded Trousers",
-			  "level": 10,
+			  "level": 5,
 			  "materials": {
 				"untarnished-leather": 10,
 				"black-iron": 10,
@@ -2009,7 +1945,7 @@ const season7 = {
 			},
 			{
 			  "name": "Pristine Boots",
-			  "level": 10,
+			  "level": 5,
 			  "materials": {
 				"untarnished-leather": 10,
 				"goldenheart-wood": 10,
@@ -2019,7 +1955,7 @@ const season7 = {
 			},
 			{
 			  "name": "Blade Ring",
-			  "level": 10,
+			  "level": 5,
 			  "materials": {
 				"untarnished-leather": 10,
 				"weirwood": 10,
@@ -2029,7 +1965,7 @@ const season7 = {
 			},
 			{
 			  "name": "Immaculate Sword",
-			  "level": 10,
+			  "level": 5,
 			  "materials": {
 				"untarnished-leather": 10,
 				"dragonglass": 10,
@@ -2039,11 +1975,71 @@ const season7 = {
 			},
 			{
 			  "name": "Spotless Helm",
+			  "level": 10,
+			  "materials": {
+				"untarnished-leather": 20,
+				"copper-bar": 20,
+				"silk": 20
+			  },
+			  "img": "item/season7/fledgling-squire/head.png"
+			},
+			{
+			  "name": "Padded Jerkin",
+			  "level": 10,
+			  "materials": {
+				"untarnished-leather": 20,
+				"milk-of-the-poppy": 20,
+				"hide": 20
+			  },
+			  "img": "item/season7/fledgling-squire/chest.png"
+			},
+			{
+			  "name": "Padded Trousers",
+			  "level": 10,
+			  "materials": {
+				"untarnished-leather": 20,
+				"black-iron": 20,
+				"wildfire": 20
+			  },
+			  "img": "item/season7/fledgling-squire/pants.png"
+			},
+			{
+			  "name": "Pristine Boots",
+			  "level": 10,
+			  "materials": {
+				"untarnished-leather": 20,
+				"goldenheart-wood": 20,
+				"leather-straps": 20
+			  },
+			  "img": "item/season7/fledgling-squire/boots.png"
+			},
+			{
+			  "name": "Blade Ring",
+			  "level": 10,
+			  "materials": {
+				"untarnished-leather": 20,
+				"weirwood": 20,
+				"copper-bar": 20
+			  },
+			  "img": "item/season7/fledgling-squire/ring.png"
+			},
+			{
+			  "name": "Immaculate Sword",
+			  "level": 10,
+			  "materials": {
+				"untarnished-leather": 20,
+				"dragonglass": 20,
+				"ironwood": 20
+			  },
+			  "img": "item/season7/fledgling-squire/weapon.png"
+			},
+			{
+			  "name": "Spotless Helm",
 			  "level": 15,
 			  "materials": {
-				"untarnished-leather": 15,
-				"copper-bar": 15,
-				"silk": 15
+				"untarnished-leather": 120,
+				"copper-bar": 120,
+				"silk": 120
 			  },
 			  "img": "item/season7/fledgling-squire/head.png"
 			},
@@ -2051,9 +2047,9 @@ const season7 = {
 			  "name": "Padded Jerkin",
 			  "level": 15,
 			  "materials": {
-				"untarnished-leather": 15,
-				"milk-of-the-poppy": 15,
-				"hide": 15
+				"untarnished-leather": 120,
+				"milk-of-the-poppy": 120,
+				"hide": 120
 			  },
 			  "img": "item/season7/fledgling-squire/chest.png"
 			},
@@ -2061,9 +2057,9 @@ const season7 = {
 			  "name": "Padded Trousers",
 			  "level": 15,
 			  "materials": {
-				"untarnished-leather": 15,
-				"black-iron": 15,
-				"wildfire": 15
+				"untarnished-leather": 120,
+				"black-iron": 120,
+				"wildfire": 120
 			  },
 			  "img": "item/season7/fledgling-squire/pants.png"
 			},
@@ -2071,9 +2067,9 @@ const season7 = {
 			  "name": "Pristine Boots",
 			  "level": 15,
 			  "materials": {
-				"untarnished-leather": 15,
-				"goldenheart-wood": 15,
-				"leather-straps": 15
+				"untarnished-leather": 120,
+				"goldenheart-wood": 120,
+				"leather-straps": 120
 			  },
 			  "img": "item/season7/fledgling-squire/boots.png"
 			},
@@ -2081,9 +2077,9 @@ const season7 = {
 			  "name": "Blade Ring",
 			  "level": 15,
 			  "materials": {
-				"untarnished-leather": 15,
-				"weirwood": 15,
-				"copper-bar": 15
+				"untarnished-leather": 120,
+				"weirwood": 120,
+				"copper-bar": 120
 			  },
 			  "img": "item/season7/fledgling-squire/ring.png"
 			},
@@ -2091,9 +2087,9 @@ const season7 = {
 			  "name": "Immaculate Sword",
 			  "level": 15,
 			  "materials": {
-				"untarnished-leather": 15,
-				"dragonglass": 15,
-				"ironwood": 15
+				"untarnished-leather": 120,
+				"dragonglass": 120,
+				"ironwood": 120
 			  },
 			  "img": "item/season7/fledgling-squire/weapon.png"
 			},
