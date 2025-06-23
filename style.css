@@ -32,6 +32,12 @@ body {
     column-gap: 10px;
 }
 
+h1.calc-header {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 30px;
+}
+
 .leveltmp1 {
     margin-top: 15px;
 }
@@ -265,8 +271,16 @@ footer p {
     font-style: italic;
     color: #e5dfbc;
 }
+footer a {
+    color: #e5dfbc;
+    text-decoration: none;
+    font-style: italic;
+}
+footer a:hover {
+    text-decoration: underline;
+}
 footer div {
-    width: 600px;
+    width: 300px;
 }
 
 /* Tulosten tyyli */
@@ -849,9 +863,6 @@ button.multiplier-btn {
 @media (max-width: 600px) {
 	body {
 		min-height: initial;
-	}
-	footer div {
-		width: max-content;
 	}
 }
 
