@@ -46,8 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const data = JSON.parse(atob(shareParam));
             initialMaterials = data.initialMaterials || {};
-            renderResults(data.templates, data.materials);
             populateInputsFromShare(data);
+            // Show spinner before automatic calculation
+            document.querySelector('.spinner-wrap').classList.add('active');
+            // Automatically trigger calculation based on the populated inputs
+            calculateMaterials();
         } catch (e) {
             console.error('Invalid share data');
         }
@@ -664,12 +667,47 @@ function renderResults(templateCounts, materialCounts) {
         }
     });
 
-    const shareData = { templates: templateCounts, materials: materialCounts, initialMaterials };
+    // Prepare a lighter share payload containing only the user inputs
+    const minimalTemplates = {};
+    Object.entries(templateCounts).forEach(([lvl, items]) => {
+        minimalTemplates[lvl] = items.map(({ name, amount, setName, season, multiplier, warlord }) => ({
+            name,
+            amount,
+            setName,
+            season,
+            multiplier,
+            warlord
+        }));
+    });
+    const shareData = { templates: minimalTemplates, initialMaterials };
     const copyBtn = createCopyButton(shareData);
     generateDiv.after(copyBtn);
     copyBtn.after(itemsDiv);
     itemsDiv.after(itemsInfoPopup);
     createCloseButton(resultsDiv);
+
+    const seasonTotals = {};
+    let totalBasicMat = 0;
+    let totalAllSeason = 0;
+    Object.entries(materialCounts).forEach(([name, data]) => {
+        const season = materialToSeason[name] || 0;
+        if (season === 0) {
+            totalBasicMat += data.amount;
+        } else {
+            seasonTotals[season] = (seasonTotals[season] || 0) + data.amount;
+            totalAllSeason += data.amount;
+        }
+    });
+
+    const nf = new Intl.NumberFormat('fi-FI');
+    console.log(`Käytetty perusmateriaali: ${nf.format(totalBasicMat)}`);
+    Object.keys(seasonTotals)
+        .sort((a, b) => a - b)
+        .forEach(season => {
+            console.log(`Käytetty materiaali Season ${season}: ${nf.format(seasonTotals[season])}`);
+        });
+    console.log(`Käytetty Gear materiaali yhteensä: ${nf.format(totalAllSeason)}`);
+
     showResults();
 }
 
@@ -881,6 +919,46 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
     const includeMediumOdds = document.getElementById('includeMediumOdds')?.checked ?? true;
     const gearLevelSelect = document.getElementById('gearMaterialLevels');
     const allowedGearLevels = gearLevelSelect ? Array.from(gearLevelSelect.selectedOptions).map(o => parseInt(o.value, 10)) : [];
+
+    // Craft level 15 items first when only normal odds are allowed and
+    // no CTW or gear materials are in use at that level.
+    if (
+        templatesByLevel[15] > 0 &&
+        !includeWarlords &&
+        !includeLowOdds &&
+        !includeMediumOdds &&
+        !allowedGearLevels.includes(15)
+    ) {
+        let remaining15 = templatesByLevel[15];
+        const multiplier15 = qualityMultipliers[15] || 1;
+
+        while (remaining15 > 0) {
+            const prefs = getUserPreferences(availableMaterials);
+            let levelProducts = craftItem.products.filter(p => p.level === 15 && !p.warlord);
+            levelProducts = levelProducts.filter(p => p.season == 0);
+            levelProducts = levelProducts.filter(p => !p.odds || p.odds === 'normal');
+            levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier15);
+            const selected = selectBestAvailableProduct(
+                levelProducts,
+                prefs.mostAvailableMaterials,
+                prefs.secondMostAvailableMaterials,
+                prefs.leastAvailableMaterials,
+                availableMaterials,
+                multiplier15
+            );
+
+            if (selected && canProductBeProduced(selected, availableMaterials, multiplier15)) {
+                productionPlan[15].push({ name: selected.name, season: selected.season, setName: selected.setName, warlord: selected.warlord });
+                updateAvailableMaterials(availableMaterials, selected, multiplier15);
+                remaining15--;
+            } else {
+                failed.add(15);
+                break;
+            }
+        }
+
+        templatesByLevel[15] = 0; // Prevent further processing for level 15
+    }
 
     LEVELS.forEach(level => {
         if (templatesByLevel[level] <= 0) return;
