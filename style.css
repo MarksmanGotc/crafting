@@ -296,34 +296,10 @@ footer div {
         background: none;
         width: max-content;
 }
-#copyLink {
-    font-size: 14px;
-    cursor: pointer;
-    background: initial;
-    color: var(--primary-color);
-    border: none;
-    display: flex;
-    font-weight: bold;
-    justify-content: center;
-    align-items: center;
-}
-#results #copyLink svg {
-    fill: var(--primary-color);
-    padding-left: 10px;
-    height: 18px;
-}
-#results #copyLink svg:hover {
-	transform: rotate(0deg);
-	fill: initial;
-}
 div#results h3 ~ #closeResults {
     margin: 0;
     top: -40px;
     right: -20px;
-}
-div#results h3 ~ #copyLink {
-    top: -40px;
-    right: 20px;
 }
 #results .items {
     margin-bottom: 10px;
