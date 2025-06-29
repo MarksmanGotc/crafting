@@ -1,3 +1,4 @@
+
 let initialMaterials = {}; 
 const urlParams = new URLSearchParams(window.location.search);
 const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
@@ -24,6 +25,7 @@ const BALANCE_WEIGHT = 0.1;
 let failedLevels = [];
 let requestedTemplates = {};
 let remainingUse = {};
+let ctwMediumNotice = false;
 
 function slug(str) {
     return (str || '')
@@ -157,6 +159,65 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === templatesPopup || e.target.closest('.close-popup')) {
             templatesPopup.style.display = 'none';
         }
+    });
+
+    // Trigger calculation when pressing Enter on any input
+    document.addEventListener('keydown', e => {
+        const tag = document.activeElement.tagName;
+        if (e.key === 'Enter' && ['INPUT', 'SELECT'].includes(tag) &&
+            document.getElementById('results').style.display === 'none') {
+            const manualVisible = document.getElementById('manualInput').style.display !== 'none';
+            const choiceVisible = document.getElementById('generatebychoice').style.display !== 'none';
+            if (choiceVisible) {
+                calculateWithPreferences();
+            } else if (manualVisible) {
+                calculateMaterials();
+            }
+        }
+
+        if (e.key === 'Escape') {
+            if (document.getElementById('results').style.display === 'block') {
+                closeResults();
+            }
+            document.querySelectorAll('.info-overlay').forEach(overlay => {
+                if (overlay.style.display !== 'none') {
+                    overlay.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    // Custom tab order for template amount inputs and quality selects
+    const templateInputs = LEVELS.map(l => document.getElementById(`templateAmount${l}`)).filter(Boolean);
+    const templateSelects = LEVELS.map(l => document.getElementById(`temp${l}`)).filter(Boolean);
+
+    templateInputs.forEach((input, idx) => {
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Tab' && !e.shiftKey) {
+                e.preventDefault();
+                const next = templateInputs[idx + 1];
+                if (next) {
+                    next.focus();
+                } else if (templateSelects[0]) {
+                    templateSelects[0].focus();
+                }
+            }
+        });
+    });
+
+    templateSelects.forEach((select, idx) => {
+        select.addEventListener('keydown', e => {
+            if (e.key === 'Tab' && !e.shiftKey) {
+                e.preventDefault();
+                const next = templateSelects[idx + 1];
+                if (next) {
+                    next.focus();
+                } else {
+                    const firstMat = document.querySelector('.my-material input[type="text"]');
+                    if (firstMat) firstMat.focus();
+                }
+            }
+        });
     });
 });
 
@@ -576,6 +637,7 @@ function renderResults(templateCounts, materialCounts) {
             const levelHeader = document.createElement('h4');
             levelHeader.textContent = allSameCount ? `Level ${level}` : `Level ${level} (${new Intl.NumberFormat('en-US').format(levelItemCounts[level])} pcs)`;
 
+
             if (firstLevelHeader) {
                 const headerWrap = document.createElement('div');
                 headerWrap.className = 'items-header';
@@ -585,6 +647,13 @@ function renderResults(templateCounts, materialCounts) {
                 firstLevelHeader = false;
             } else {
                 itemsDiv.appendChild(levelHeader);
+            }
+
+            if (lvl === 20 && ctwMediumNotice) {
+                const extraInfo = document.createElement('p');
+                extraInfo.className = 'craft-extra-info';
+                extraInfo.textContent = "Medium odds items were used because otherwise no items would be generated. At level 20, Ceremonial Targaryen Warlord items are categorized as 'medium odds'.";
+                itemsDiv.appendChild(extraInfo);
             }
 
             const levelGroup = document.createElement('div');
@@ -750,7 +819,7 @@ function createMaterialImageElement(materialName, imgUrl, preference) {
     return imgElement;
 }
 
-document.getElementById('calculateWithPreferences').addEventListener('click', function() {
+function calculateWithPreferences() {
 	const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
     const templateAmountInputs = LEVELS.map(l => document.querySelector(`#templateAmount${l}`));
     let isValid = true;
@@ -865,8 +934,10 @@ document.getElementById('calculateWithPreferences').addEventListener('click', fu
 		if (calculateBtn) {
 			calculateBtn.click(); // Simuloi napin klikkausta
 		}
-	}, 0);
-});
+        }, 0);
+}
+
+document.getElementById('calculateWithPreferences').addEventListener('click', calculateWithPreferences);
 
 function gatherMaterialsFromInputs() {
     const scaleSelect = document.getElementById('scaleSelect');
@@ -924,6 +995,11 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
     const includeMediumOdds = document.getElementById('includeMediumOdds')?.checked ?? true;
     const gearLevelSelect = document.getElementById('gearMaterialLevels');
     const allowedGearLevels = gearLevelSelect ? Array.from(gearLevelSelect.selectedOptions).map(o => parseInt(o.value, 10)) : [];
+    const hasGearMaterials = Object.keys(availableMaterials).some(
+        key => (materialToSeason[key] || 0) !== 0
+    );
+    const level20Allowed = hasGearMaterials && allowedGearLevels.includes(20);
+    ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed;
 
     // Craft level 15 items first when only normal odds are allowed and
     // no CTW or gear materials are in use at that level.
@@ -980,7 +1056,7 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
             const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
             if (!applyOdds || !p.odds) return true;
             if (p.odds === 'low') return includeLowOdds;
-            if (p.odds === 'medium') return includeMediumOdds;
+            if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
             return true;
         });
         levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
@@ -1011,7 +1087,7 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
                 const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
                 if (!applyOdds || !p.odds) return true;
                 if (p.odds === 'low') return includeLowOdds;
-                if (p.odds === 'medium') return includeMediumOdds;
+                if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
                 return true;
             });
             levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
@@ -1386,7 +1462,7 @@ function initAdvMaterialSection() {
     const infoPopup = document.createElement('div');
     infoPopup.id = 'gearLevelsInfoPopup';
     infoPopup.className = 'info-overlay';
-    infoPopup.innerHTML = '<div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path></svg></button><p>Select the levels where gear set materials may be used. Other levels craft only with basic materials, allowing you to save gear materials for later levels.</p></div>';
+    infoPopup.innerHTML = '<div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path></svg></button><p>Select the levels where gear set materials may be used. Other levels craft only with basic materials, allowing you to save gear materials for later levels. Levels with a dark background are active.</p></div>';
     container.appendChild(infoPopup);
 
     const levelWrap = document.createElement('div');
