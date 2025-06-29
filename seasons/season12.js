@@ -324,6 +324,324 @@ const season12 = {
 		  ]
 		},
 		{
+		  "setName": "Dragonflame Warrior's",
+		  "setMat": "Combusted Leather",
+		  "products": [
+			{
+			  "name": "Plated Helm",
+			  "level": 5,
+			  "materials": {
+				"combusted-leather": 10,
+				"wildfire": 10,
+				"kingswood-oak": 10
+			  },
+			  "img": "item/season12/dragonflame-warrior/head.png"
+			},
+			{
+			  "name": "Hardened Cuirass",
+			  "level": 5,
+			  "materials": {
+				"combusted-leather": 10,
+				"black-iron": 10,
+				"silk": 10
+			  },
+			  "img": "item/season12/dragonflame-warrior/chest.png"
+			},
+			{
+			  "name": "Light Trousers",
+			  "level": 5,
+			  "materials": {
+				"combusted-leather": 10,
+				"leather-straps": 10,
+				"copper-bar": 10
+			  },
+			  "img": "item/season12/dragonflame-warrior/pants.png"
+			},
+			{
+			  "name": "Light Sandals",
+			  "level": 5,
+			  "materials": {
+				"combusted-leather": 10,
+				"hide": 10,
+				"milk-of-the-poppy": 10
+			  },
+			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 5,
+			  "materials": {
+				"combusted-leather": 10,
+				"goldenheart-wood": 10,
+				"weirwood": 10
+			  },
+			  "img": "item/season12/dragonflame-warrior/ring.png"
+			},
+			{
+			  "name": "Astapori Spear",
+			  "level": 5,
+			  "materials": {
+				"combusted-leather": 10,
+				"dragonglass": 10,
+				"ironwood": 10
+			  },
+			  "img": "item/season12/dragonflame-warrior/weapon.png"
+			},
+			{
+			  "name": "Plated Helm",
+			  "level": 10,
+			  "materials": {
+				"combusted-leather": 20,
+				"wildfire": 20,
+				"kingswood-oak": 20
+			  },
+			  "img": "item/season12/dragonflame-warrior/head.png"
+			},
+			{
+			  "name": "Hardened Cuirass",
+			  "level": 10,
+			  "materials": {
+				"combusted-leather": 20,
+				"black-iron": 20,
+				"silk": 20
+			  },
+			  "img": "item/season12/dragonflame-warrior/chest.png"
+			},
+			{
+			  "name": "Light Trousers",
+			  "level": 10,
+			  "materials": {
+				"combusted-leather": 20,
+				"leather-straps": 20,
+				"copper-bar": 20
+			  },
+			  "img": "item/season12/dragonflame-warrior/pants.png"
+			},
+			{
+			  "name": "Light Sandals",
+			  "level": 10,
+			  "materials": {
+				"combusted-leather": 20,
+				"hide": 20,
+				"milk-of-the-poppy": 20
+			  },
+			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 10,
+			  "materials": {
+				"combusted-leather": 20,
+				"goldenheart-wood": 20,
+				"weirwood": 20
+			  },
+			  "img": "item/season12/dragonflame-warrior/ring.png"
+			},
+			{
+			  "name": "Astapori Spear",
+			  "level": 10,
+			  "materials": {
+				"combusted-leather": 20,
+				"dragonglass": 20,
+				"ironwood": 20
+			  },
+			  "img": "item/season12/dragonflame-warrior/weapon.png"
+			},
+			{
+			  "name": "Plated Helm",
+			  "level": 15,
+			  "materials": {
+				"combusted-leather": 120,
+				"wildfire": 120,
+				"kingswood-oak": 120
+			  },
+			  "img": "item/season12/dragonflame-warrior/head.png"
+			},
+			{
+			  "name": "Hardened Cuirass",
+			  "level": 15,
+			  "materials": {
+				"combusted-leather": 120,
+				"black-iron": 120,
+				"silk": 120
+			  },
+			  "img": "item/season12/dragonflame-warrior/chest.png"
+			},
+			{
+			  "name": "Light Trousers",
+			  "level": 15,
+			  "materials": {
+				"combusted-leather": 120,
+				"leather-straps": 120,
+				"copper-bar": 120
+			  },
+			  "img": "item/season12/dragonflame-warrior/pants.png"
+			},
+			{
+			  "name": "Light Sandals",
+			  "level": 15,
+			  "materials": {
+				"combusted-leather": 120,
+				"hide": 120,
+				"milk-of-the-poppy": 120
+			  },
+			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 15,
+			  "materials": {
+				"combusted-leather": 120,
+				"goldenheart-wood": 120,
+				"weirwood": 120
+			  },
+			  "img": "item/season12/dragonflame-warrior/ring.png"
+			},
+			{
+			  "name": "Astapori Spear",
+			  "level": 15,
+			  "materials": {
+				"combusted-leather": 120,
+				"dragonglass": 120,
+				"ironwood": 120
+			  },
+			  "img": "item/season12/dragonflame-warrior/weapon.png"
+			},
+			{
+			  "name": "Plated Helm",
+			  "level": 20,
+			  "materials": {
+				"combusted-leather": 400,
+				"wildfire": 400,
+				"kingswood-oak": 400,
+				"copper-bar": 400
+			  },
+			  "img": "item/season12/dragonflame-warrior/head.png"
+			},
+			{
+			  "name": "Hardened Cuirass",
+			  "level": 20,
+			  "materials": {
+				"combusted-leather": 400,
+				"black-iron": 400,
+				"silk": 400,
+				"dragonglass": 400
+			  },
+			  "img": "item/season12/dragonflame-warrior/chest.png"
+			},
+			{
+			  "name": "Light Trousers",
+			  "level": 20,
+			  "materials": {
+				"combusted-leather": 400,
+				"leather-straps": 400,
+				"copper-bar": 400,
+				"milk-of-the-poppy": 400
+			  },
+			  "img": "item/season12/dragonflame-warrior/pants.png"
+			},
+			{
+			  "name": "Light Sandals",
+			  "level": 20,
+			  "materials": {
+				"combusted-leather": 400,
+				"hide": 400,
+				"milk-of-the-poppy": 400,
+				"goldenheart-wood": 400
+			  },
+			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 20,
+			  "materials": {
+				"combusted-leather": 400,
+				"goldenheart-wood": 400,
+				"weirwood": 400,
+				"silk": 400
+			  },
+			  "img": "item/season12/dragonflame-warrior/ring.png"
+			},
+			{
+			  "name": "Astapori Spear",
+			  "level": 20,
+			  "materials": {
+				"combusted-leather": 400,
+				"dragonglass": 400,
+				"ironwood": 400,
+				"kingswood-oak": 400
+			  },
+			  "img": "item/season12/dragonflame-warrior/weapon.png"
+			},
+			{
+			  "name": "Plated Helm",
+			  "level": 25,
+			  "materials": {
+				"combusted-leather": 1200,
+				"wildfire": 1200,
+				"kingswood-oak": 1200,
+				"copper-bar": 1200
+			  },
+			  "img": "item/season12/dragonflame-warrior/head.png"
+			},
+			{
+			  "name": "Hardened Cuirass",
+			  "level": 25,
+			  "materials": {
+				"combusted-leather": 1200,
+				"black-iron": 1200,
+				"silk": 1200,
+				"dragonglass": 1200
+			  },
+			  "img": "item/season12/dragonflame-warrior/chest.png"
+			},
+			{
+			  "name": "Light Trousers",
+			  "level": 25,
+			  "materials": {
+				"combusted-leather": 1200,
+				"leather-straps": 1200,
+				"copper-bar": 1200,
+				"milk-of-the-poppy": 1200
+			  },
+			  "img": "item/season12/dragonflame-warrior/pants.png"
+			},
+			{
+			  "name": "Light Sandals",
+			  "level": 25,
+			  "materials": {
+				"combusted-leather": 1200,
+				"hide": 1200,
+				"milk-of-the-poppy": 1200,
+				"goldenheart-wood": 1200
+			  },
+			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 25,
+			  "materials": {
+				"combusted-leather": 1200,
+				"goldenheart-wood": 1200,
+				"weirwood": 1200,
+				"silk": 1200
+			  },
+			  "img": "item/season12/dragonflame-warrior/ring.png"
+			},
+			{
+			  "name": "Astapori Spear",
+			  "level": 25,
+			  "materials": {
+				"combusted-leather": 1200,
+				"dragonglass": 1200,
+				"ironwood": 1200,
+				"kingswood-oak": 1200
+			  },
+			  "img": "item/season12/dragonflame-warrior/weapon.png"
+			}
+		  ]
+		},
+		{
 		  "setName": "Chilled Corsair's",
 		  "setMat": "Frost Crusted Abalone",
 		  "products": [
