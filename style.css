@@ -77,6 +77,12 @@ select#scaleSelect option {
     font-size: 13px;
 }
 
+p.craft-extra-info {
+    margin-bottom: -5px;
+    font-size: 15px;
+    text-align: center;
+}
+
 .section-title {
     display: flex;
     align-items: center;
