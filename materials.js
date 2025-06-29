@@ -434,13 +434,13 @@ const materials = {
 				"img": "materials/season12/burning-stag-hide.png",
 				"Original-name": "Burning Stag Hide"
 			},
-			"frost-crusted-abalone": {
-				"img": "materials/season12/frost-crusted-abalone.png",
-				"Original-name": "Frost Crusted Abalone"
-			},
 			"combusted-leather": {
 				"img": "materials/season12/combusted-leather.png",
 				"Original-name": "Combusted Leather"
+			},
+			"frost-crusted-abalone": {
+				"img": "materials/season12/frost-crusted-abalone.png",
+				"Original-name": "Frost Crusted Abalone"
 			}
 		}
 	}
