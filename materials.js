@@ -437,6 +437,10 @@ const materials = {
 			"frost-crusted-abalone": {
 				"img": "materials/season12/frost-crusted-abalone.png",
 				"Original-name": "Frost Crusted Abalone"
+			},
+			"combusted-leather": {
+				"img": "materials/season12/combusted-leather.png",
+				"Original-name": "Combusted Leather"
 			}
 		}
 	}
