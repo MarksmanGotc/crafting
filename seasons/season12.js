@@ -365,7 +365,7 @@ const season12 = {
 				"hide": 10,
 				"milk-of-the-poppy": 10
 			  },
-			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			  "img": "item/season12/dragonflame-warrior/boots.png"
 			},
 			{
 			  "name": "Ring",
@@ -425,7 +425,7 @@ const season12 = {
 				"hide": 20,
 				"milk-of-the-poppy": 20
 			  },
-			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			  "img": "item/season12/dragonflame-warrior/boots.png"
 			},
 			{
 			  "name": "Ring",
@@ -485,7 +485,7 @@ const season12 = {
 				"hide": 120,
 				"milk-of-the-poppy": 120
 			  },
-			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			  "img": "item/season12/dragonflame-warrior/boots.png"
 			},
 			{
 			  "name": "Ring",
@@ -549,7 +549,7 @@ const season12 = {
 				"milk-of-the-poppy": 400,
 				"goldenheart-wood": 400
 			  },
-			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			  "img": "item/season12/dragonflame-warrior/boots.png"
 			},
 			{
 			  "name": "Ring",
@@ -615,7 +615,7 @@ const season12 = {
 				"milk-of-the-poppy": 1200,
 				"goldenheart-wood": 1200
 			  },
-			  "img": "item/season12/dragonflame-warrior/Light Sandals.png"
+			  "img": "item/season12/dragonflame-warrior/boots.png"
 			},
 			{
 			  "name": "Ring",
