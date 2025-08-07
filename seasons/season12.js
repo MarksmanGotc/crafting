@@ -962,6 +962,328 @@ const season12 = {
 			  "img": "item/season12/chilled-corsair/weapon.png"
 			}
 		  ]
+		},
+		{
+		  "setName": "Golden Rose",
+		  "setMat": "Myrish Lace",
+		  "products": [
+			{
+			  "name": "Consort Crown",
+			  "level": 5,
+			  "materials": {
+				"myrish-lace": 10,
+				"kingswood-oak": 10,
+				"milk-of-the-poppy": 10
+			  },
+			  "img": "item/season12/golden-rose/head.png"
+			},
+			{
+			  "name": "Décolletage",
+			  "level": 5,
+			  "materials": {
+				"myrish-lace": 10,
+				"hide": 10,
+				"ironwood": 10
+			  },
+			  "img": "item/season12/golden-rose/chest.png"
+			},
+			{
+			  "name": "Sandsilk Skirt",
+			  "level": 5,
+			  "materials": {
+				"myrish-lace": 10,
+				"silk": 10,
+				"copper-bar": 10
+			  },
+			  "img": "item/season12/golden-rose/pants.png"
+			},
+			{
+			  "name": "Pantofles",
+			  "level": 5,
+			  "materials": {
+				"myrish-lace": 10,
+				"weirwood": 10,
+				"leather-straps": 10
+			  },
+			  "img": "item/season12/golden-rose/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 5,
+			  "materials": {
+				"myrish-lace": 10,
+				"dragonglass": 10,
+				"wildfire": 10
+			  },
+			  "img": "item/season12/golden-rose/ring.png"
+			},
+			{
+			  "name": "Poison Necklace",
+			  "level": 5,
+			  "materials": {
+				"myrish-lace": 10,
+				"black-iron": 10,
+				"goldenheart-wood": 10
+			  },
+			  "img": "item/season12/golden-rose/weapon.png"
+			},
+
+			{
+			  "name": "Consort Crown",
+			  "level": 10,
+			  "materials": {
+				"myrish-lace": 20,
+				"kingswood-oak": 20,
+				"milk-of-the-poppy": 20
+			  },
+			  "img": "item/season12/golden-rose/head.png"
+			},
+			{
+			  "name": "Décolletage",
+			  "level": 10,
+			  "materials": {
+				"myrish-lace": 20,
+				"hide": 20,
+				"ironwood": 20
+			  },
+			  "img": "item/season12/golden-rose/chest.png"
+			},
+			{
+			  "name": "Sandsilk Skirt",
+			  "level": 10,
+			  "materials": {
+				"myrish-lace": 20,
+				"silk": 20,
+				"copper-bar": 20
+			  },
+			  "img": "item/season12/golden-rose/pants.png"
+			},
+			{
+			  "name": "Pantofles",
+			  "level": 10,
+			  "materials": {
+				"myrish-lace": 20,
+				"weirwood": 20,
+				"leather-straps": 20
+			  },
+			  "img": "item/season12/golden-rose/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 10,
+			  "materials": {
+				"myrish-lace": 20,
+				"dragonglass": 20,
+				"wildfire": 20
+			  },
+			  "img": "item/season12/golden-rose/ring.png"
+			},
+			{
+			  "name": "Poison Necklace",
+			  "level": 10,
+			  "materials": {
+				"myrish-lace": 20,
+				"black-iron": 20,
+				"goldenheart-wood": 20
+			  },
+			  "img": "item/season12/golden-rose/weapon.png"
+			},
+
+			{
+			  "name": "Consort Crown",
+			  "level": 15,
+			  "materials": {
+				"myrish-lace": 120,
+				"kingswood-oak": 120,
+				"milk-of-the-poppy": 120
+			  },
+			  "img": "item/season12/golden-rose/head.png"
+			},
+			{
+			  "name": "Décolletage",
+			  "level": 15,
+			  "materials": {
+				"myrish-lace": 120,
+				"hide": 120,
+				"ironwood": 120
+			  },
+			  "img": "item/season12/golden-rose/chest.png"
+			},
+			{
+			  "name": "Sandsilk Skirt",
+			  "level": 15,
+			  "materials": {
+				"myrish-lace": 120,
+				"silk": 120,
+				"copper-bar": 120
+			  },
+			  "img": "item/season12/golden-rose/pants.png"
+			},
+			{
+			  "name": "Pantofles",
+			  "level": 15,
+			  "materials": {
+				"myrish-lace": 120,
+				"weirwood": 120,
+				"leather-straps": 120
+			  },
+			  "img": "item/season12/golden-rose/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 15,
+			  "materials": {
+				"myrish-lace": 120,
+				"dragonglass": 120,
+				"wildfire": 120
+			  },
+			  "img": "item/season12/golden-rose/ring.png"
+			},
+			{
+			  "name": "Poison Necklace",
+			  "level": 15,
+			  "materials": {
+				"myrish-lace": 120,
+				"black-iron": 120,
+				"goldenheart-wood": 120
+			  },
+			  "img": "item/season12/golden-rose/weapon.png"
+			},
+
+			{
+			  "name": "Consort Crown",
+			  "level": 20,
+			  "materials": {
+				"myrish-lace": 400,
+				"kingswood-oak": 400,
+				"milk-of-the-poppy": 400,
+				"ironwood": 400
+			  },
+			  "img": "item/season12/golden-rose/head.png"
+			},
+			{
+			  "name": "Décolletage",
+			  "level": 20,
+			  "materials": {
+				"myrish-lace": 400,
+				"hide": 400,
+				"ironwood": 400,
+				"weirwood": 400
+			  },
+			  "img": "item/season12/golden-rose/chest.png"
+			},
+			{
+			  "name": "Sandsilk Skirt",
+			  "level": 20,
+			  "materials": {
+				"myrish-lace": 400,
+				"silk": 400,
+				"copper-bar": 400,
+				"hide": 400
+			  },
+			  "img": "item/season12/golden-rose/pants.png"
+			},
+			{
+			  "name": "Pantofles",
+			  "level": 20,
+			  "materials": {
+				"myrish-lace": 400,
+				"weirwood": 400,
+				"leather-straps": 400,
+				"black-iron": 400
+			  },
+			  "img": "item/season12/golden-rose/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 20,
+			  "materials": {
+				"myrish-lace": 400,
+				"dragonglass": 400,
+				"wildfire": 400,
+				"leather-straps": 400
+			  },
+			  "img": "item/season12/golden-rose/ring.png"
+			},
+			{
+			  "name": "Poison Necklace",
+			  "level": 20,
+			  "materials": {
+				"myrish-lace": 400,
+				"black-iron": 400,
+				"goldenheart-wood": 400,
+				"wildfire": 400
+			  },
+			  "img": "item/season12/golden-rose/weapon.png"
+			},
+
+			{
+			  "name": "Consort Crown",
+			  "level": 25,
+			  "materials": {
+				"myrish-lace": 1200,
+				"kingswood-oak": 1200,
+				"milk-of-the-poppy": 1200,
+				"ironwood": 1200
+			  },
+			  "img": "item/season12/golden-rose/head.png"
+			},
+			{
+			  "name": "Décolletage",
+			  "level": 25,
+			  "materials": {
+				"myrish-lace": 1200,
+				"hide": 1200,
+				"ironwood": 1200,
+				"weirwood": 1200
+			  },
+			  "img": "item/season12/golden-rose/chest.png"
+			},
+			{
+			  "name": "Sandsilk Skirt",
+			  "level": 25,
+			  "materials": {
+				"myrish-lace": 1200,
+				"silk": 1200,
+				"copper-bar": 1200,
+				"hide": 1200
+			  },
+			  "img": "item/season12/golden-rose/pants.png"
+			},
+			{
+			  "name": "Pantofles",
+			  "level": 25,
+			  "materials": {
+				"myrish-lace": 1200,
+				"weirwood": 1200,
+				"leather-straps": 1200,
+				"black-iron": 1200
+			  },
+			  "img": "item/season12/golden-rose/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 25,
+			  "materials": {
+				"myrish-lace": 1200,
+				"dragonglass": 1200,
+				"wildfire": 1200,
+				"leather-straps": 1200
+			  },
+			  "img": "item/season12/golden-rose/ring.png"
+			},
+			{
+			  "name": "Poison Necklace",
+			  "level": 25,
+			  "materials": {
+				"myrish-lace": 1200,
+				"black-iron": 1200,
+				"goldenheart-wood": 1200,
+				"wildfire": 1200
+			  },
+			  "img": "item/season12/golden-rose/weapon.png"
+			}
+		  ]
 		}
 	]
 };

@@ -441,7 +441,12 @@ const materials = {
 			"frost-crusted-abalone": {
 				"img": "materials/season12/frost-crusted-abalone.png",
 				"Original-name": "Frost Crusted Abalone"
+			},
+			"myrish-lace": {
+				"img": "materials/season12/myrish-lace.png",
+				"Original-name": "Myrish Lace"
 			}
 		}
 	}
 }
+
