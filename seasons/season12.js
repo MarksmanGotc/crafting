@@ -1284,6 +1284,324 @@ const season12 = {
 			  "img": "item/season12/golden-rose/weapon.png"
 			}
 		  ]
+		},
+		{
+		  "setName": "Sun-Scorched Dornish",
+		  "setMat": "Scorched Horsehair Tassel",
+		  "products": [
+			{
+			  "name": "Headscarf",
+			  "level": 5,
+			  "materials": {
+				"scorched-horsehair-tassel": 10,
+				"milk-of-the-poppy": 10,
+				"leather-straps": 10
+			  },
+			  "img": "item/season12/sun-scorched/head.png"
+			},
+			{
+			  "name": "Robes",
+			  "level": 5,
+			  "materials": {
+				"scorched-horsehair-tassel": 10,
+				"goldenheart-wood": 10,
+				"weirwood": 10
+			  },
+			  "img": "item/season12/sun-scorched/chest.png"
+			},
+			{
+			  "name": "Sash",
+			  "level": 5,
+			  "materials": {
+				"scorched-horsehair-tassel": 10,
+				"copper-bar": 10,
+				"hide": 10
+			  },
+			  "img": "item/season12/sun-scorched/pants.png"
+			},
+			{
+			  "name": "Boots",
+			  "level": 5,
+			  "materials": {
+				"scorched-horsehair-tassel": 10,
+				"dragonglass": 10,
+				"black-iron": 10
+			  },
+			  "img": "item/season12/sun-scorched/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 5,
+			  "materials": {
+				"scorched-horsehair-tassel": 10,
+				"silk": 10,
+				"wildfire": 10
+			  },
+			  "img": "item/season12/sun-scorched/ring.png"
+			},
+			{
+			  "name": "Spear",
+			  "level": 5,
+			  "materials": {
+				"scorched-horsehair-tassel": 10,
+				"kingswood-oak": 10,
+				"ironwood": 10
+			  },
+			  "img": "item/season12/sun-scorched/weapon.png"
+			},
+			{
+			  "name": "Headscarf",
+			  "level": 10,
+			  "materials": {
+				"scorched-horsehair-tassel": 20,
+				"milk-of-the-poppy": 20,
+				"leather-straps": 20
+			  },
+			  "img": "item/season12/sun-scorched/head.png"
+			},
+			{
+			  "name": "Robes",
+			  "level": 10,
+			  "materials": {
+				"scorched-horsehair-tassel": 20,
+				"goldenheart-wood": 20,
+				"weirwood": 20
+			  },
+			  "img": "item/season12/sun-scorched/chest.png"
+			},
+			{
+			  "name": "Sash",
+			  "level": 10,
+			  "materials": {
+				"scorched-horsehair-tassel": 20,
+				"copper-bar": 20,
+				"hide": 20
+			  },
+			  "img": "item/season12/sun-scorched/pants.png"
+			},
+			{
+			  "name": "Boots",
+			  "level": 10,
+			  "materials": {
+				"scorched-horsehair-tassel": 20,
+				"dragonglass": 20,
+				"black-iron": 20
+			  },
+			  "img": "item/season12/sun-scorched/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 10,
+			  "materials": {
+				"scorched-horsehair-tassel": 20,
+				"silk": 20,
+				"wildfire": 20
+			  },
+			  "img": "item/season12/sun-scorched/ring.png"
+			},
+			{
+			  "name": "Spear",
+			  "level": 10,
+			  "materials": {
+				"scorched-horsehair-tassel": 20,
+				"kingswood-oak": 20,
+				"ironwood": 20
+			  },
+			  "img": "item/season12/sun-scorched/weapon.png"
+			},
+			{
+			  "name": "Headscarf",
+			  "level": 15,
+			  "materials": {
+				"scorched-horsehair-tassel": 120,
+				"milk-of-the-poppy": 120,
+				"leather-straps": 120
+			  },
+			  "img": "item/season12/sun-scorched/head.png"
+			},
+			{
+			  "name": "Robes",
+			  "level": 15,
+			  "materials": {
+				"scorched-horsehair-tassel": 120,
+				"goldenheart-wood": 120,
+				"weirwood": 120
+			  },
+			  "img": "item/season12/sun-scorched/chest.png"
+			},
+			{
+			  "name": "Sash",
+			  "level": 15,
+			  "materials": {
+				"scorched-horsehair-tassel": 120,
+				"copper-bar": 120,
+				"hide": 120
+			  },
+			  "img": "item/season12/sun-scorched/pants.png"
+			},
+			{
+			  "name": "Boots",
+			  "level": 15,
+			  "materials": {
+				"scorched-horsehair-tassel": 120,
+				"dragonglass": 120,
+				"black-iron": 120
+			  },
+			  "img": "item/season12/sun-scorched/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 15,
+			  "materials": {
+				"scorched-horsehair-tassel": 120,
+				"silk": 120,
+				"wildfire": 120
+			  },
+			  "img": "item/season12/sun-scorched/ring.png"
+			},
+			{
+			  "name": "Spear",
+			  "level": 15,
+			  "materials": {
+				"scorched-horsehair-tassel": 120,
+				"kingswood-oak": 120,
+				"ironwood": 120
+			  },
+			  "img": "item/season12/sun-scorched/weapon.png"
+			},
+			{
+			  "name": "Headscarf",
+			  "level": 20,
+			  "materials": {
+				"scorched-horsehair-tassel": 400,
+				"milk-of-the-poppy": 400,
+				"leather-straps": 400,
+				"copper-bar": 400
+			  },
+			  "img": "item/season12/sun-scorched/head.png"
+			},
+			{
+			  "name": "Robes",
+			  "level": 20,
+			  "materials": {
+				"scorched-horsehair-tassel": 400,
+				"goldenheart-wood": 400,
+				"weirwood": 400,
+				"dragonglass": 400
+			  },
+			  "img": "item/season12/sun-scorched/chest.png"
+			},
+			{
+			  "name": "Sash",
+			  "level": 20,
+			  "materials": {
+				"scorched-horsehair-tassel": 400,
+				"copper-bar": 400,
+				"hide": 400,
+				"goldenheart-wood": 400
+			  },
+			  "img": "item/season12/sun-scorched/pants.png"
+			},
+			{
+			  "name": "Boots",
+			  "level": 20,
+			  "materials": {
+				"scorched-horsehair-tassel": 400,
+				"dragonglass": 400,
+				"black-iron": 400,
+				"silk": 400
+			  },
+			  "img": "item/season12/sun-scorched/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 20,
+			  "materials": {
+				"scorched-horsehair-tassel": 400,
+				"silk": 400,
+				"wildfire": 400,
+				"kingswood-oak": 400
+			  },
+			  "img": "item/season12/sun-scorched/ring.png"
+			},
+			{
+			  "name": "Spear",
+			  "level": 20,
+			  "materials": {
+				"scorched-horsehair-tassel": 400,
+				"kingswood-oak": 400,
+				"ironwood": 400,
+				"milk-of-the-poppy": 400
+			  },
+			  "img": "item/season12/sun-scorched/weapon.png"
+			},
+			{
+			  "name": "Headscarf",
+			  "level": 25,
+			  "materials": {
+				"scorched-horsehair-tassel": 1200,
+				"milk-of-the-poppy": 1200,
+				"leather-straps": 1200,
+				"copper-bar": 1200
+			  },
+			  "img": "item/season12/sun-scorched/head.png"
+			},
+			{
+			  "name": "Robes",
+			  "level": 25,
+			  "materials": {
+				"scorched-horsehair-tassel": 1200,
+				"goldenheart-wood": 1200,
+				"weirwood": 1200,
+				"dragonglass": 1200
+			  },
+			  "img": "item/season12/sun-scorched/chest.png"
+			},
+			{
+			  "name": "Sash",
+			  "level": 25,
+			  "materials": {
+				"scorched-horsehair-tassel": 1200,
+				"copper-bar": 1200,
+				"hide": 1200,
+				"goldenheart-wood": 1200
+			  },
+			  "img": "item/season12/sun-scorched/pants.png"
+			},
+			{
+			  "name": "Boots",
+			  "level": 25,
+			  "materials": {
+				"scorched-horsehair-tassel": 1200,
+				"dragonglass": 1200,
+				"black-iron": 1200,
+				"silk": 1200
+			  },
+			  "img": "item/season12/sun-scorched/boots.png"
+			},
+			{
+			  "name": "Ring",
+			  "level": 25,
+			  "materials": {
+				"scorched-horsehair-tassel": 1200,
+				"silk": 1200,
+				"wildfire": 1200,
+				"kingswood-oak": 1200
+			  },
+			  "img": "item/season12/sun-scorched/ring.png"
+			},
+			{
+			  "name": "Spear",
+			  "level": 25,
+			  "materials": {
+				"scorched-horsehair-tassel": 1200,
+				"kingswood-oak": 1200,
+				"ironwood": 1200,
+				"milk-of-the-poppy": 1200
+			  },
+			  "img": "item/season12/sun-scorched/weapon.png"
+			}
+		  ]
 		}
 	]
 };
