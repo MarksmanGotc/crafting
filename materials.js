@@ -445,8 +445,11 @@ const materials = {
 			"myrish-lace": {
 				"img": "materials/season12/myrish-lace.png",
 				"Original-name": "Myrish Lace"
+			},
+			"scorched-horsehair-tassel": {
+				"img": "materials/season12/scorched-horsehair-tassel.png",
+				"Original-name": "Scorched Horsehair Tassel"
 			}
 		}
 	}
 }
-
