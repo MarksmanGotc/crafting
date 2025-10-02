@@ -91,7 +91,47 @@ let craftItem = {
 						season: season12.season
 				}))
 		)
-	]
+        ]
 };
 
-window.seasons = [season0, season1, season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12];
+const seasonsMap = {
+  0: season0,
+  1: season1,
+  2: season2,
+  3: season3,
+  4: season4,
+  5: season5,
+  6: season6,
+  7: season7,
+  8: season8,
+  9: season9,
+  10: season10,
+  11: season11,
+  12: season12,
+};
+
+const extraProducts = [];
+
+craftItem.products.forEach(product => {
+  if (product.level === 25 && product.season !== 0) {
+    const extraLevels = seasonsMap[product.season]?.extraLevels;
+    if (extraLevels) {
+      Object.entries(extraLevels).forEach(([lvl, amt]) => {
+        const ratio = amt / 1200;
+        const mats = {};
+        Object.entries(product.materials).forEach(([mat, val]) => {
+          mats[mat] = val * ratio;
+        });
+        extraProducts.push({
+          ...product,
+          level: parseInt(lvl, 10),
+          materials: mats,
+        });
+      });
+    }
+  }
+});
+
+craftItem.products.push(...extraProducts);
+
+window.seasons = Object.values(seasonsMap);
