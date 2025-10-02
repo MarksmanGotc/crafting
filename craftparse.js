@@ -1,9 +1,8 @@
-
 let initialMaterials = {}; 
 const urlParams = new URLSearchParams(window.location.search);
 const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
-
-const LEVELS = [1, 5, 10, 15, 20, 25];
+ 
+const LEVELS = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45];
 const allMaterials = Object.values(materials).reduce((acc, season) => {
     return { ...acc, ...season.mats };
 }, {});
@@ -22,10 +21,21 @@ const GEAR_SECOND_WEIGHT = 3;
 const LEFTOVER_WEIGHT_BASE = 7;
 const LEFTOVER_WEIGHT_GEAR = 3;
 const BALANCE_WEIGHT = 0.1;
+const qualityColorMap = {
+    poor: '#A9A9A9',
+    common: '#32CD32',
+    fine: '#0070DD',
+    exquisite: '#A335EE',
+    epic: '#FF8000',
+    legendary: '#E5CC80'
+};
+let qualitySelectHandlersAttached = false;
 let failedLevels = [];
 let requestedTemplates = {};
 let remainingUse = {};
 let ctwMediumNotice = false;
+let lowOddsNotice = false;
+let level20OnlyWarlordsActive = false;
 
 function slug(str) {
     return (str || '')
@@ -47,12 +57,209 @@ function formatTimestamp(date = new Date()) {
     );
 }
 
+function closeAllQualitySelects() {
+    document.querySelectorAll('.quality-select.open').forEach(wrapper => {
+        wrapper.classList.remove('open');
+        const trigger = wrapper.querySelector('.quality-select__display');
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
+function updateQualitySelectUI(select, trigger, optionsContainer) {
+    if (!select || !trigger || !optionsContainer) return;
+
+    const labelEl = trigger.querySelector('.quality-select__label');
+    const swatchEl = trigger.querySelector('.quality-select__swatch');
+    const selectedOption = Array.from(select.options).find(opt => opt.value === select.value) || select.options[0];
+
+    if (labelEl && selectedOption) {
+        labelEl.textContent = selectedOption.textContent;
+    }
+
+    trigger.dataset.qualityValue = select.value || '';
+
+    if (swatchEl) {
+        const color = qualityColorMap[select.value];
+        if (color) {
+            swatchEl.style.backgroundColor = color;
+            swatchEl.classList.remove('quality-select__swatch--empty');
+        } else {
+            swatchEl.style.removeProperty('background-color');
+            swatchEl.classList.add('quality-select__swatch--empty');
+        }
+    }
+
+    optionsContainer.querySelectorAll('.quality-select__option').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.value === select.value);
+    });
+}
+
+function initializeQualitySelects() {
+    const selects = Array.from(document.querySelectorAll('select.temps'))
+        .filter(select => /^temp\d+$/.test(select.id || ''));
+
+    selects.forEach(select => {
+        if (select.dataset.customSelect === 'true') return;
+
+        select.dataset.customSelect = 'true';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'quality-select';
+        wrapper.dataset.selectId = select.id || '';
+
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'quality-select__display';
+        trigger.setAttribute('aria-haspopup', 'listbox');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Select template quality');
+        trigger.dataset.qualityTrigger = select.id || '';
+
+        const swatch = document.createElement('span');
+        swatch.className = 'quality-select__swatch quality-select__swatch--empty';
+        const label = document.createElement('span');
+        label.className = 'quality-select__label';
+        const chevron = document.createElement('span');
+        chevron.className = 'quality-select__chevron';
+        trigger.append(swatch, label, chevron);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'quality-select__options';
+        optionsContainer.setAttribute('role', 'listbox');
+
+        Array.from(select.options).forEach(option => {
+            const optionButton = document.createElement('button');
+            optionButton.type = 'button';
+            optionButton.className = 'quality-select__option';
+            optionButton.dataset.value = option.value;
+            optionButton.setAttribute('role', 'option');
+            optionButton.setAttribute('data-quality', option.value);
+
+            const optionSwatch = document.createElement('span');
+            optionSwatch.className = 'quality-select__swatch';
+            if (qualityColorMap[option.value]) {
+                optionSwatch.style.backgroundColor = qualityColorMap[option.value];
+            } else {
+                optionSwatch.classList.add('quality-select__swatch--empty');
+            }
+
+            const optionLabel = document.createElement('span');
+            optionLabel.className = 'quality-select__option-label';
+            optionLabel.textContent = option.textContent;
+
+            optionButton.append(optionSwatch, optionLabel);
+            if (option.selected) {
+                optionButton.classList.add('selected');
+            }
+
+            optionsContainer.appendChild(optionButton);
+        });
+
+        const parent = select.parentNode;
+        parent.insertBefore(wrapper, select);
+        wrapper.append(trigger, optionsContainer, select);
+
+        select.classList.add('quality-select__native');
+        updateQualitySelectUI(select, trigger, optionsContainer);
+
+        trigger.addEventListener('click', event => {
+            event.preventDefault();
+            const isOpen = wrapper.classList.contains('open');
+            closeAllQualitySelects();
+            wrapper.classList.toggle('open', !isOpen);
+            trigger.setAttribute('aria-expanded', (!isOpen).toString());
+            if (!isOpen) {
+                const selectedBtn = optionsContainer.querySelector('.quality-select__option.selected');
+                (selectedBtn || optionsContainer.querySelector('.quality-select__option'))?.focus();
+            }
+        });
+
+        trigger.addEventListener('keydown', event => {
+            if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key)) {
+                event.preventDefault();
+                const isOpen = wrapper.classList.contains('open');
+                if (!isOpen) {
+                    closeAllQualitySelects();
+                    wrapper.classList.add('open');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }
+                const options = Array.from(optionsContainer.querySelectorAll('.quality-select__option'));
+                if (!options.length) return;
+                if (event.key === 'ArrowUp') {
+                    (optionsContainer.querySelector('.quality-select__option.selected') || options[options.length - 1])?.focus();
+                } else {
+                    (optionsContainer.querySelector('.quality-select__option.selected') || options[0])?.focus();
+                }
+            }
+        });
+
+        optionsContainer.addEventListener('click', event => {
+            const optionButton = event.target.closest('.quality-select__option');
+            if (!optionButton) return;
+            event.preventDefault();
+            const { value } = optionButton.dataset;
+            if (value && select.value !== value) {
+                select.value = value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            } else {
+                updateQualitySelectUI(select, trigger, optionsContainer);
+            }
+            wrapper.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.focus();
+        });
+
+        optionsContainer.addEventListener('keydown', event => {
+            const optionButton = event.target.closest('.quality-select__option');
+            if (!optionButton) return;
+
+            const options = Array.from(optionsContainer.querySelectorAll('.quality-select__option'));
+            const currentIndex = options.indexOf(optionButton);
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                const next = options[currentIndex + 1] || options[0];
+                next.focus();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                const prev = options[currentIndex - 1] || options[options.length - 1];
+                prev.focus();
+            } else if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                optionButton.click();
+            } else if (event.key === 'Escape') {
+                event.preventDefault();
+                wrapper.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.focus();
+            }
+        });
+
+        select.addEventListener('change', () => {
+            updateQualitySelectUI(select, trigger, optionsContainer);
+        });
+    });
+
+    if (!qualitySelectHandlersAttached) {
+        document.addEventListener('click', event => {
+            if (!event.target.closest('.quality-select')) {
+                closeAllQualitySelects();
+            }
+        });
+
+        qualitySelectHandlersAttached = true;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     createLevelStructure();
     addCalculateButton();
         formatedInputNumber();
         inputActive();
         initAdvMaterialSection();
+        initializeQualitySelects();
 
     const shareParam = urlParams.get('share');
     if (shareParam) {
@@ -135,6 +342,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    const materialsInfoBtn = document.getElementById('yourMaterialsInfoBtn');
+    const materialsInfoPopup = document.getElementById('yourMaterialsInfoPopup');
+    materialsInfoBtn?.addEventListener('click', () => {
+        if (materialsInfoPopup) {
+            materialsInfoPopup.style.display = 'flex';
+        }
+    });
+    materialsInfoPopup?.addEventListener('click', (e) => {
+        if (e.target === materialsInfoPopup || e.target.closest('.close-popup')) {
+            materialsInfoPopup.style.display = 'none';
+        }
+    });
+
     const scaleBtn = document.getElementById('scaleInfoBtn');
     const scalePopup = document.getElementById('scaleInfoPopup');
     scaleBtn?.addEventListener('click', () => {
@@ -163,8 +383,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Trigger calculation when pressing Enter on any input
     document.addEventListener('keydown', e => {
-        const tag = document.activeElement.tagName;
-        if (e.key === 'Enter' && ['INPUT', 'SELECT'].includes(tag) &&
+        const activeEl = document.activeElement;
+        const tag = activeEl ? activeEl.tagName : '';
+        const isQualityTrigger = activeEl?.classList?.contains('quality-select__display');
+        if (e.key === 'Enter' && (['INPUT', 'SELECT'].includes(tag) || isQualityTrigger) &&
             document.getElementById('results').style.display === 'none') {
             const manualVisible = document.getElementById('manualInput').style.display !== 'none';
             const choiceVisible = document.getElementById('generatebychoice').style.display !== 'none';
@@ -184,12 +406,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     overlay.style.display = 'none';
                 }
             });
+            closeAllQualitySelects();
         }
     });
 
     // Custom tab order for template amount inputs and quality selects
     const templateInputs = LEVELS.map(l => document.getElementById(`templateAmount${l}`)).filter(Boolean);
     const templateSelects = LEVELS.map(l => document.getElementById(`temp${l}`)).filter(Boolean);
+    const qualityTriggers = templateSelects
+        .map(select => select.closest('.quality-select')?.querySelector('.quality-select__display'))
+        .filter(Boolean);
 
     templateInputs.forEach((input, idx) => {
         input.addEventListener('keydown', e => {
@@ -198,18 +424,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const next = templateInputs[idx + 1];
                 if (next) {
                     next.focus();
-                } else if (templateSelects[0]) {
-                    templateSelects[0].focus();
+                } else if (qualityTriggers[0]) {
+                    qualityTriggers[0].focus();
                 }
             }
         });
     });
 
-    templateSelects.forEach((select, idx) => {
-        select.addEventListener('keydown', e => {
+    qualityTriggers.forEach((trigger, idx) => {
+        trigger.addEventListener('keydown', e => {
             if (e.key === 'Tab' && !e.shiftKey) {
                 e.preventDefault();
-                const next = templateSelects[idx + 1];
+                const next = qualityTriggers[idx + 1];
                 if (next) {
                     next.focus();
                 } else {
@@ -219,6 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
 });
 
 function formatPlaceholderWithCommas(number) {
@@ -316,7 +543,10 @@ function populateInputsFromShare(data) {
             }
             if (quality) {
                 const sel = document.getElementById(`temp${level}`);
-                if (sel) sel.value = quality;
+                if (sel) {
+                    sel.value = quality;
+                    sel.dispatchEvent(new Event('change', { bubbles: true }));
+                }
             }
         });
 
@@ -447,7 +677,7 @@ function calculateMaterials() {
 
     // Täytä materialsDiv materiaalien tiedoilla...
 
-    const templateCounts = { 1: [], 5: [], 10: [], 15: [], 20: [], 25: [] };
+    const templateCounts = { 1: [], 5: [], 10: [], 15: [], 20: [], 25: [], 30: [], 35: [], 40: [], 45: [] };
     const materialCounts = {};
     
     // Kerää tiedot kaikista syötetyistä itemeistä
@@ -503,6 +733,14 @@ function renderResults(templateCounts, materialCounts) {
 
     const materialsDiv = document.createElement('div');
     materialsDiv.className = 'materials';
+
+    const materialsShortage = failedLevels.length > 0 && failedLevels.some(level => (requestedTemplates[level] || 0) > 0);
+    if (materialsShortage) {
+        const warningBanner = document.createElement('div');
+        warningBanner.className = 'materials-warning';
+        warningBanner.innerHTML = '<strong>Materials depleted.</strong> Not every requested template could be generated with the available stock.';
+        resultsDiv.appendChild(warningBanner);
+    }
 
     Object.entries(materialCounts)
         .sort(([aName], [bName]) => {
@@ -649,12 +887,19 @@ function renderResults(templateCounts, materialCounts) {
                 itemsDiv.appendChild(levelHeader);
             }
 
-            if (lvl === 20 && ctwMediumNotice) {
+            if (lvl === 20 && ctwMediumNotice && !level20OnlyWarlordsActive) {
                 const extraInfo = document.createElement('p');
                 extraInfo.className = 'craft-extra-info';
                 extraInfo.textContent = "Medium odds items were used because otherwise no items would be generated. At level 20, Ceremonial Targaryen Warlord items are categorized as 'medium odds'.";
                 itemsDiv.appendChild(extraInfo);
             }
+            if (lvl === 20 && lowOddsNotice && !level20OnlyWarlordsActive) {
+                const extraInfo = document.createElement('p');
+                extraInfo.className = 'craft-extra-info';
+                extraInfo.textContent = "Low odds items were used because otherwise no items would be generated.";
+                itemsDiv.appendChild(extraInfo);
+            }
+            
 
             const levelGroup = document.createElement('div');
             levelGroup.className = 'level-group';
@@ -986,11 +1231,35 @@ function filterProductsByAvailableGear(products, availableMaterials, multiplier 
     });
 }
 
+const SEASONAL_ODDS_LEVELS = new Set([15, 20, 25, 30, 35]);
+const EXTENDED_ODDS_LEVELS = new Set([20]);
+
+function shouldApplyOddsForProduct(product) {
+    if (!product?.odds || product.odds === 'normal') {
+        return false;
+    }
+
+    const level = product.level;
+    const season = product.season;
+    const isCeremonialTargaryenWarlord = product.setName === 'Ceremonial Targaryen Warlord';
+
+    if ((season === 0 || isCeremonialTargaryenWarlord) && SEASONAL_ODDS_LEVELS.has(level)) {
+        return true;
+    }
+
+    if ((season === 1 || season === 2) && EXTENDED_ODDS_LEVELS.has(level)) {
+        return true;
+    }
+
+    return false;
+}
+
 function calculateProductionPlan(availableMaterials, templatesByLevel) {
-    let productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [] };
+    let productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [], "30": [], "35": [], "40": [], "45": [] };
     const failed = new Set();
     const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
     const level1OnlyWarlords = document.getElementById('level1OnlyWarlords')?.checked ?? false;
+    const level20OnlyWarlords = document.getElementById('level20OnlyWarlords')?.checked ?? false;
     const includeLowOdds = document.getElementById('includeLowOdds')?.checked ?? true;
     const includeMediumOdds = document.getElementById('includeMediumOdds')?.checked ?? true;
     const gearLevelSelect = document.getElementById('gearMaterialLevels');
@@ -999,51 +1268,70 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
         key => (materialToSeason[key] || 0) !== 0
     );
     const level20Allowed = hasGearMaterials && allowedGearLevels.includes(20);
-    ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed;
+    level20OnlyWarlordsActive = level20OnlyWarlords;
+    ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed && !level20OnlyWarlords;
+    lowOddsNotice = !includeWarlords && !includeMediumOdds && !includeLowOdds;
 
-    // Craft level 15 items first when only normal odds are allowed and
-    // no CTW or gear materials are in use at that level.
-    if (
-        templatesByLevel[15] > 0 &&
-        !includeWarlords &&
-        !includeLowOdds &&
-        !includeMediumOdds &&
-        !allowedGearLevels.includes(15)
-    ) {
-        let remaining15 = templatesByLevel[15];
-        const multiplier15 = qualityMultipliers[15] || 1;
+    const processNormalOddsLevel = (level) => {
+        if (
+            templatesByLevel[level] > 0 &&
+            !includeWarlords &&
+            !includeLowOdds &&
+            !includeMediumOdds
+        ) {
+            let remaining = templatesByLevel[level];
+            const multiplier = qualityMultipliers[level] || 1;
+            const isLegendary = multiplier >= 1024;
 
-        while (remaining15 > 0) {
-            const prefs = getUserPreferences(availableMaterials);
-            let levelProducts = craftItem.products.filter(p => p.level === 15 && !p.warlord);
-            levelProducts = levelProducts.filter(p => p.season == 0);
-            levelProducts = levelProducts.filter(p => !p.odds || p.odds === 'normal');
-            levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier15);
-            const selected = selectBestAvailableProduct(
-                levelProducts,
-                prefs.mostAvailableMaterials,
-                prefs.secondMostAvailableMaterials,
-                prefs.leastAvailableMaterials,
-                availableMaterials,
-                multiplier15
-            );
+            while (remaining > 0) {
+                const prefs = getUserPreferences(availableMaterials);
+                let levelProducts = craftItem.products.filter(p => p.level === level && !p.warlord);
+                if (!allowedGearLevels.includes(level)) {
+                    levelProducts = levelProducts.filter(p => p.season == 0);
+                }
+                levelProducts = levelProducts.filter(p => {
+                    const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
+                    if (!applyOdds) return true;
+                    if (p.odds === 'low') return includeLowOdds;
+                    if (p.odds === 'medium') return includeMediumOdds;
+                    return true;
+                });
+                levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
+                const selected = selectBestAvailableProduct(
+                    levelProducts,
+                    prefs.mostAvailableMaterials,
+                    prefs.secondMostAvailableMaterials,
+                    prefs.leastAvailableMaterials,
+                    availableMaterials,
+                    multiplier
+                );
 
-            if (selected && canProductBeProduced(selected, availableMaterials, multiplier15)) {
-                productionPlan[15].push({ name: selected.name, season: selected.season, setName: selected.setName, warlord: selected.warlord });
-                updateAvailableMaterials(availableMaterials, selected, multiplier15);
-                remaining15--;
-            } else {
-                failed.add(15);
-                break;
+                if (selected && canProductBeProduced(selected, availableMaterials, multiplier)) {
+                    productionPlan[level].push({ name: selected.name, season: selected.season, setName: selected.setName, warlord: selected.warlord });
+                    updateAvailableMaterials(availableMaterials, selected, multiplier);
+                    remaining--;
+                } else {
+                    failed.add(level);
+                    break;
+                }
             }
-        }
 
-        templatesByLevel[15] = 0; // Prevent further processing for level 15
-    }
+            templatesByLevel[level] = 0; // Prevent further processing for the level
+        }
+    };
+
+    const normalOddsPriorityLevels = [35, 30, 15];
+    normalOddsPriorityLevels.forEach(level => processNormalOddsLevel(level));
 
     LEVELS.forEach(level => {
         if (templatesByLevel[level] <= 0) return;
-        let levelProducts = craftItem.products.filter(p => p.level === level && (includeWarlords || !p.warlord));
+        const requireCtwOnly = level === 20 && level20OnlyWarlords;
+        let levelProducts = craftItem.products.filter(p => {
+            if (requireCtwOnly) {
+                return p.level === level && p.warlord && p.setName === 'Ceremonial Targaryen Warlord';
+            }
+            return p.level === level && (includeWarlords || !p.warlord);
+        });
         if (level === 1 && level1OnlyWarlords) {
             levelProducts = craftItem.products.filter(p => p.level === 1 && p.warlord);
         }
@@ -1053,9 +1341,12 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
         const multiplier = qualityMultipliers[level] || 1;
         const isLegendary = multiplier >= 1024;
         levelProducts = levelProducts.filter(p => {
-            const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
-            if (!applyOdds || !p.odds) return true;
-            if (p.odds === 'low') return includeLowOdds;
+            if (requireCtwOnly && p.setName === 'Ceremonial Targaryen Warlord') {
+                return true;
+            }
+            const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
+            if (!applyOdds) return true;
+            if (p.odds === 'low') return includeLowOdds || (lowOddsNotice && p.level === 20);
             if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
             return true;
         });
@@ -1074,7 +1365,13 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
 
         for (let level of LEVELS) {
             if (remaining[level] <= 0) continue;
-            let levelProducts = craftItem.products.filter(p => p.level === level && (includeWarlords || !p.warlord));
+            const requireCtwOnly = level === 20 && level20OnlyWarlords;
+            let levelProducts = craftItem.products.filter(p => {
+                if (requireCtwOnly) {
+                    return p.level === level && p.warlord && p.setName === 'Ceremonial Targaryen Warlord';
+                }
+                return p.level === level && (includeWarlords || !p.warlord);
+            });
             if (level === 1 && level1OnlyWarlords) {
                 levelProducts = craftItem.products.filter(p => p.level === 1 && p.warlord);
             }
@@ -1084,14 +1381,24 @@ function calculateProductionPlan(availableMaterials, templatesByLevel) {
             const multiplier = qualityMultipliers[level] || 1;
             const isLegendary = multiplier >= 1024;
             levelProducts = levelProducts.filter(p => {
-                const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
-                if (!applyOdds || !p.odds) return true;
-                if (p.odds === 'low') return includeLowOdds;
+                if (requireCtwOnly && p.setName === 'Ceremonial Targaryen Warlord') {
+                    return true;
+                }
+                const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
+                if (!applyOdds) return true;
+                if (p.odds === 'low') return includeLowOdds || (lowOddsNotice && p.level === 20);
                 if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
                 return true;
             });
             levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
-            const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials, multiplier);
+            const selectedProduct = selectBestAvailableProduct(
+                levelProducts,
+                preferences.mostAvailableMaterials,
+                preferences.secondMostAvailableMaterials,
+                preferences.leastAvailableMaterials,
+                availableMaterials,
+                multiplier
+            );
 
             if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials, multiplier)) {
                 productionPlan[level].push({ name: selectedProduct.name, season: selectedProduct.season, setName: selectedProduct.setName, warlord: selectedProduct.warlord });
@@ -1186,7 +1493,7 @@ function selectBestAvailableProduct(levelProducts, mostAvailableMaterials, secon
     const candidates = levelProducts
         .map(product => ({
             product,
-			score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier)
+            score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier)
         }))
         .sort((a, b) => b.score - a.score); // suurimmasta pienimpään
 
@@ -1282,7 +1589,7 @@ function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMa
         }
     });
 	
-	const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
+    const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
     score -= balancePenalty * BALANCE_WEIGHT;
 	
     return score;
@@ -1359,7 +1666,7 @@ function inputActive(){
     });		
 
 	// Uusi osa: käsittele kaikki templateAmount-inputit tasoittain (1,5,10,...)
-	const levels = [1, 5, 10, 15, 20, 25];
+        const levels = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45];
 	levels.forEach(level => {
 		const input = document.querySelector(`#templateAmount${level}`);
 		const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
@@ -1475,11 +1782,12 @@ function initAdvMaterialSection() {
     select.multiple = true;
     select.style.display = 'none';
 
-    [5,10,15,20,25].forEach(l => {
+    const defaultGearLevels = [25, 40, 45];
+    [5,10,15,20,25,30,35,40,45].forEach(l => {
         const optionDiv = document.createElement('div');
         optionDiv.dataset.value = l;
         optionDiv.textContent = l;
-        if (![5,10,15].includes(l)) {
+        if (defaultGearLevels.includes(l)) {
             optionDiv.classList.add('selected');
         }
         dropdown.appendChild(optionDiv);
@@ -1487,7 +1795,7 @@ function initAdvMaterialSection() {
         const opt = document.createElement('option');
         opt.value = l;
         opt.textContent = l;
-        if (![5,10,15].includes(l)) {
+        if (defaultGearLevels.includes(l)) {
             opt.selected = true;
         }
         select.appendChild(opt);
