@@ -41,14 +41,229 @@ h1.calc-header {
 .leveltmp1 {
     margin-top: 15px;
 }
+
+#generatebychoice {
+    max-width: 306px;
+}
 .temps {
     padding: 0;
     height: 34px;
-    background: transparent;
+    background: #fff;
     padding: 7px 10px;
     border: 1px solid var(--primary-color);
     box-sizing: border-box;
     border-radius: 4px;
+}
+
+.temps:focus,
+.temps:focus-visible {
+    background: #fff !important;
+    color: var(--text-color) !important;
+}
+
+/* Color-coded options for template quality */
+.temps option[value="poor"] {
+    color: #A9A9A9;
+}
+.temps option[value="common"] {
+    color: #32CD32;
+}
+.temps option[value="fine"] {
+    color: #0070DD;
+}
+.temps option[value="exquisite"] {
+    color: #A335EE;
+}
+.temps option[value="epic"] {
+    color: #FF8000;
+}
+.temps option[value="legendary"] {
+    color: #E5CC80;
+}
+
+.quality-select {
+    position: relative;
+    flex: 0 0 150px;
+}
+
+.quality-select__native {
+    position: absolute !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+.quality-select__display {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    height: 32px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    background: #fff;
+    padding: 0 12px;
+    margin-top: 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+button.quality-select__display:hover {
+    background: initial;
+}
+.quality-select__display:focus {
+    outline: none;
+    border-color: var(--button-bg);
+    box-shadow: 0 0 0 2px rgba(8, 103, 133, 0.25);
+}
+
+.quality-select.open .quality-select__display {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.quality-select__swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.quality-select__swatch--empty {
+    border-color: #d0d0d0;
+    background: transparent;
+}
+
+.quality-select__label {
+    flex: 1;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.quality-select__chevron {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--primary-color);
+    transition: transform 0.2s ease;
+    margin-left: auto;
+}
+
+.quality-select.open .quality-select__chevron {
+    transform: rotate(180deg);
+}
+
+.quality-select__options {
+    position: absolute;
+    top: calc(100% - 1px);
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--primary-color);
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+    padding: 4px 0;
+}
+
+.quality-select.open .quality-select__options {
+    display: flex;
+}
+
+.quality-select__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-color);
+    text-transform: capitalize;
+}
+
+.quality-select__option:hover {
+    background: var(--light-bg);
+}
+
+.quality-select__option:focus {
+    outline: none;
+    background: rgba(8, 103, 133, 0.12);
+}
+
+.quality-select__option.selected {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.quality-select__option.selected .quality-select__option-label {
+    color: #fff;
+}
+
+.quality-select__option-label {
+    flex: 1;
+}
+
+.quality-select__option[data-quality="poor"]:not(.selected) .quality-select__option-label {
+    color: #A9A9A9;
+}
+
+.quality-select__option[data-quality="common"]:not(.selected) .quality-select__option-label {
+    color: #32CD32;
+}
+
+.quality-select__option[data-quality="fine"]:not(.selected) .quality-select__option-label {
+    color: #0070DD;
+}
+
+.quality-select__option[data-quality="exquisite"]:not(.selected) .quality-select__option-label {
+    color: #A335EE;
+}
+
+.quality-select__option[data-quality="epic"]:not(.selected) .quality-select__option-label {
+    color: #FF8000;
+}
+
+.quality-select__option[data-quality="legendary"]:not(.selected) .quality-select__option-label {
+    color: #E5CC80;
+}
+
+.quality-select__display[data-quality-value="poor"] .quality-select__label {
+    color: #545454;
+}
+
+.quality-select__display[data-quality-value="common"] .quality-select__label {
+    color: #1f8a1f;
+}
+
+.quality-select__display[data-quality-value="fine"] .quality-select__label {
+    color: #0054a7;
+}
+
+.quality-select__display[data-quality-value="exquisite"] .quality-select__label {
+    color: #6f24b9;
+}
+
+.quality-select__display[data-quality-value="epic"] .quality-select__label {
+    color: #bf5b00;
+}
+
+.quality-select__display[data-quality-value="legendary"] .quality-select__label {
+    color: #c39b2b;
 }
 select#scaleSelect {
 	width: 100%;
@@ -80,6 +295,18 @@ select#scaleSelect option {
 p.craft-extra-info {
     margin-bottom: -5px;
     font-size: 15px;
+    text-align: center;
+}
+
+.materials-warning {
+    background: #fff7e6;
+    border: 1px solid #f0c36d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 16px 0 16px 0;
+    color: #8a5a00;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     text-align: center;
 }
 
@@ -623,18 +850,24 @@ button.multiplier-btn {
 
 .level-dropdown {
     display: flex;
-    gap: 5px;
+    gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 5px;
+    justify-content: center;
 }
 
 .level-dropdown div {
-    padding: 5px 10px;
+    padding: 10px 15px;
     border: 1px solid #d5d5d5;
     border-radius: 4px;
     cursor: pointer;
     user-select: none;
     background: #d5d5d5;
+}
+
+.level-dropdown div:hover {
+    background: #ececec;
+    border-color: #c7c7c7;
 }
 
 .level-dropdown div.selected {
