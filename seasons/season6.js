@@ -1,6 +1,7 @@
 const season6 = {
-	season: 6,
-	sets: [
+        season: 6,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Crannogman Trapper's",
 		  "setMat": "Alligator Skins",
