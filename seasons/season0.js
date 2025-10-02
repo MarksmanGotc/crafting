@@ -829,7 +829,727 @@ const season0 = {
 					"odds": "normal",
 					"warlord": true,
 					"setName": "Ceremonial Targaryen Warlord"
-				}
+				},
+				{
+					"name": "Kettle Helm",
+					"level": 30,
+					"materials": {"copper-bar": 6000, "goldenheart-wood": 6000},
+					"img": "item/30-45/icon_eq_standard_helmet_kettlehelm.png",
+					"odds": "low",
+				},
+				{
+					"name": "Garnet Forehead Pendant",
+					"level": 30,
+					"materials": {"dragonglass": 4000, "leather-straps": 4000, "wildfire": 4000},
+					"img": "item/30-45/icon_eq_standard_helmet_garnetforeheadpendant.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Officer's Plumed Helm",
+					"level": 30,
+					"materials": {"silk": 4000, "dragonglass": 4000, "hide": 4000},
+					"img": "item/30-45/icon_eq_standard_helmet_officersplumedhelm.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Silk Tunic",
+					"level": 30,
+					"materials": {"silk": 6000, "milk-of-the-poppy": 6000},
+					"img": "item/30-45/icon_eq_standard_chest_silktunic.png",
+					"odds": "low",
+				},
+				{
+					"name": "Gold Chainmail",
+					"level": 30,
+					"materials": {"leather-straps": 6000, "copper-bar": 6000},
+					"img": "item/30-45/icon_eq_standard_chest_goldchainmail.png",
+					"odds": "low",
+				},
+				{
+					"name": "Iron Brigandine",
+					"level": 30,
+					"materials": {"weirwood": 4000, "leather-straps": 4000, "hide": 4000},
+					"img": "item/30-45/icon_eq_standard_chest_ironbrigandine.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Gold-Thread Trousers",
+					"level": 30,
+					"materials": {"copper-bar": 4000, "kingswood-oak": 4000, "milk-of-the-poppy": 4000},
+					"img": "item/30-45/icon_eq_standard_pants_gold-threadtrousers.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Steel Culet",
+					"level": 30,
+					"materials": {"black-iron": 4000, "kingswood-oak": 4000, "goldenheart-wood": 4000},
+					"img": "item/30-45/icon_eq_standard_pants_steelculet.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Iron Poleyns",
+					"level": 30,
+					"materials": {"black-iron": 4000, "ironwood": 4000, "hide": 4000},
+					"img": "item/30-45/icon_eq_standard_pants_ironpoleyns.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Pathfinder's Boots",
+					"level": 30,
+					"materials": {"ironwood": 4000, "kingswood-oak": 4000, "milk-of-the-poppy": 4000},
+					"img": "item/30-45/icon_eq_standard_boots_pathfindersboots.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Silver Sabatons",
+					"level": 30,
+					"materials": {"copper-bar": 4000, "leather-straps": 4000, "milk-of-the-poppy": 4000},
+					"img": "item/30-45/icon_eq_standard_boots_silversabatons.png",
+					"odds": "medium",
+				},
+								{
+					"name": "Spiked Boots",
+					"level": 30,
+					"materials": {"leather-straps": 3000, "copper-bar": 3000, "wildfire": 3000, "dragonglass": 3000},
+					"img": "item/30-45/icon_eq_standard_boots_spikedboots.png",
+					"odds": "normal",
+				},
+				{
+					"name": "Obsidian Ring",
+					"level": 30,
+					"materials": {"black-iron": 4000, "wildfire": 4000, "silk": 4000},
+					"img": "item/30-45/icon_eq_standard_ring_obsidianring.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Lead Band",
+					"level": 30,
+					"materials": {"black-iron": 4000, "milk-of-the-poppy": 4000, "silk": 4000},
+					"img": "item/30-45/icon_eq_standard_ring_leadband.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Electrum & Bronze Braid",
+					"level": 30,
+					"materials": {"copper-bar": 4000, "black-iron": 4000, "milk-of-the-poppy": 4000},
+					"img": "item/30-45/icon_eq_standard_ring_electrumbronzebraid.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Recurve Bow",
+					"level": 30,
+					"materials": {"goldenheart-wood": 4000, "hide": 4000, "black-iron": 4000},
+					"img": "item/30-45/icon_eq_standard_weapon_recurvebow.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Glaive",
+					"level": 30,
+					"materials": {"leather-straps": 4000, "copper-bar": 4000, "hide": 4000},
+					"img": "item/30-45/icon_eq_standard_weapon_glaive.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Bastard Sword",
+					"level": 30,
+					"materials": {"weirwood": 4000, "leather-straps": 4000, "hide": 4000},
+					"img": "item/30-45/icon_eq_standard_weapon_bastardsword.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Helm",
+					"level": 30,
+					"materials": {"kingswood-oak": 3000, "wildfire": 3000, "hide": 3000, "milk-of-the-poppy": 3000},
+					"img": "item/ctw-head.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Chestplate",
+					"level": 30,
+					"materials": {"silk": 3000, "black-iron": 3000, "copper-bar": 3000, "dragonglass": 3000},
+					"img": "item/ctw-chest.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Pants",
+					"level": 30,
+					"materials": {"weirwood": 3000, "leather-straps": 3000, "black-iron": 3000, "silk": 3000},
+					"img": "item/ctw-pants.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Sword",
+					"level": 30,
+					"materials": {"copper-bar": 3000, "dragonglass": 3000, "leather-straps": 3000, "weirwood": 3000},
+					"img": "item/ctw-weapon.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Ring",
+					"level": 30,
+					"materials": {"ironwood": 3000, "goldenheart-wood": 3000, "wildfire": 3000, "kingswood-oak": 3000},
+					"img": "item/ctw-ring.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Boots",
+					"level": 30,
+					"materials": {"milk-of-the-poppy": 3000, "hide": 3000, "ironwood": 3000, "goldenheart-wood": 3000},
+					"img": "item/ctw-boots.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Emerald Forehead Pendant",
+					"level": 35,
+					"materials": {"dragonglass": 16000, "hide": 16000, "silk": 16000},
+					"img": "item/30-45/icon_eq_standard_helmet_emeraldforeheadpendant.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Casque",
+					"level": 35,
+					"materials": {"copper-bar": 16000, "kingswood-oak": 16000, "hide": 16000},
+					"img": "item/30-45/icon_eq_standard_helmet_casque.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Silk Chapeau",
+					"level": 35,
+					"materials": {"silk": 16000, "leather-straps": 16000, "milk-of-the-poppy": 16000},
+					"img": "item/30-45/icon_eq_standard_helmet_silkchapeau.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Satin Dress",
+					"level": 35,
+					"materials": {"silk": 24000, "milk-of-the-poppy": 24000},
+					"img": "item/30-45/icon_eq_standard_chest_satindress.png",
+					"odds": "low",
+				},
+				{
+					"name": "Steel Chainmail",
+					"level": 35,
+					"materials": {"leather-straps": 16000, "copper-bar": 16000, "black-iron": 16000},
+					"img": "item/30-45/icon_eq_standard_chest_steelchainmail.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Silvered Brigandine",
+					"level": 35,
+					"materials": {"ironwood": 24000, "dragonglass": 24000},
+					"img": "item/30-45/icon_eq_standard_chest_silveredbrigandine.png",
+					"odds": "low",
+				},
+				{
+					"name": "Electrum Tasset",
+					"level": 35,
+					"materials": {"copper-bar": 16000, "hide": 16000, "weirwood": 16000},
+					"img": "item/30-45/icon_eq_standard_pants_electrumtasset.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Fur-Lined Britches",
+					"level": 35,
+					"materials": {"hide": 16000, "ironwood": 16000, "kingswood-oak": 16000},
+					"img": "item/30-45/icon_eq_standard_pants_fur-linedbritches.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Balzarine Skirt",
+					"level": 35,
+					"materials": {"silk": 16000, "milk-of-the-poppy": 16000, "wildfire": 16000},
+					"img": "item/30-45/icon_eq_standard_pants_balzarineskirt.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Earthshakers",
+					"level": 35,
+					"materials": {"black-iron": 16000, "weirwood": 16000, "ironwood": 16000},
+					"img": "item/30-45/icon_eq_standard_boots_earthshakers.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Gold Sabatons",
+					"level": 35,
+					"materials": {"silk": 16000, "copper-bar": 16000, "milk-of-the-poppy": 16000},
+					"img": "item/30-45/icon_eq_standard_boots_goldsabatons.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Winged Boots",
+					"level": 35,
+					"materials": {"leather-straps": 16000, "wildfire": 16000, "dragonglass": 16000},
+					"img": "item/30-45/icon_eq_standard_boots_wingedboots.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Ecclesiastical Ring",
+					"level": 35,
+					"materials": {"dragonglass": 16000, "ironwood": 16000, "weirwood": 16000},
+					"img": "item/30-45/icon_eq_standard_ring_ecclesiasticalring.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Pale Steel Band",
+					"level": 35,
+					"materials": {"dragonglass": 16000, "weirwood": 16000, "goldenheart-wood": 16000},
+					"img": "item/30-45/icon_eq_standard_ring_palesteelband.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Poison Ring",
+					"level": 35,
+					"materials": {"dragonglass": 16000, "leather-straps": 16000, "black-iron": 16000},
+					"img": "item/30-45/icon_eq_standard_ring_poisonring.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Long Bow",
+					"level": 35,
+					"materials": {"goldenheart-wood": 12000, "silk": 12000, "hide": 12000, "dragonglass": 12000},
+					"img": "item/30-45/icon_eq_standard_weapon_longbow.png",
+					"odds": "normal",
+				},
+				{
+					"name": "Lance",
+					"level": 35,
+					"materials": {"leather-straps": 16000, "copper-bar": 16000, "black-iron": 16000},
+					"img": "item/30-45/icon_eq_standard_weapon_lance.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Falchion",
+					"level": 35,
+					"materials": {"ironwood": 16000, "black-iron": 16000, "copper-bar": 16000},
+					"img": "item/30-45/icon_eq_standard_weapon_falchion.png",
+					"odds": "medium",
+				},
+				{
+					"name": "Helm",
+					"level": 35,
+					"materials": {"kingswood-oak": 12000, "wildfire": 12000, "hide": 12000, "milk-of-the-poppy": 12000},
+					"img": "item/ctw-head.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Chestplate",
+					"level": 35,
+					"materials": {"silk": 12000, "black-iron": 12000, "copper-bar": 12000, "dragonglass": 12000},
+					"img": "item/ctw-chest.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Pants",
+					"level": 35,
+					"materials": {"weirwood": 12000, "leather-straps": 12000, "black-iron": 12000, "silk": 12000},
+					"img": "item/ctw-pants.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Sword",
+					"level": 35,
+					"materials": {"copper-bar": 12000, "dragonglass": 12000, "leather-straps": 12000, "weirwood": 12000},
+					"img": "item/ctw-weapon.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Ring",
+					"level": 35,
+					"materials": {"ironwood": 12000, "goldenheart-wood": 12000, "wildfire": 12000, "kingswood-oak": 12000},
+					"img": "item/ctw-ring.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Boots",
+					"level": 35,
+					"materials": {"milk-of-the-poppy": 12000, "hide": 12000, "ironwood": 12000, "goldenheart-wood": 12000},
+					"img": "item/ctw-boots.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Golden Crown",
+					"level": 40,
+					"materials": {"copper-bar": 45000, "leather-straps": 45000, "hide": 45000, "kingswood-oak": 45000},
+					"img": "item/30-45/icon_eq_standard_helmet_goldencrown.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Mark Of The Seven",
+					"level": 40,
+					"materials": {"wildfire": 45000, "kingswood-oak": 45000, "weirwood": 45000, "goldenheart-wood": 45000},
+					"img": "item/30-45/icon_eq_standard_helmet_markoftheseven.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Copper Circlet",
+					"level": 40,
+					"materials": {"copper-bar": 60000, "goldenheart-wood": 60000, "weirwood": 60000},
+					"img": "item/30-45/icon_eq_standard_helmet_coppercirclet.png",
+					"odds": "medium"
+				},
+				{
+					"name": "Courtesan's Outfit",
+					"level": 40,
+					"materials": {"silk": 60000, "leather-straps": 60000, "milk-of-the-poppy": 60000},
+					"img": "item/30-45/icon_eq_standard_chest_courtesansoutfit.png",
+					"odds": "medium"
+				},
+				{
+					"name": "Electrum Scalemail",
+					"level": 40,
+					"materials": {"weirwood": 45000, "kingswood-oak": 45000, "copper-bar": 45000, "black-iron": 45000},
+					"img": "item/30-45/icon_eq_standard_chest_electrumscalemail.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Iron Scalemail",
+					"level": 40,
+					"materials": {"goldenheart-wood": 45000, "kingswood-oak": 45000, "black-iron": 45000, "leather-straps": 45000},
+					"img": "item/30-45/icon_eq_standard_chest_ironscalemail.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Bronze Cuisse",
+					"level": 40,
+					"materials": {"copper-bar": 45000, "weirwood": 45000, "goldenheart-wood": 45000, "hide": 45000},
+					"img": "item/30-45/icon_eq_standard_pants_bronzecuisse.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Velour Pants",
+					"level": 40,
+					"materials": {"hide": 45000, "wildfire": 45000, "milk-of-the-poppy": 45000, "kingswood-oak": 45000},
+					"img": "item/30-45/icon_eq_standard_pants_velourpants.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Iron Greaves",
+					"level": 40,
+					"materials": {"black-iron": 45000, "ironwood": 45000, "wildfire": 45000, "copper-bar": 45000},
+					"img": "item/30-45/icon_eq_standard_pants_irongreaves.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Copper Spiked Kickers",
+					"level": 40,
+					"materials": {"copper-bar": 45000, "leather-straps": 45000, "wildfire": 45000, "milk-of-the-poppy": 45000},
+					"img": "item/30-45/icon_eq_standard_boots_copperspikedkickers.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Black Iron Sabatons",
+					"level": 40,
+					"materials": {"silk": 45000, "black-iron": 45000, "wildfire": 45000, "hide": 45000},
+					"img": "item/30-45/icon_eq_standard_boots_blackironsabatons.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Blackwater Treads",
+					"level": 40,
+					"materials": {"weirwood": 45000, "black-iron": 45000, "hide": 45000, "kingswood-oak": 45000},
+					"img": "item/30-45/icon_eq_standard_boots_blackwatertreads.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Sapphire Ring",
+					"level": 40,
+					"materials": {"dragonglass": 45000, "weirwood": 45000, "hide": 45000, "milk-of-the-poppy": 45000},
+					"img": "item/30-45/icon_eq_standard_ring_sapphire.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Ruby Ring",
+					"level": 40,
+					"materials": {"dragonglass": 45000, "kingswood-oak": 45000, "silk": 45000, "milk-of-the-poppy": 45000},
+					"img": "item/30-45/icon_eq_standard_ring_ruby.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Iron Ring",
+					"level": 40,
+					"materials": {"black-iron": 45000, "leather-straps": 45000, "ironwood": 45000, "goldenheart-wood": 45000},
+					"img": "item/30-45/icon_eq_standard_ring_ironring.png",
+					"odds": "normal"
+				},
+				{
+					"name": "heavy Crossbow",
+					"level": 40,
+					"materials": {"weirwood": 45000, "leather-straps": 45000, "hide": 45000, "dragonglass": 45000},
+					"img": "item/30-45/icon_eq_standard_weapon_heavycrossbow.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Long Sword",
+					"level": 40,
+					"materials": {"weirwood": 45000, "kingswood-oak": 45000, "copper-bar": 45000, "black-iron": 45000},
+					"img": "item/30-45/icon_eq_standard_weapon_longsword.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Poleaxe",
+					"level": 40,
+					"materials": {"goldenheart-wood": 45000, "kingswood-oak": 45000, "black-iron": 45000, "leather-straps": 45000},
+					"img": "item/30-45/icon_eq_standard_weapon_poleaxe.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Helm",
+					"level": 40,
+					"materials": {"kingswood-oak": 45000, "wildfire": 45000, "hide": 45000, "milk-of-the-poppy": 45000},
+					"img": "item/ctw-head.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Chestplate",
+					"level": 40,
+					"materials": {"silk": 45000, "black-iron": 45000, "copper-bar": 45000, "dragonglass": 45000},
+					"img": "item/ctw-chest.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Pants",
+					"level": 40,
+					"materials": {"weirwood": 45000, "leather-straps": 45000, "black-iron": 45000, "silk": 45000},
+					"img": "item/ctw-pants.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Sword",
+					"level": 40,
+					"materials": {"copper-bar": 45000, "dragonglass": 45000, "leather-straps": 45000, "weirwood": 45000},
+					"img": "item/ctw-weapon.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Ring",
+					"level": 40,
+					"materials": {"ironwood": 45000, "goldenheart-wood": 45000, "wildfire": 45000, "kingswood-oak": 45000},
+					"img": "item/ctw-ring.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Boots",
+					"level": 40,
+					"materials": {"milk-of-the-poppy": 45000, "hide": 45000, "ironwood": 45000, "goldenheart-wood": 45000},
+					"img": "item/ctw-boots.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Jewl Encrusted Tiara",
+					"level": 45,
+					"materials": {"dragonglass": 120000, "wildfire": 120000, "kingswood-oak": 120000, "silk": 120000},
+					"img": "item/30-45/icon_eq_standard_helmet_jewelencrustedtiara.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Assassin's Cowl",
+					"level": 45,
+					"materials": {"silk": 120000, "leather-straps": 120000, "hide": 120000, "kingswood-oak": 120000},
+					"img": "item/30-45/icon_eq_standard_helmet_assassinscowl.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Sapphire Forehead Pendant",
+					"level": 45,
+					"materials": {"dragonglass": 120000, "ironwood": 120000, "kingswood-oak": 120000, "hide": 120000},
+					"img": "item/30-45/icon_eq_standard_helmet_sapphireforeheadpendant.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Golden Raiment",
+					"level": 45,
+					"materials": {"goldenheart-wood": 120000, "copper-bar": 120000, "weirwood": 120000, "ironwood": 120000},
+					"img": "item/30-45/icon_eq_standard_chest_goldenraiment.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Bronze Cuirass",
+					"level": 45,
+					"materials": {"ironwood": 120000, "kingswood-oak": 120000, "hide": 120000, "dragonglass": 120000},
+					"img": "item/30-45/icon_eq_standard_chest_bronzecuirass.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Lead Cuirass",
+					"level": 45,
+					"materials": {"black-iron": 120000, "weirwood": 120000, "silk": 120000, "goldenheart-wood": 120000},
+					"img": "item/30-45/icon_eq_standard_chest_leadcuirass.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Steel Greaves",
+					"level": 45,
+					"materials": {"black-iron": 120000, "ironwood": 120000, "weirwood": 120000, "goldenheart-wood": 120000},
+					"img": "item/30-45/icon_eq_standard_pants_steelgreaves.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Wolf Pelt Trousers",
+					"level": 45,
+					"materials": {"hide": 120000, "kingswood-oak": 120000, "silk": 120000, "milk-of-the-poppy": 120000},
+					"img": "item/30-45/icon_eq_standard_pants_wolfpelttrousers.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Satin Skirt",
+					"level": 45,
+					"materials": {"silk": 120000, "milk-of-the-poppy": 120000, "kingswood-oak": 120000, "copper-bar": 120000},
+					"img": "item/30-45/icon_eq_standard_pants_satinskirt.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Lead Soled Shoes",
+					"level": 45,
+					"materials": {"kingswood-oak": 120000, "black-iron": 120000, "weirwood": 120000, "copper-bar": 120000},
+					"img": "item/30-45/icon_eq_standard_boots_leadsoledshoes.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Copper Sabatons",
+					"level": 45,
+					"materials": {"copper-bar": 120000, "ironwood": 120000, "kingswood-oak": 120000, "milk-of-the-poppy": 120000},
+					"img": "item/30-45/icon_eq_standard_boots_coppersabatons.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Spurred Treads",
+					"level": 45,
+					"materials": {"ironwood": 120000, "dragonglass": 120000, "goldenheart-wood": 120000, "hide": 120000},
+					"img": "item/30-45/icon_eq_standard_boots_spurredtreads.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Pearl Ring",
+					"level": 45,
+					"materials": {"dragonglass": 120000, "hide": 120000, "ironwood": 120000, "goldenheart-wood": 120000},
+					"img": "item/30-45/icon_eq_standard_ring_pearl.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Emerald Ring",
+					"level": 45,
+					"materials": {"dragonglass": 120000, "weirwood": 120000, "milk-of-the-poppy": 120000, "goldenheart-wood": 120000},
+					"img": "item/30-45/icon_eq_standard_ring_emerald.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Gold Loop",
+					"level": 45,
+					"materials": {"copper-bar": 120000, "weirwood": 120000, "silk": 120000, "milk-of-the-poppy": 120000},
+					"img": "item/30-45/icon_eq_standard_ring_goldloop.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Triple Crossbow",
+					"level": 45,
+					"materials": {"goldenheart-wood": 120000, "kingswood-oak": 120000, "weirwood": 120000, "ironwood": 120000},
+					"img": "item/30-45/icon_eq_standard_weapon_triplecrossbow.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Morningstar",
+					"level": 45,
+					"materials": {"ironwood": 120000, "kingswood-oak": 120000, "hide": 120000, "wildfire": 120000},
+					"img": "item/30-45/icon_eq_standard_weapon_morningstar.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Battle Axe",
+					"level": 45,
+					"materials": {"weirwood": 120000, "copper-bar": 120000, "silk": 120000, "goldenheart-wood": 120000},
+					"img": "item/30-45/icon_eq_standard_weapon_battleaxe.png",
+					"odds": "normal"
+				},
+				{
+					"name": "Helm",
+					"level": 45,
+					"materials": {"kingswood-oak": 120000, "wildfire": 120000, "hide": 120000, "milk-of-the-poppy": 120000},
+					"img": "item/ctw-head.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Chestplate",
+					"level": 45,
+					"materials": {"silk": 120000, "black-iron": 120000, "copper-bar": 120000, "dragonglass": 120000},
+					"img": "item/ctw-chest.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Pants",
+					"level": 45,
+					"materials": {"weirwood": 120000, "leather-straps": 120000, "black-iron": 120000, "silk": 120000},
+					"img": "item/ctw-pants.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Sword",
+					"level": 45,
+					"materials": {"copper-bar": 120000, "dragonglass": 120000, "leather-straps": 120000, "weirwood": 120000},
+					"img": "item/ctw-weapon.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Ring",
+					"level": 45,
+					"materials": {"ironwood": 120000, "goldenheart-wood": 120000, "wildfire": 120000, "kingswood-oak": 120000},
+					"img": "item/ctw-ring.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
+				{
+					"name": "Boots",
+					"level": 45,
+					"materials": {"milk-of-the-poppy": 120000, "hide": 120000, "ironwood": 120000, "goldenheart-wood": 120000},
+					"img": "item/ctw-boots.png",
+					"odds": "normal",
+					"warlord": true,
+					"setName": "Ceremonial Targaryen Warlord"
+				},
 			]
 		}
 	]
