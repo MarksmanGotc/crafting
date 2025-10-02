@@ -1,6 +1,7 @@
 const season10 = {
-	season: 10,
-	sets: [
+        season: 10,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 			setName: "Fishmonger",
 			setMat: "Fishmongers Fishing Net",
