@@ -1,6 +1,7 @@
 const season4 = {
-	season: 4,
-	sets: [
+        season: 4,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Dragonkeeper's",
 		  "setMat": "Black Scalemail",
