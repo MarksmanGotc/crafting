@@ -1,6 +1,7 @@
 const season7 = {
-	season: 7,
-	sets: [
+        season: 7,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Storm Lord's",
 		  "setMat": "Boiled Leather",
