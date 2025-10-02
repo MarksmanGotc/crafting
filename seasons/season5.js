@@ -1,6 +1,7 @@
 const season5 = {
-	season: 5,
-	sets: [
+        season: 5,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Fiery Zealot's",
 		  "setMat": "Crimson Taffeta",
