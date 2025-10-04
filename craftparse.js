@@ -48,6 +48,12 @@ const GEAR_BASELINE_BONUS = BASE_MOST_WEIGHT;
 const LEFTOVER_WEIGHT_BASE = 7;
 const LEFTOVER_WEIGHT_GEAR = 3;
 const BALANCE_WEIGHT = 0.1;
+const CTW_SET_NAME_FALLBACK = 'Ceremonial Targaryen Warlord';
+const ctwSetName =
+    typeof window !== 'undefined' && window.CTW_SET_NAME
+        ? window.CTW_SET_NAME
+        : CTW_SET_NAME_FALLBACK;
+
 const SeasonZeroPreference = Object.freeze({
     OFF: 0,
     LOW: 1,
@@ -62,11 +68,12 @@ const seasonZeroValueText = {
 };
 const SEASON_ZERO_SCORE_DEFAULT = Object.freeze({ seasonZero: 0, nonSeason: 0 });
 const SEASON_ZERO_SCORE_ADJUSTMENTS = Object.freeze({
-    [SeasonZeroPreference.LOW]: Object.freeze({ seasonZero: 100, nonSeason: -100 }),
+    // Non-season adjustments remain at zero so that the slider only influences Season 0 items.
+    [SeasonZeroPreference.LOW]: Object.freeze({ seasonZero: 100, nonSeason: 0 }),
     // Normal weighting sits roughly halfway between the low and high configurations
     // to provide a smoother progression without overwhelming the default results.
-    [SeasonZeroPreference.NORMAL]: Object.freeze({ seasonZero: 700, nonSeason: -500 }),
-    [SeasonZeroPreference.HIGH]: Object.freeze({ seasonZero: 1400, nonSeason: -1000 })
+    [SeasonZeroPreference.NORMAL]: Object.freeze({ seasonZero: 700, nonSeason: 0 }),
+    [SeasonZeroPreference.HIGH]: Object.freeze({ seasonZero: 1400, nonSeason: 0 })
 });
 let currentSeasonZeroPreference = SeasonZeroPreference.NORMAL;
 const qualityColorMap = {
@@ -82,7 +89,6 @@ let failedLevels = [];
 let requestedTemplates = {};
 let remainingUse = {};
 let ctwMediumNotice = false;
-let lowOddsNotice = false;
 let level20OnlyWarlordsActive = false;
 const productsByLevel = craftItem.products.reduce((acc, product) => {
     const levelKey = product.level.toString();
@@ -123,6 +129,89 @@ function waitForNextFrame() {
             requestAnimationFrame(() => resolve());
         } else {
             setTimeout(resolve, 0);
+        }
+    });
+}
+
+function isLocalStorageAvailable() {
+    try {
+        if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
+            return false;
+        }
+        const testKey = '__noox_update_log__';
+        window.localStorage.setItem(testKey, testKey);
+        window.localStorage.removeItem(testKey);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+function initializeUpdateLog() {
+    const overlay = document.getElementById('updateLogOverlay');
+    const trigger = document.getElementById('openUpdateLog');
+
+    if (!overlay || !trigger) {
+        return;
+    }
+
+    const closeButton = overlay.querySelector('.close-popup');
+    const storageKey = 'noox-update-log-2024-05-14';
+    const storageSupported = isLocalStorageAvailable();
+    const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
+
+    const markSeen = () => {
+        if (storageSupported) {
+            try {
+                window.localStorage.setItem(storageKey, 'seen');
+            } catch (error) {
+                // Ignore storage failures silently
+            }
+        }
+    };
+
+    const setExpandedState = (expanded) => {
+        trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    };
+
+    const openOverlay = () => {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        setExpandedState(true);
+    };
+
+    const closeOverlay = (shouldMarkSeen = false) => {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        setExpandedState(false);
+        if (shouldMarkSeen) {
+            markSeen();
+        }
+    };
+
+    if (!hasSeenUpdate) {
+        openOverlay();
+    }
+
+    trigger.addEventListener('click', () => {
+        if (overlay.style.display === 'flex') {
+            closeOverlay(true);
+        } else {
+            openOverlay();
+        }
+    });
+
+    closeButton?.addEventListener('click', () => closeOverlay(true));
+
+    overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+            closeOverlay(true);
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && overlay.style.display === 'flex') {
+            closeOverlay(true);
         }
     });
 }
@@ -463,6 +552,7 @@ function applySeasonZeroPreference(products, preference) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    initializeUpdateLog();
     createLevelStructure();
     addCalculateButton();
         formatedInputNumber();
@@ -1119,14 +1209,6 @@ function renderResults(templateCounts, materialCounts) {
                 extraInfo.textContent = "Medium odds items were used because otherwise no items would be generated. At level 20, Ceremonial Targaryen Warlord items are categorized as 'medium odds'.";
                 itemsDiv.appendChild(extraInfo);
             }
-            if (lvl === 20 && lowOddsNotice && !level20OnlyWarlordsActive) {
-                const extraInfo = document.createElement('p');
-                extraInfo.className = 'craft-extra-info';
-                extraInfo.textContent = "Low odds items were used because otherwise no items would be generated.";
-                itemsDiv.appendChild(extraInfo);
-            }
-            
-
             const levelGroup = document.createElement('div');
             levelGroup.className = 'level-group';
             itemsDiv.appendChild(levelGroup);
@@ -1498,7 +1580,6 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
     const level20Allowed = hasGearMaterials && allowedGearLevels.includes(20);
     level20OnlyWarlordsActive = level20OnlyWarlords;
     ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed && !level20OnlyWarlords;
-    lowOddsNotice = !includeWarlords && !includeMediumOdds && !includeLowOdds;
     const progress = typeof progressTick === 'function' ? progressTick : async () => {};
 
     const getLevelProducts = (level, { requireCtwOnly = false } = {}) => {
@@ -1518,7 +1599,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
     const applyLevelFilters = (level, levelProducts, multiplier, { requireCtwOnly = false } = {}) => {
         let filtered = levelProducts;
         if (!allowedGearLevels.includes(level)) {
-            filtered = filtered.filter(p => p.season == 0);
+            filtered = filtered.filter(p => p.season == 0 || p.setName === ctwSetName);
         }
         const isLegendary = multiplier >= 1024;
         filtered = filtered.filter(p => {
@@ -1527,7 +1608,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
             }
             const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
             if (!applyOdds) return true;
-            if (p.odds === 'low') return includeLowOdds || (lowOddsNotice && p.level === 20);
+            if (p.odds === 'low') return includeLowOdds;
             if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
             return true;
         });
@@ -1787,11 +1868,9 @@ function computeBalancePenalty(product, availableMaterials, multiplier = 1) {
 
 function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier = 1) {
     let score = 0;
-    const seasonZeroPreference = getSeasonZeroPreference();
     const availableMap = getNormalizedKeyMap(availableMaterials);
-    const shouldApplyGearBaselineBonus =
-        seasonZeroPreference === SeasonZeroPreference.LOW ||
-        seasonZeroPreference === SeasonZeroPreference.NORMAL;
+    const seasonZeroPreference = getSeasonZeroPreference();
+    const shouldApplyGearBaselineBonus = true; // Season 0 slider should not modify non-season gear weighting
     Object.entries(product.materials).forEach(([material, _]) => {
         const season = materialToSeason[material] || 0;
         const isGear = season !== 0;
@@ -1829,12 +1908,10 @@ function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMa
     const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
     score -= balancePenalty * BALANCE_WEIGHT;
 
-    const { seasonZero: seasonZeroAdjustment, nonSeason: nonSeasonAdjustment } = getSeasonZeroScoreAdjustments(seasonZeroPreference);
+    const { seasonZero: seasonZeroAdjustment } = getSeasonZeroScoreAdjustments(seasonZeroPreference);
 
     if (product.season === 0) {
         score += seasonZeroAdjustment;
-    } else {
-        score += nonSeasonAdjustment;
     }
 
     return score;
