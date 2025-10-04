@@ -36,6 +36,7 @@ h1.calc-header {
     color: var(--primary-color);
     text-align: center;
     font-size: 30px;
+    padding-top: 50px;
 }
 
 .leveltmp1 {
@@ -438,6 +439,80 @@ button.info-btn:hover {
     box-shadow: 0px 4px 8px 0px var(--shadow-color);
     border-radius: 8px;
     position: relative;
+}
+
+.update-log-trigger {
+    /* position: absolute; */
+    /* top: 24px; */
+    /* left: 16px; */
+    /* z-index: 2; */
+    float: left;
+}
+
+.update-log-trigger button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    color: var(--primary-color);
+    box-shadow: none;
+    transition: transform 0.2s ease, color 0.2s ease;
+    border: none;
+    padding: 0;
+    margin: 0;
+    height: 30px;
+    width: 30px;
+}
+
+.update-log-trigger button svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.update-log-trigger button:hover,
+.update-log-trigger button:focus-visible {
+    transform: scale(1.05);
+    color: var(--button-bg-hover);
+    outline: none;
+    background: initial;
+}
+
+.changelog-overlay .info-content {
+    max-width: 480px;
+    text-align: left;
+}
+
+.changelog-overlay .info-content h2 {
+    font-size: 20px;
+    margin: 0 0 12px 0;
+    color: var(--primary-color);
+}
+
+.changelog-overlay .info-content p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.changelog-overlay .info-content ul {
+    margin: 12px 0 16px 0;
+    padding-left: 20px;
+}
+
+.changelog-overlay .info-content li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.changelog-overlay .info-content li strong {
+    color: var(--primary-color);
+}
+
+.changelog-footer {
+    margin: 0;
+    font-size: 13px;
+    color: #555;
 }
 
 h3, h4 {
@@ -1103,9 +1178,10 @@ button.multiplier-btn {
     color: #08425a;
 }
 .donate-header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    /* width: 70%; */
+    /* display: flex; */
+    /* justify-content: center; */
+    float: right;
 }
 
 .donate-header button#openGiftFromHeader {
@@ -1113,7 +1189,7 @@ button.multiplier-btn {
     color: #08425a;
     column-gap: 10px;
     margin: 0;
-    padding-top: 0;
+    padding-top: 5px;
     display: flex;
     justify-content: flex-end;
     flex-direction: row;
