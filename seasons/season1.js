@@ -1,6 +1,7 @@
 const season1 = {
-	season: 1,
-	sets: [
+        season: 1,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Corsair's",
 		  "setMat": "Abalone",

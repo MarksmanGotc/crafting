@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +14,10 @@
     <link rel="stylesheet" href="style.css?v=1.115">
 	<script src="seasons/season0.js"></script>
 	<script src="seasons/season1.js"></script>
-	<script src="seasons/season2.js"></script>
-	<script src="seasons/season3.js"></script>
-	<script src="seasons/season4.js"></script>
+        <script src="seasons/season2.js"></script>
+        <script src="seasons/season3.js"></script>
+        <script src="seasons/seasonctw.js"></script>
+        <script src="seasons/season4.js"></script>
 	<script src="seasons/season5.js"></script>
 	<script src="seasons/season6.js"></script>
 	<script src="seasons/season7.js"></script>
@@ -28,9 +28,9 @@
 	<script src="seasons/season12.js"></script>
     <script src="products.js"></script>
     <script src="materials.js"></script>
-    <script defer src="craftparse.js?v=1.111"></script>
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-3KDS4M7C1F"></script>
-	<script>
+    <script defer src="craftparse.js?v=1.113"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KDS4M7C1F"></script>
+    <script>
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
 	  gtag('js', new Date());
@@ -40,9 +40,28 @@
 </head>
 <body>
     <div class="wrapper">
-		<!-- Materiaalien valinta -->
-		
-		<div id="generatebychoice">
+                
+                <!-- Materiaalien valinta -->
+
+                <div id="generatebychoice">
+					<div class="update-log-trigger">
+                        <button id="openUpdateLog" type="button" aria-label="View the latest updates" aria-haspopup="dialog" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Pro v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2025 Fonticons, Inc.--><path d="M518.6 109.3L530.7 121.4C543.2 133.9 543.2 154.2 530.7 166.7L504 193.4L446.6 136L473.4 109.3C485.9 96.8 506.2 96.8 518.7 109.3zM253 329.6L424 158.7L481.4 216.1L310.4 387.1C306.2 391.3 300.8 394.3 295 395.7L229.4 410.8L244.5 345.2C245.8 339.4 248.8 334 253.1 329.8zM450.7 86.6L230.4 307C221.9 315.5 216 326.2 213.3 337.9L192.4 428.5C191.2 433.9 192.8 439.5 196.7 443.4C200.6 447.3 206.2 448.9 211.6 447.7L302.2 426.8C313.9 424.1 324.6 418.2 333.1 409.7L553.4 189.3C578.4 164.3 578.4 123.8 553.4 98.8L541.3 86.6C516.3 61.6 475.8 61.6 450.8 86.6zM144 128C99.8 128 64 163.8 64 208L64 496C64 540.2 99.8 576 144 576L432 576C476.2 576 512 540.2 512 496L512 368C512 359.2 504.8 352 496 352C487.2 352 480 359.2 480 368L480 496C480 522.5 458.5 544 432 544L144 544C117.5 544 96 522.5 96 496L96 208C96 181.5 117.5 160 144 160L272 160C280.8 160 288 152.8 288 144C288 135.2 280.8 128 272 128L144 128z"/></svg>
+                        </button>
+                </div>
+                <div id="updateLogOverlay" class="info-overlay changelog-overlay" role="dialog" aria-modal="true" aria-labelledby="updateLogTitle" aria-hidden="true">
+                        <div class="info-content changelog-content">
+                                <button class="close-popup" type="button" aria-label="Close update log">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>
+                                </button>
+                                <h2 id="updateLogTitle">What&rsquo;s new &ndash; 10/04/2025</h2>
+                                <ul>
+                                        <li><strong>Levels 30&ndash;45 coverage:</strong> You can now prepare high-level templates without leaving the calculator, making late-game planning effortless.</li>
+                                        <li><strong>Season 0 weighting control:</strong> Choose how much influence Season 0 items have in the recommendations with an intuitive slider.</li>
+                                        <li><strong>Enhanced calculation algorithm:</strong> Behind-the-scenes logic improvements make the planner handle the expanded dataset more reliably.</li>
+                                </ul>
+                        </div>
+                </div>
 			<div class="donate-header">
 				<button id="openGiftFromHeader">
 					<span>Support this project</span>
@@ -60,7 +79,10 @@
                         </select>
 
                         <div id="yourMaterials" class="material-choices">
-                                <div class="section-title"><div class="checkbox-header"><span>Your materials</span></div></div>
+                                <div class="section-title"><div class="checkbox-header"><span>Your materials</span><button id="yourMaterialsInfoBtn" class="info-btn" aria-label="Your materials info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+                                </button></div></div>
+                                <div id="yourMaterialsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p>Enter the total amount of each material at <b>Poor</b> quality. If your inventory is in higher tiers, downgrade them in-game and use the resulting Poor total here. This ensures the calculator matches the expected material scale.</p></div></div>
                                 <div class="materials-list">
 					<div class="my-material black-iron"><img src="materials/icon_crafting_blackiron.webp"><div><span>Black Iron</span><input type="text" class="numeric-input" id="my-black-iron" name="my-black-iron" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
 					<div class="my-material copper-bar"><img src="materials/icon_crafting_copper_bar.webp"><div><span>Copper bar</span><input type="text" class="numeric-input" id="my-copper-bar" name="my-copper-bar" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
@@ -153,34 +175,98 @@
 					<option value="legendary">Legendary</option>
 				</select>
 			</div>
-			<div class="leveltmp25">
-				<div class="templateAmountWrap">
-					<label for="templateAmount25">level 25</label>
-					<input type="number" id="templateAmount25" placeholder="120" min="0">
-				</div>
-				<select name="temp25" id="temp25" class="temps">
-					<option value="poor">Poor</option>
-					<option value="common">Common</option>
-					<option value="fine">Fine</option>
-					<option value="exquisite" selected>Exquisite</option>
-					<option value="epic">Epic</option>
-					<option value="legendary">Legendary</option>
-				</select>
-			</div>
+                        <div class="leveltmp25">
+                                <div class="templateAmountWrap">
+                                        <label for="templateAmount25">level 25</label>
+                                        <input type="number" id="templateAmount25" placeholder="120" min="0">
+                                </div>
+                                <select name="temp25" id="temp25" class="temps">
+                                        <option value="poor">Poor</option>
+                                        <option value="common">Common</option>
+                                        <option value="fine">Fine</option>
+                                        <option value="exquisite" selected>Exquisite</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                </select>
+                        </div>
+                        <div class="leveltmp30">
+                                <div class="templateAmountWrap">
+                                        <label for="templateAmount30">level 30</label>
+                                        <input type="number" id="templateAmount30" placeholder="120" min="0">
+                                </div>
+                                <select name="temp30" id="temp30" class="temps">
+                                        <option value="poor">Poor</option>
+                                        <option value="common">Common</option>
+                                        <option value="fine" selected>Fine</option>
+                                        <option value="exquisite">Exquisite</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                </select>
+                        </div>
+                        <div class="leveltmp35">
+                                <div class="templateAmountWrap">
+                                        <label for="templateAmount35">level 35</label>
+                                        <input type="number" id="templateAmount35" placeholder="120" min="0">
+                                </div>
+                                <select name="temp35" id="temp35" class="temps">
+                                        <option value="poor">Poor</option>
+                                        <option value="common">Common</option>
+                                        <option value="fine" selected>Fine</option>
+                                        <option value="exquisite">Exquisite</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                </select>
+                        </div>
+                        <div class="leveltmp40">
+                                <div class="templateAmountWrap">
+                                        <label for="templateAmount40">level 40</label>
+                                        <input type="number" id="templateAmount40" placeholder="120" min="0">
+                                </div>
+                                <select name="temp40" id="temp40" class="temps">
+                                        <option value="poor">Poor</option>
+                                        <option value="common">Common</option>
+                                        <option value="fine" selected>Fine</option>
+                                        <option value="exquisite">Exquisite</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                </select>
+                        </div>
+                        <div class="leveltmp45">
+                                <div class="templateAmountWrap">
+                                        <label for="templateAmount45">level 45</label>
+                                        <input type="number" id="templateAmount45" placeholder="120" min="0">
+                                </div>
+                                <select name="temp45" id="temp45" class="temps">
+                                        <option value="poor">Poor</option>
+                                        <option value="common" selected>Common</option>
+                                        <option value="fine">Fine</option>
+                                        <option value="exquisite">Exquisite</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                </select>
+                        </div>
 			
                         <div class="section-title"><div class="checkbox-header"><span>Ceremonial Targaryen Warlord</span><button id="ctwInfoBtn" class="info-btn" aria-label="CTW info">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
                         </button></div></div>
                         <div id="ctwInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-					<path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
-				</svg></button><p><b>Only for Level 1</b>: Level 1 templates will exclusively use Ceremonial Targ items. This is more material-efficient as these items are cheaper to produce.<br><br>
-			<b>Use when needed</b>: Ceremonial Targaryen Warlord items can be used at any level when material constraints make it beneficial. This does not force their use, but allows it as needed.</p></div></div>
+                                        <path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+                               </svg></button><p><b>Only for Level 1</b>: Level 1 templates will exclusively use Ceremonial Targaryen Warlord items. This is more material-efficient as these items are cheaper to produce.<br><br>
+                        <b>Only for Level 20</b>: Level 20 templates will exclusively use Ceremonial Targaryen Warlord items, ensuring the Ceremonial Targaryen Warlord set is crafted even when other warlord options are unavailable.<br><br>
+                        <b>Use when needed</b>: Ceremonial Targaryen Warlord items can be used at any level when material constraints make it beneficial. This does not force their use, but allows it as needed.</p></div></div>
                         <div class="warlord-toggle checkbox-wrapper-30">
                             <span class="checkbox">
                                 <input type="checkbox" id="level1OnlyWarlords" checked>
                                 <svg><use xlink:href="#checkbox-30"></use></svg>
                             </span>
                             <label for="level1OnlyWarlords">Only for Level 1</label>
+                        </div>
+                        <div class="warlord-toggle checkbox-wrapper-30">
+                            <span class="checkbox">
+                                <input type="checkbox" id="level20OnlyWarlords" checked>
+                                <svg><use xlink:href="#checkbox-30"></use></svg>
+                            </span>
+                            <label for="level20OnlyWarlords">Only for Level 20</label>
                         </div>
                         <div class="warlord-toggle checkbox-wrapper-30">
                             <span class="checkbox">
@@ -193,8 +279,8 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
                         </button></div></div>
                         <div id="oddsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-					<path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
-                               </svg></button><p><b>Odds</b>: Items are grouped into three tiers. Normal odds are always active, while medium and low odds can be toggled on or off. Odds apply to Season 0 and Ceremonial Targaryen Warlord items at levels 15, 20, and 25. Season 1 and Season 2 items are affected only at level 20.</p></div></div>
+                                        <path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path>
+                               </svg></button><p><b>Odds</b>: Items are grouped into three tiers. Normal odds stay active, while medium and low odds can be toggled on or off. Season 0 gear and Ceremonial Targaryen Warlord pieces respond to these toggles wherever odds apply (level 20 CTW requires the medium toggle), while Season 1 and Season 2 gear only react at level 20.</p></div></div>
                         <div class="warlord-toggle checkbox-wrapper-30">
                             <span class="checkbox">
                                 <input type="checkbox" id="includeLowOdds">
@@ -208,6 +294,43 @@
                                 <svg><use xlink:href="#checkbox-30"></use></svg>
                             </span>
                             <label for="includeMediumOdds">Include medium odds items</label>
+                        </div>
+                        <div class="season-zero-section">
+                            <div class="section-title">
+                                <div class="checkbox-header">
+                                    <span>Season 0 weighting</span>
+                                    <button id="seasonZeroInfoBtn" class="info-btn" aria-label="Season 0 weighting info">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="seasonZeroInfoPopup" class="info-overlay">
+                                <div class="info-content">
+                                    <button class="close-popup" aria-label="Close">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>
+                                    </button>
+                                    <p>Use the slider to fine-tune how much the calculator favours Season 0 items. Off removes them, Low gently reduces their priority, Normal keeps the default balance, and High heavily prioritises Season 0 over other seasons.</p>
+                                </div>
+                            </div>
+                            <div class="season-zero-slider">
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="3"
+                                    step="1"
+                                    value="2"
+                                    id="seasonZeroPriority"
+                                    class="season-zero-slider__input"
+                                    aria-label="Season 0 weighting"
+                                    aria-describedby="seasonZeroPriorityLabels"
+                                >
+                                <div class="season-zero-slider__labels" id="seasonZeroPriorityLabels">
+                                    <span>Off</span>
+                                    <span>Low</span>
+                                    <span>Normal</span>
+                                    <span>High</span>
+                                </div>
+                            </div>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
                             <symbol id="checkbox-30" viewBox="0 0 22 22">
@@ -247,7 +370,17 @@
 				</script>
 			</div>
 		</div>
-		<div class="spinner-wrap"><div class="loading"><div class="spinner"><svg viewBox="25 25 50 50" class="circular"><circle stroke-miterlimit="10" stroke-width="3" fill="none" r="20" cy="50" cx="50" class="path"></circle></svg></div><p>Loading...</p></div></div>
+            <div class="spinner-wrap">
+                    <div class="loading">
+                            <p class="loading-message">Preparing calculations…</p>
+                            <div class="spinner-progress" aria-live="polite">
+                                    <div class="spinner-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="spinner-progress__bar"></div>
+                                    </div>
+                                    <span class="spinner-progress__label">Preparing templates…</span>
+                            </div>
+                    </div>
+            </div>
     </div>
         
     <footer>
@@ -259,3 +392,6 @@
 	</footer>
 </body>
 </html>
+
+
+

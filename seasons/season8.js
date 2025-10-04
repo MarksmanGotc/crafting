@@ -1,6 +1,7 @@
 const season8 = {
-	season: 8,
-	sets: [
+        season: 8,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Living Mountain's",
 		  "setMat": "Dark Steel Plate",

@@ -1,31 +1,107 @@
-
-let initialMaterials = {}; 
+let initialMaterials = {};
 const urlParams = new URLSearchParams(window.location.search);
 const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
 
-const LEVELS = [1, 5, 10, 15, 20, 25];
+const LEVELS = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45];
+const normalizeKey = (str = '') =>
+    (str || '')
+        .toString()
+        .toLowerCase()
+        .replace(/["'`]/g, '')
+        .replace(/\s+/g, '-');
 const allMaterials = Object.values(materials).reduce((acc, season) => {
     return { ...acc, ...season.mats };
 }, {});
+const materialKeyMap = {};
 const materialToSeason = {};
 Object.values(materials).forEach(season => {
     Object.keys(season.mats).forEach(mat => {
+        const normalized = normalizeKey(mat);
+        materialKeyMap[normalized] = mat;
         materialToSeason[mat] = season.season;
+        materialToSeason[normalized] = season.season;
     });
 });
+const normalizedKeyCache = new WeakMap();
+
+function getNormalizedKeyMap(source) {
+    if (!source || typeof source !== 'object') {
+        return {};
+    }
+    let cached = normalizedKeyCache.get(source);
+    if (!cached) {
+        cached = {};
+        Object.keys(source).forEach(key => {
+            cached[normalizeKey(key)] = key;
+        });
+        normalizedKeyCache.set(source, cached);
+    }
+    return cached;
+}
 let qualityMultipliers = {};
 const WARLORD_PENALTY = 3;
 const BASE_MOST_WEIGHT = 12;
 const BASE_SECOND_WEIGHT = 6;
 const GEAR_MOST_WEIGHT = 6;
 const GEAR_SECOND_WEIGHT = 3;
+const GEAR_BASELINE_BONUS = BASE_MOST_WEIGHT;
 const LEFTOVER_WEIGHT_BASE = 7;
 const LEFTOVER_WEIGHT_GEAR = 3;
 const BALANCE_WEIGHT = 0.1;
+const CTW_SET_NAME_FALLBACK = 'Ceremonial Targaryen Warlord';
+const ctwSetName =
+    typeof window !== 'undefined' && window.CTW_SET_NAME
+        ? window.CTW_SET_NAME
+        : CTW_SET_NAME_FALLBACK;
+
+const SeasonZeroPreference = Object.freeze({
+    OFF: 0,
+    LOW: 1,
+    NORMAL: 2,
+    HIGH: 3
+});
+const seasonZeroValueText = {
+    [SeasonZeroPreference.OFF]: 'Off - exclude Season 0 items',
+    [SeasonZeroPreference.LOW]: 'Low weighting',
+    [SeasonZeroPreference.NORMAL]: 'Normal weighting',
+    [SeasonZeroPreference.HIGH]: 'High weighting'
+};
+const SEASON_ZERO_SCORE_DEFAULT = Object.freeze({ seasonZero: 0, nonSeason: 0 });
+const SEASON_ZERO_SCORE_ADJUSTMENTS = Object.freeze({
+    // Non-season adjustments remain at zero so that the slider only influences Season 0 items.
+    [SeasonZeroPreference.LOW]: Object.freeze({ seasonZero: 100, nonSeason: 0 }),
+    // Normal weighting sits roughly halfway between the low and high configurations
+    // to provide a smoother progression without overwhelming the default results.
+    [SeasonZeroPreference.NORMAL]: Object.freeze({ seasonZero: 700, nonSeason: 0 }),
+    [SeasonZeroPreference.HIGH]: Object.freeze({ seasonZero: 1400, nonSeason: 0 })
+});
+let currentSeasonZeroPreference = SeasonZeroPreference.NORMAL;
+const qualityColorMap = {
+    poor: '#A9A9A9',
+    common: '#32CD32',
+    fine: '#0070DD',
+    exquisite: '#A335EE',
+    epic: '#FF8000',
+    legendary: '#E5CC80'
+};
+let qualitySelectHandlersAttached = false;
 let failedLevels = [];
 let requestedTemplates = {};
 let remainingUse = {};
 let ctwMediumNotice = false;
+let level20OnlyWarlordsActive = false;
+const productsByLevel = craftItem.products.reduce((acc, product) => {
+    const levelKey = product.level.toString();
+    if (!acc[levelKey]) {
+        acc[levelKey] = [];
+    }
+    acc[levelKey].push(product);
+    return acc;
+}, {});
+const productLookup = new Map();
+craftItem.products.forEach(product => {
+    productLookup.set(getProductLookupKey(product), product);
+});
 
 function slug(str) {
     return (str || '')
@@ -47,12 +123,443 @@ function formatTimestamp(date = new Date()) {
     );
 }
 
+function waitForNextFrame() {
+    return new Promise(resolve => {
+        if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(() => resolve());
+        } else {
+            setTimeout(resolve, 0);
+        }
+    });
+}
+
+function isLocalStorageAvailable() {
+    try {
+        if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
+            return false;
+        }
+        const testKey = '__noox_update_log__';
+        window.localStorage.setItem(testKey, testKey);
+        window.localStorage.removeItem(testKey);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+function initializeUpdateLog() {
+    const overlay = document.getElementById('updateLogOverlay');
+    const trigger = document.getElementById('openUpdateLog');
+
+    if (!overlay || !trigger) {
+        return;
+    }
+
+    const closeButton = overlay.querySelector('.close-popup');
+    const storageKey = 'noox-update-log-2024-05-14';
+    const storageSupported = isLocalStorageAvailable();
+    const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
+
+    const markSeen = () => {
+        if (storageSupported) {
+            try {
+                window.localStorage.setItem(storageKey, 'seen');
+            } catch (error) {
+                // Ignore storage failures silently
+            }
+        }
+    };
+
+    const setExpandedState = (expanded) => {
+        trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    };
+
+    const openOverlay = () => {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        setExpandedState(true);
+    };
+
+    const closeOverlay = (shouldMarkSeen = false) => {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        setExpandedState(false);
+        if (shouldMarkSeen) {
+            markSeen();
+        }
+    };
+
+    if (!hasSeenUpdate) {
+        openOverlay();
+    }
+
+    trigger.addEventListener('click', () => {
+        if (overlay.style.display === 'flex') {
+            closeOverlay(true);
+        } else {
+            openOverlay();
+        }
+    });
+
+    closeButton?.addEventListener('click', () => closeOverlay(true));
+
+    overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+            closeOverlay(true);
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && overlay.style.display === 'flex') {
+            closeOverlay(true);
+        }
+    });
+}
+
+const calculationProgressState = {
+    total: 0,
+    processed: 0
+};
+
+function resetCalculationProgress(total) {
+    calculationProgressState.total = total;
+    calculationProgressState.processed = 0;
+    updateCalculationProgress(0, total);
+}
+
+function updateCalculationProgress(processed, totalOverride = calculationProgressState.total) {
+    calculationProgressState.processed = Math.min(processed, totalOverride);
+    const container = document.querySelector('.spinner-progress');
+    const track = document.querySelector('.spinner-progress__track');
+    const bar = document.querySelector('.spinner-progress__bar');
+    const label = document.querySelector('.spinner-progress__label');
+    const total = Math.max(totalOverride, 0);
+
+    if (!track || !bar || !label) {
+        return;
+    }
+
+    const hasTotal = total > 0;
+    const ratio = hasTotal ? Math.min(1, processed / total) : 0;
+    const percent = Math.round(ratio * 100);
+
+    bar.style.transform = `scaleX(${ratio})`;
+    track.setAttribute('aria-valuenow', hasTotal ? percent : 0);
+    track.setAttribute('aria-valuemin', 0);
+    track.setAttribute('aria-valuemax', 100);
+    if (container) {
+        container.classList.toggle('is-active', hasTotal);
+    }
+    label.textContent = hasTotal ? `Calculating templates… ${percent}%` : 'Preparing templates…';
+}
+
+function completeCalculationProgress() {
+    updateCalculationProgress(calculationProgressState.total, calculationProgressState.total);
+}
+
+function clearCalculationProgress() {
+    calculationProgressState.total = 0;
+    calculationProgressState.processed = 0;
+    const container = document.querySelector('.spinner-progress');
+    const track = document.querySelector('.spinner-progress__track');
+    const bar = document.querySelector('.spinner-progress__bar');
+    const label = document.querySelector('.spinner-progress__label');
+    if (container) {
+        container.classList.remove('is-active');
+    }
+    if (bar) {
+        bar.style.transform = 'scaleX(0)';
+    }
+    if (track) {
+        track.setAttribute('aria-valuenow', 0);
+    }
+    if (label) {
+        label.textContent = 'Preparing templates…';
+    }
+}
+
+function createProgressTracker(total) {
+    resetCalculationProgress(total);
+    const chunkSize = Math.max(1, Math.floor(Math.max(total, 100) / 25));
+    let processed = 0;
+
+    const tick = async (increment = 1) => {
+        processed += increment;
+        updateCalculationProgress(processed, total);
+        if (processed % chunkSize === 0) {
+            await waitForNextFrame();
+        }
+    };
+
+    const complete = () => {
+        processed = total;
+        completeCalculationProgress();
+    };
+
+    return { tick, complete };
+}
+
+function getProductLookupKey(product) {
+    return [
+        product.level,
+        product.season,
+        slug(product.name),
+        slug(product.setName || 'no-set')
+    ].join('|');
+}
+
+function closeAllQualitySelects() {
+    document.querySelectorAll('.quality-select.open').forEach(wrapper => {
+        wrapper.classList.remove('open');
+        const trigger = wrapper.querySelector('.quality-select__display');
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
+function updateQualitySelectUI(select, trigger, optionsContainer) {
+    if (!select || !trigger || !optionsContainer) return;
+
+    const labelEl = trigger.querySelector('.quality-select__label');
+    const swatchEl = trigger.querySelector('.quality-select__swatch');
+    const selectedOption = Array.from(select.options).find(opt => opt.value === select.value) || select.options[0];
+
+    if (labelEl && selectedOption) {
+        labelEl.textContent = selectedOption.textContent;
+    }
+
+    trigger.dataset.qualityValue = select.value || '';
+
+    if (swatchEl) {
+        const color = qualityColorMap[select.value];
+        if (color) {
+            swatchEl.style.backgroundColor = color;
+            swatchEl.classList.remove('quality-select__swatch--empty');
+        } else {
+            swatchEl.style.removeProperty('background-color');
+            swatchEl.classList.add('quality-select__swatch--empty');
+        }
+    }
+
+    optionsContainer.querySelectorAll('.quality-select__option').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.value === select.value);
+    });
+}
+
+function initializeQualitySelects() {
+    const selects = Array.from(document.querySelectorAll('select.temps'))
+        .filter(select => /^temp\d+$/.test(select.id || ''));
+
+    selects.forEach(select => {
+        if (select.dataset.customSelect === 'true') return;
+
+        select.dataset.customSelect = 'true';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'quality-select';
+        wrapper.dataset.selectId = select.id || '';
+
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'quality-select__display';
+        trigger.setAttribute('aria-haspopup', 'listbox');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Select template quality');
+        trigger.dataset.qualityTrigger = select.id || '';
+
+        const swatch = document.createElement('span');
+        swatch.className = 'quality-select__swatch quality-select__swatch--empty';
+        const label = document.createElement('span');
+        label.className = 'quality-select__label';
+        const chevron = document.createElement('span');
+        chevron.className = 'quality-select__chevron';
+        trigger.append(swatch, label, chevron);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'quality-select__options';
+        optionsContainer.setAttribute('role', 'listbox');
+
+        Array.from(select.options).forEach(option => {
+            const optionButton = document.createElement('button');
+            optionButton.type = 'button';
+            optionButton.className = 'quality-select__option';
+            optionButton.dataset.value = option.value;
+            optionButton.setAttribute('role', 'option');
+            optionButton.setAttribute('data-quality', option.value);
+
+            const optionSwatch = document.createElement('span');
+            optionSwatch.className = 'quality-select__swatch';
+            if (qualityColorMap[option.value]) {
+                optionSwatch.style.backgroundColor = qualityColorMap[option.value];
+            } else {
+                optionSwatch.classList.add('quality-select__swatch--empty');
+            }
+
+            const optionLabel = document.createElement('span');
+            optionLabel.className = 'quality-select__option-label';
+            optionLabel.textContent = option.textContent;
+
+            optionButton.append(optionSwatch, optionLabel);
+            if (option.selected) {
+                optionButton.classList.add('selected');
+            }
+
+            optionsContainer.appendChild(optionButton);
+        });
+
+        const parent = select.parentNode;
+        parent.insertBefore(wrapper, select);
+        wrapper.append(trigger, optionsContainer, select);
+
+        select.classList.add('quality-select__native');
+        updateQualitySelectUI(select, trigger, optionsContainer);
+
+        trigger.addEventListener('click', event => {
+            event.preventDefault();
+            const isOpen = wrapper.classList.contains('open');
+            closeAllQualitySelects();
+            wrapper.classList.toggle('open', !isOpen);
+            trigger.setAttribute('aria-expanded', (!isOpen).toString());
+            if (!isOpen) {
+                const selectedBtn = optionsContainer.querySelector('.quality-select__option.selected');
+                (selectedBtn || optionsContainer.querySelector('.quality-select__option'))?.focus();
+            }
+        });
+
+        trigger.addEventListener('keydown', event => {
+            if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key)) {
+                event.preventDefault();
+                const isOpen = wrapper.classList.contains('open');
+                if (!isOpen) {
+                    closeAllQualitySelects();
+                    wrapper.classList.add('open');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }
+                const options = Array.from(optionsContainer.querySelectorAll('.quality-select__option'));
+                if (!options.length) return;
+                if (event.key === 'ArrowUp') {
+                    (optionsContainer.querySelector('.quality-select__option.selected') || options[options.length - 1])?.focus();
+                } else {
+                    (optionsContainer.querySelector('.quality-select__option.selected') || options[0])?.focus();
+                }
+            }
+        });
+
+        optionsContainer.addEventListener('click', event => {
+            const optionButton = event.target.closest('.quality-select__option');
+            if (!optionButton) return;
+            event.preventDefault();
+            const { value } = optionButton.dataset;
+            if (value && select.value !== value) {
+                select.value = value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            } else {
+                updateQualitySelectUI(select, trigger, optionsContainer);
+            }
+            wrapper.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.focus();
+        });
+
+        optionsContainer.addEventListener('keydown', event => {
+            const optionButton = event.target.closest('.quality-select__option');
+            if (!optionButton) return;
+
+            const options = Array.from(optionsContainer.querySelectorAll('.quality-select__option'));
+            const currentIndex = options.indexOf(optionButton);
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                const next = options[currentIndex + 1] || options[0];
+                next.focus();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                const prev = options[currentIndex - 1] || options[options.length - 1];
+                prev.focus();
+            } else if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                optionButton.click();
+            } else if (event.key === 'Escape') {
+                event.preventDefault();
+                wrapper.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.focus();
+            }
+        });
+
+        select.addEventListener('change', () => {
+            updateQualitySelectUI(select, trigger, optionsContainer);
+        });
+    });
+
+    if (!qualitySelectHandlersAttached) {
+        document.addEventListener('click', event => {
+            if (!event.target.closest('.quality-select')) {
+                closeAllQualitySelects();
+            }
+        });
+
+        qualitySelectHandlersAttached = true;
+    }
+}
+
+function getSeasonZeroPreference() {
+    return currentSeasonZeroPreference;
+}
+
+function getSeasonZeroScoreAdjustments(preference) {
+    return SEASON_ZERO_SCORE_ADJUSTMENTS[preference] || SEASON_ZERO_SCORE_DEFAULT;
+}
+
+function updateSeasonZeroSliderLabel(value) {
+    const sliderEl = document.getElementById('seasonZeroPriority');
+    if (!sliderEl) return;
+    const normalized = Number.isInteger(value) ? value : SeasonZeroPreference.NORMAL;
+    const valueText = seasonZeroValueText[normalized] || seasonZeroValueText[SeasonZeroPreference.NORMAL];
+    sliderEl.setAttribute('aria-valuetext', valueText);
+}
+
+function initializeSeasonZeroSlider() {
+    const slider = document.getElementById('seasonZeroPriority');
+    if (!slider) return;
+
+    const initialValue = parseInt(slider.value, 10);
+    const safeValue = Number.isNaN(initialValue) ? SeasonZeroPreference.NORMAL : initialValue;
+    currentSeasonZeroPreference = safeValue;
+    slider.value = safeValue;
+    updateSeasonZeroSliderLabel(safeValue);
+
+    const handleChange = (event) => {
+        const value = parseInt(event.target.value, 10);
+        if (Number.isNaN(value)) {
+            return;
+        }
+        currentSeasonZeroPreference = value;
+        updateSeasonZeroSliderLabel(value);
+    };
+
+    slider.addEventListener('input', handleChange);
+    slider.addEventListener('change', handleChange);
+}
+
+function applySeasonZeroPreference(products, preference) {
+    if (!Array.isArray(products)) return [];
+    if (preference === SeasonZeroPreference.OFF) {
+        return products.filter(product => product.season !== 0);
+    }
+    return products;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    initializeUpdateLog();
     createLevelStructure();
     addCalculateButton();
         formatedInputNumber();
         inputActive();
         initAdvMaterialSection();
+        initializeQualitySelects();
+        initializeSeasonZeroSlider();
 
     const shareParam = urlParams.get('share');
     if (shareParam) {
@@ -60,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = JSON.parse(atob(shareParam));
             initialMaterials = data.initialMaterials || {};
             populateInputsFromShare(data);
-            // Show spinner before automatic calculation
+            // Show loading overlay before automatic calculation
             document.querySelector('.spinner-wrap').classList.add('active');
             // Automatically trigger calculation based on the populated inputs
             calculateMaterials();
@@ -135,6 +642,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    const seasonZeroBtn = document.getElementById('seasonZeroInfoBtn');
+    const seasonZeroPopup = document.getElementById('seasonZeroInfoPopup');
+    seasonZeroBtn?.addEventListener('click', () => {
+        if (seasonZeroPopup) {
+            seasonZeroPopup.style.display = 'flex';
+        }
+    });
+    seasonZeroPopup?.addEventListener('click', (e) => {
+        if (e.target === seasonZeroPopup || e.target.closest('.close-popup')) {
+            seasonZeroPopup.style.display = 'none';
+        }
+    });
+
+    const materialsInfoBtn = document.getElementById('yourMaterialsInfoBtn');
+    const materialsInfoPopup = document.getElementById('yourMaterialsInfoPopup');
+    materialsInfoBtn?.addEventListener('click', () => {
+        if (materialsInfoPopup) {
+            materialsInfoPopup.style.display = 'flex';
+        }
+    });
+    materialsInfoPopup?.addEventListener('click', (e) => {
+        if (e.target === materialsInfoPopup || e.target.closest('.close-popup')) {
+            materialsInfoPopup.style.display = 'none';
+        }
+    });
+
     const scaleBtn = document.getElementById('scaleInfoBtn');
     const scalePopup = document.getElementById('scaleInfoPopup');
     scaleBtn?.addEventListener('click', () => {
@@ -163,8 +696,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Trigger calculation when pressing Enter on any input
     document.addEventListener('keydown', e => {
-        const tag = document.activeElement.tagName;
-        if (e.key === 'Enter' && ['INPUT', 'SELECT'].includes(tag) &&
+        const activeEl = document.activeElement;
+        const tag = activeEl ? activeEl.tagName : '';
+        const isQualityTrigger = activeEl?.classList?.contains('quality-select__display');
+        if (e.key === 'Enter' && (['INPUT', 'SELECT'].includes(tag) || isQualityTrigger) &&
             document.getElementById('results').style.display === 'none') {
             const manualVisible = document.getElementById('manualInput').style.display !== 'none';
             const choiceVisible = document.getElementById('generatebychoice').style.display !== 'none';
@@ -184,12 +719,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     overlay.style.display = 'none';
                 }
             });
+            closeAllQualitySelects();
         }
     });
 
     // Custom tab order for template amount inputs and quality selects
     const templateInputs = LEVELS.map(l => document.getElementById(`templateAmount${l}`)).filter(Boolean);
     const templateSelects = LEVELS.map(l => document.getElementById(`temp${l}`)).filter(Boolean);
+    const qualityTriggers = templateSelects
+        .map(select => select.closest('.quality-select')?.querySelector('.quality-select__display'))
+        .filter(Boolean);
 
     templateInputs.forEach((input, idx) => {
         input.addEventListener('keydown', e => {
@@ -198,18 +737,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const next = templateInputs[idx + 1];
                 if (next) {
                     next.focus();
-                } else if (templateSelects[0]) {
-                    templateSelects[0].focus();
+                } else if (qualityTriggers[0]) {
+                    qualityTriggers[0].focus();
                 }
             }
         });
     });
 
-    templateSelects.forEach((select, idx) => {
-        select.addEventListener('keydown', e => {
+    qualityTriggers.forEach((trigger, idx) => {
+        trigger.addEventListener('keydown', e => {
             if (e.key === 'Tab' && !e.shiftKey) {
                 e.preventDefault();
-                const next = templateSelects[idx + 1];
+                const next = qualityTriggers[idx + 1];
                 if (next) {
                     next.focus();
                 } else {
@@ -219,6 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
 });
 
 function formatPlaceholderWithCommas(number) {
@@ -316,7 +856,10 @@ function populateInputsFromShare(data) {
             }
             if (quality) {
                 const sel = document.getElementById(`temp${level}`);
-                if (sel) sel.value = quality;
+                if (sel) {
+                    sel.value = quality;
+                    sel.dispatchEvent(new Event('change', { bubbles: true }));
+                }
             }
         });
 
@@ -361,14 +904,15 @@ function addCalculateButton() {
 
 // Funktio tulosten näyttämiseen (modifioi tämä toimimaan haluamallasi tavalla)
 function showResults() {
-	document.getElementById('results').style.display = 'block';
-	document.getElementById('generatebychoice').style.display = 'none';
-	window.scrollTo({
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('generatebychoice').style.display = 'none';
+        window.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
-	
+
     document.querySelector('.spinner-wrap').classList.remove('active');
+    clearCalculationProgress();
 
 }
 
@@ -415,7 +959,8 @@ function createLevelStructure() {
         });
 
         // Lisää kunkin tason itemit niiden containeriin
-        craftItem.products.filter(product => product.level === level).forEach(product => {
+        const levelProducts = productsByLevel[level] || [];
+        levelProducts.forEach(product => {
             const productDiv = document.createElement('div');
             const label = document.createElement('label');
             if (product.season === 0) {
@@ -428,6 +973,7 @@ function createLevelStructure() {
             const nameSlug = slug(product.name);
             const setSlug = slug(product.setName || 'no-set');
             input.name = `${nameSlug}_${product.season}_${setSlug}`;
+            input.dataset.productKey = getProductLookupKey(product);
             input.placeholder = 'amount';
 
             productDiv.appendChild(label);
@@ -447,7 +993,7 @@ function calculateMaterials() {
 
     // Täytä materialsDiv materiaalien tiedoilla...
 
-    const templateCounts = { 1: [], 5: [], 10: [], 15: [], 20: [], 25: [] };
+    const templateCounts = { 1: [], 5: [], 10: [], 15: [], 20: [], 25: [], 30: [], 35: [], 40: [], 45: [] };
     const materialCounts = {};
     
     // Kerää tiedot kaikista syötetyistä itemeistä
@@ -455,16 +1001,19 @@ function calculateMaterials() {
         const level = parseInt(levelDiv.id.split('-')[1]);
         levelDiv.querySelectorAll('input[type="number"]').forEach(input => {
             const amount = parseInt(input.value) || 0;
-            const [nameSlug, seasonStr, setSlug] = input.name.split('_');
-            const season = parseInt(seasonStr, 10);
-            const product = craftItem.products.find(p =>
-                slug(p.name) === nameSlug &&
-                p.level === level &&
-                p.season === season &&
-                slug(p.setName || 'no-set') === setSlug
-            );
+            const productKey = input.dataset.productKey;
+            let product = productKey ? productLookup.get(productKey) : null;
 
-    
+            if (!product && input.name) {
+                const [nameSlug, seasonStr, setSlug] = input.name.split('_');
+                const season = parseInt(seasonStr, 10);
+                product = (productsByLevel[level] || []).find(p =>
+                    slug(p.name) === nameSlug &&
+                    p.season === season &&
+                    slug(p.setName || 'no-set') === setSlug
+                ) || null;
+            }
+
             if (product && amount > 0) {
                 templateCounts[level].push({
                     name: product.name,
@@ -476,20 +1025,17 @@ function calculateMaterials() {
                     season: product.season,
                     warlord: product.warlord || false
                 });
-    
                 Object.entries(product.materials).forEach(([rawName, requiredAmount]) => {
-					const materialName = Object.keys(allMaterials).find(
-						key => key.toLowerCase().replace(/\s/g, '-') === rawName.toLowerCase().replace(/\s/g, '-')
-					) || rawName;
+                    const materialName = materialKeyMap[normalizeKey(rawName)] || rawName;
 
                     if (!materialCounts[materialName]) {
-						materialCounts[materialName] = {
-							amount: 0,
-							img: allMaterials[materialName] ? allMaterials[materialName].img : ''
-						};
-					}
-					const multiplier = qualityMultipliers[level] || 1;
-                materialCounts[materialName].amount += requiredAmount * amount * multiplier;
+                        materialCounts[materialName] = {
+                            amount: 0,
+                            img: allMaterials[materialName] ? allMaterials[materialName].img : ''
+                        };
+                    }
+                    const multiplier = qualityMultipliers[level] || 1;
+                    materialCounts[materialName].amount += requiredAmount * amount * multiplier;
                 });
             }
         });
@@ -503,6 +1049,16 @@ function renderResults(templateCounts, materialCounts) {
 
     const materialsDiv = document.createElement('div');
     materialsDiv.className = 'materials';
+
+    const materialsShortage = failedLevels.length > 0 && failedLevels.some(level => (requestedTemplates[level] || 0) > 0);
+    if (materialsShortage) {
+        const warningBanner = document.createElement('div');
+        warningBanner.className = 'materials-warning';
+        warningBanner.innerHTML = '<strong>Materials depleted.</strong> Not every requested template could be generated with the available stock.';
+        resultsDiv.appendChild(warningBanner);
+    }
+
+    const initialMaterialMap = getNormalizedKeyMap(initialMaterials);
 
     Object.entries(materialCounts)
         .sort(([aName], [bName]) => {
@@ -540,9 +1096,7 @@ function renderResults(templateCounts, materialCounts) {
             pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(data.amount)}`;
             pRemaining.textContent = pMatAmount.textContent;
             remainingUse[materialName] = data.amount;
-            const matchedKey = Object.keys(initialMaterials).find(
-                key => key.toLowerCase().replace(/\s/g, '-') === materialName.toLowerCase().replace(/\s/g, '-')
-            );
+            const matchedKey = initialMaterialMap[normalizeKey(materialName)];
             const originalAmount = matchedKey ? initialMaterials[matchedKey] : 0;
             if (originalAmount > 0) {
                 const remainingAmount = originalAmount - data.amount;
@@ -649,13 +1203,12 @@ function renderResults(templateCounts, materialCounts) {
                 itemsDiv.appendChild(levelHeader);
             }
 
-            if (lvl === 20 && ctwMediumNotice) {
+            if (lvl === 20 && ctwMediumNotice && !level20OnlyWarlordsActive) {
                 const extraInfo = document.createElement('p');
                 extraInfo.className = 'craft-extra-info';
                 extraInfo.textContent = "Medium odds items were used because otherwise no items would be generated. At level 20, Ceremonial Targaryen Warlord items are categorized as 'medium odds'.";
                 itemsDiv.appendChild(extraInfo);
             }
-
             const levelGroup = document.createElement('div');
             levelGroup.className = 'level-group';
             itemsDiv.appendChild(levelGroup);
@@ -819,13 +1372,12 @@ function createMaterialImageElement(materialName, imgUrl, preference) {
     return imgElement;
 }
 
-function calculateWithPreferences() {
-	const materialInputs = document.querySelectorAll('.my-material input[type="text"]');
+async function calculateWithPreferences() {
     const templateAmountInputs = LEVELS.map(l => document.querySelector(`#templateAmount${l}`));
     let isValid = true;
-	let hasValue = false;
+        let hasValue = false;
 
-	templateAmountInputs.forEach(input => {
+        templateAmountInputs.forEach(input => {
 		const val = parseInt(input.value.replace(/,/g, ''), 10);
 		if (!isNaN(val)) {
 				if (val > 0) {
@@ -849,20 +1401,15 @@ function calculateWithPreferences() {
 						input.classList.remove('missing-input');
 				}, 3000);
 		});
-	}
-	if (!isValid) {
-		return; // Estä laskennan suoritus
-	}
-	
-	document.querySelector('.spinner-wrap').classList.add('active');
-	
-	setTimeout(() => {
-		
-		/*let availableMaterials = gatherMaterialsFromInputs();
-		if (Object.keys(initialMaterials).length === 0) {
-			initialMaterials = { ...availableMaterials };
-		}*/
-		
+        }
+        if (!isValid) {
+                return; // Estä laskennan suoritus
+        }
+
+        document.querySelector('.spinner-wrap').classList.add('active');
+        await waitForNextFrame();
+
+        try {
                 let availableMaterials = gatherMaterialsFromInputs();
                 availableMaterials = sanitizeGearMaterials(availableMaterials);
                 if (Object.keys(initialMaterials).length === 0) {
@@ -885,45 +1432,45 @@ function calculateWithPreferences() {
                                 const quality = document.getElementById(`temp${level}`).value;
                                 qualityMultipliers[level] = getQualityMultiplier(quality);
                 });
-		if (totalTemplates === 0) {
-				document.querySelector('.spinner-wrap').classList.remove('active');
-				return;
-		} else {
-				if (!isDebugMode){
-						gtag('event', 'total_material_templates', {
-								'event_material_templates': totalTemplates,
-								'value': 1
-						});
-				}
-		}
-		
-		let materialAmounts = Object.values(availableMaterials).map(amount => {
-			// Tarkista, onko arvo merkkijono ja sisältääkö se pilkkuja
-			if (typeof amount === 'string' && amount.includes(',')) {
-				// Muunna merkkijono numeroksi poistamalla pilkut ja käyttämällä parseInt
-				return parseInt(amount.replace(/,/g, ''), 10);
-			} else {
-				// Jos arvo on jo numero tai merkkijono ilman pilkkuja, palauta se sellaisenaan
-				return parseInt(amount, 10);
-			}
-		});
-		
-		if (!isDebugMode){
-			let totalMaterialAmount = materialAmounts.reduce((total, amount) => total + amount, 0);
-			let averageMaterialAmount = materialAmounts.length > 0 ? totalMaterialAmount / materialAmounts.length : 0;
-			let maxMaterialAmount = Math.max(...materialAmounts);
-			let maxMaterialIndex = materialAmounts.findIndex(amount => amount === maxMaterialAmount);
-			let maxMaterialName = Object.keys(availableMaterials)[maxMaterialIndex];
+                if (totalTemplates === 0) {
+                                document.querySelector('.spinner-wrap').classList.remove('active');
+                                clearCalculationProgress();
+                                return;
+                } else {
+                                if (!isDebugMode){
+                                                gtag('event', 'total_material_templates', {
+                                                                'event_material_templates': totalTemplates,
+                                                                'value': 1
+                                                });
+                                }
+                }
 
-			gtag('event', 'material_analytics', {
-				'average_material_amount': parseInt(averageMaterialAmount),
-				'max_material_amount': maxMaterialAmount,
-				'max_material_name': maxMaterialName,
-				'value': 1
-			});
-		}
+                let materialAmounts = Object.values(availableMaterials).map(amount => {
+                        if (typeof amount === 'string' && amount.includes(',')) {
+                                return parseInt(amount.replace(/,/g, ''), 10);
+                        } else {
+                                return parseInt(amount, 10);
+                        }
+                });
 
-                const resultPlan = calculateProductionPlan(availableMaterials, templatesByLevel);
+                if (!isDebugMode){
+                        let totalMaterialAmount = materialAmounts.reduce((total, amount) => total + amount, 0);
+                        let averageMaterialAmount = materialAmounts.length > 0 ? totalMaterialAmount / materialAmounts.length : 0;
+                        let maxMaterialAmount = Math.max(...materialAmounts);
+                        let maxMaterialIndex = materialAmounts.findIndex(amount => amount === maxMaterialAmount);
+                        let maxMaterialName = Object.keys(availableMaterials)[maxMaterialIndex];
+
+                        gtag('event', 'material_analytics', {
+                                'average_material_amount': parseInt(averageMaterialAmount),
+                                'max_material_amount': maxMaterialAmount,
+                                'max_material_name': maxMaterialName,
+                                'value': 1
+                        });
+                }
+
+                const progressTracker = createProgressTracker(totalTemplates);
+                const resultPlan = await calculateProductionPlan(availableMaterials, templatesByLevel, progressTracker.tick);
+                progressTracker.complete();
                 failedLevels = resultPlan.failedLevels;
 
                 document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
@@ -931,10 +1478,18 @@ function calculateWithPreferences() {
                 });
                 listSelectedProducts(resultPlan.plan);
                 const calculateBtn = document.querySelector('.calculate-button');
-		if (calculateBtn) {
-			calculateBtn.click(); // Simuloi napin klikkausta
-		}
-        }, 0);
+                if (calculateBtn) {
+                        calculateBtn.click(); // Simuloi napin klikkausta
+                } else {
+                        document.querySelector('.spinner-wrap').classList.remove('active');
+                        clearCalculationProgress();
+                }
+        } catch (error) {
+                console.error('Failed to calculate templates with preferences:', error);
+                displayUserMessage('Something went wrong while calculating templates. Please try again.');
+                document.querySelector('.spinner-wrap').classList.remove('active');
+                clearCalculationProgress();
+        }
 }
 
 document.getElementById('calculateWithPreferences').addEventListener('click', calculateWithPreferences);
@@ -945,7 +1500,7 @@ function gatherMaterialsFromInputs() {
     let materialsInput = {};
     document.querySelectorAll('.my-material input[type="text"]').forEach(input => {
         const id = input.getAttribute('id').replace('my-', '');
-        const materialName = Object.keys(allMaterials).find(name => name.toLowerCase().replace(/\s/g, '-') === id);
+        const materialName = materialKeyMap[normalizeKey(id)];
         const raw = input.value.replace(/,/g, '');
         const materialAmount = parseFloat(raw);
         if (!materialName) {
@@ -971,140 +1526,209 @@ function sanitizeGearMaterials(materialsInput) {
 }
 
 function filterProductsByAvailableGear(products, availableMaterials, multiplier = 1) {
+    const availableMap = getNormalizedKeyMap(availableMaterials);
     return products.filter(product => {
         return Object.entries(product.materials).every(([mat, amt]) => {
-            const normalized = mat.toLowerCase().replace(/\s/g, '-');
-            const season = materialToSeason[normalized] || 0;
+            const normalized = normalizeKey(mat);
+            const season = materialToSeason[normalized] || materialToSeason[mat] || 0;
             if (season === 0) {
                 return true;
             }
-            const matchedKey = Object.keys(availableMaterials).find(key =>
-                key.toLowerCase().replace(/\s/g, '-') === normalized
-            );
+            const matchedKey = availableMap[normalized];
             return matchedKey && availableMaterials[matchedKey] >= amt * multiplier;
         });
     });
 }
 
-function calculateProductionPlan(availableMaterials, templatesByLevel) {
-    let productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [] };
+const SEASONAL_ODDS_LEVELS = new Set([15, 20, 25, 30, 35]);
+const EXTENDED_ODDS_LEVELS = new Set([20]);
+
+function shouldApplyOddsForProduct(product) {
+    if (!product?.odds || product.odds === 'normal') {
+        return false;
+    }
+
+    const level = product.level;
+    const season = product.season;
+    const isCeremonialTargaryenWarlord = product.setName === 'Ceremonial Targaryen Warlord';
+
+    if ((season === 0 || isCeremonialTargaryenWarlord) && SEASONAL_ODDS_LEVELS.has(level)) {
+        return true;
+    }
+
+    if ((season === 1 || season === 2) && EXTENDED_ODDS_LEVELS.has(level)) {
+        return true;
+    }
+
+    return false;
+}
+
+async function calculateProductionPlan(availableMaterials, templatesByLevel, progressTick = async () => {}) {
+    const productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [], "30": [], "35": [], "40": [], "45": [] };
     const failed = new Set();
     const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
     const level1OnlyWarlords = document.getElementById('level1OnlyWarlords')?.checked ?? false;
+    const level20OnlyWarlords = document.getElementById('level20OnlyWarlords')?.checked ?? false;
     const includeLowOdds = document.getElementById('includeLowOdds')?.checked ?? true;
     const includeMediumOdds = document.getElementById('includeMediumOdds')?.checked ?? true;
+    const seasonZeroPreference = getSeasonZeroPreference();
     const gearLevelSelect = document.getElementById('gearMaterialLevels');
     const allowedGearLevels = gearLevelSelect ? Array.from(gearLevelSelect.selectedOptions).map(o => parseInt(o.value, 10)) : [];
     const hasGearMaterials = Object.keys(availableMaterials).some(
-        key => (materialToSeason[key] || 0) !== 0
+        key => (materialToSeason[key] || materialToSeason[normalizeKey(key)] || 0) !== 0
     );
     const level20Allowed = hasGearMaterials && allowedGearLevels.includes(20);
-    ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed;
+    level20OnlyWarlordsActive = level20OnlyWarlords;
+    ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed && !level20OnlyWarlords;
+    const progress = typeof progressTick === 'function' ? progressTick : async () => {};
 
-    // Craft level 15 items first when only normal odds are allowed and
-    // no CTW or gear materials are in use at that level.
-    if (
-        templatesByLevel[15] > 0 &&
-        !includeWarlords &&
-        !includeLowOdds &&
-        !includeMediumOdds &&
-        !allowedGearLevels.includes(15)
-    ) {
-        let remaining15 = templatesByLevel[15];
-        const multiplier15 = qualityMultipliers[15] || 1;
-
-        while (remaining15 > 0) {
-            const prefs = getUserPreferences(availableMaterials);
-            let levelProducts = craftItem.products.filter(p => p.level === 15 && !p.warlord);
-            levelProducts = levelProducts.filter(p => p.season == 0);
-            levelProducts = levelProducts.filter(p => !p.odds || p.odds === 'normal');
-            levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier15);
-            const selected = selectBestAvailableProduct(
-                levelProducts,
-                prefs.mostAvailableMaterials,
-                prefs.secondMostAvailableMaterials,
-                prefs.leastAvailableMaterials,
-                availableMaterials,
-                multiplier15
-            );
-
-            if (selected && canProductBeProduced(selected, availableMaterials, multiplier15)) {
-                productionPlan[15].push({ name: selected.name, season: selected.season, setName: selected.setName, warlord: selected.warlord });
-                updateAvailableMaterials(availableMaterials, selected, multiplier15);
-                remaining15--;
-            } else {
-                failed.add(15);
-                break;
-            }
+    const getLevelProducts = (level, { requireCtwOnly = false } = {}) => {
+        const baseList = productsByLevel[level] ? [...productsByLevel[level]] : [];
+        if (requireCtwOnly) {
+            return baseList.filter(p => p.warlord && p.setName === 'Ceremonial Targaryen Warlord');
         }
-
-        templatesByLevel[15] = 0; // Prevent further processing for level 15
-    }
-
-    LEVELS.forEach(level => {
-        if (templatesByLevel[level] <= 0) return;
-        let levelProducts = craftItem.products.filter(p => p.level === level && (includeWarlords || !p.warlord));
         if (level === 1 && level1OnlyWarlords) {
-            levelProducts = craftItem.products.filter(p => p.level === 1 && p.warlord);
+            return baseList.filter(p => p.warlord);
         }
+        if (includeWarlords) {
+            return baseList.slice();
+        }
+        return baseList.filter(p => !p.warlord);
+    };
+
+    const applyLevelFilters = (level, levelProducts, multiplier, { requireCtwOnly = false } = {}) => {
+        let filtered = levelProducts;
         if (!allowedGearLevels.includes(level)) {
-            levelProducts = levelProducts.filter(p => p.season == 0);
+            filtered = filtered.filter(p => p.season == 0 || p.setName === ctwSetName);
         }
-        const multiplier = qualityMultipliers[level] || 1;
         const isLegendary = multiplier >= 1024;
-        levelProducts = levelProducts.filter(p => {
-            const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
-            if (!applyOdds || !p.odds) return true;
+        filtered = filtered.filter(p => {
+            if (requireCtwOnly && p.setName === 'Ceremonial Targaryen Warlord') {
+                return true;
+            }
+            const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
+            if (!applyOdds) return true;
             if (p.odds === 'low') return includeLowOdds;
             if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
             return true;
         });
-        levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
+        filtered = filterProductsByAvailableGear(filtered, availableMaterials, multiplier);
+        filtered = applySeasonZeroPreference(filtered, seasonZeroPreference);
+        return filtered;
+    };
+
+    const processNormalOddsLevel = async (level) => {
+        if (
+            templatesByLevel[level] > 0 &&
+            !includeLowOdds &&
+			!includeMediumOdds &&
+            seasonZeroPreference !== SeasonZeroPreference.OFF
+        ) {
+            let remaining = templatesByLevel[level];
+            const multiplier = qualityMultipliers[level] || 1;
+            const isLegendary = multiplier >= 1024;
+			let produced = 0;
+
+            while (remaining > 0) {
+                const prefs = getUserPreferences(availableMaterials);
+                let levelProducts = getLevelProducts(level);
+                levelProducts = applySeasonZeroPreference(levelProducts, seasonZeroPreference);
+                if (levelProducts.length === 0) {
+                    break;
+                }
+                levelProducts = levelProducts.filter(p => {
+                    const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
+                    if (!applyOdds) return true;
+                    if (p.odds === 'low') return includeLowOdds;
+                    if (p.odds === 'medium') return includeMediumOdds;
+                    return true;
+                });
+                levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
+                if (levelProducts.length === 0) {
+                    break;
+                }
+                const selected = selectBestAvailableProduct(
+                    levelProducts,
+                    prefs.mostAvailableMaterials,
+                    prefs.secondMostAvailableMaterials,
+                    prefs.leastAvailableMaterials,
+                    availableMaterials,
+                    multiplier
+                );
+
+                if (selected && canProductBeProduced(selected, availableMaterials, multiplier)) {
+                    productionPlan[level].push({ name: selected.name, season: selected.season, setName: selected.setName, warlord: selected.warlord });
+                    updateAvailableMaterials(availableMaterials, selected, multiplier);
+                    remaining--;
+					produced++;
+                    await progress();
+                } else {
+                    break;
+                }
+            }
+
+            templatesByLevel[level] = remaining;
+
+            if (produced > 0) {
+                return;
+            }
+        }
+    };
+
+    const normalOddsPriorityLevels = [35, 30, 15];
+    for (const level of normalOddsPriorityLevels) {
+        await processNormalOddsLevel(level);
+    }
+
+    for (const level of LEVELS) {
+        if (templatesByLevel[level] <= 0) continue;
+        const requireCtwOnly = level === 20 && level20OnlyWarlords;
+        let levelProducts = getLevelProducts(level, { requireCtwOnly });
+        const multiplier = qualityMultipliers[level] || 1;
+        levelProducts = applyLevelFilters(level, levelProducts, multiplier, { requireCtwOnly });
         if (levelProducts.length === 0) {
             failed.add(level);
             templatesByLevel[level] = 0;
         }
-    });
+    }
 
     let remaining = { ...templatesByLevel };
 
     while (Object.values(remaining).some(v => v > 0)) {
-        let preferences = getUserPreferences(availableMaterials);
+        const preferences = getUserPreferences(availableMaterials);
         let anySelected = false;
 
-        for (let level of LEVELS) {
+        for (const level of LEVELS) {
             if (remaining[level] <= 0) continue;
-            let levelProducts = craftItem.products.filter(p => p.level === level && (includeWarlords || !p.warlord));
-            if (level === 1 && level1OnlyWarlords) {
-                levelProducts = craftItem.products.filter(p => p.level === 1 && p.warlord);
-            }
-            if (!allowedGearLevels.includes(level)) {
-                levelProducts = levelProducts.filter(p => p.season == 0);
-            }
+            const requireCtwOnly = level === 20 && level20OnlyWarlords;
+            let levelProducts = getLevelProducts(level, { requireCtwOnly });
             const multiplier = qualityMultipliers[level] || 1;
-            const isLegendary = multiplier >= 1024;
-            levelProducts = levelProducts.filter(p => {
-                const applyOdds = !isLegendary && (p.season === 0 || (p.level === 20 && (p.season === 1 || p.season === 2)));
-                if (!applyOdds || !p.odds) return true;
-                if (p.odds === 'low') return includeLowOdds;
-                if (p.odds === 'medium') return includeMediumOdds || (ctwMediumNotice && p.warlord && p.level === 20);
-                return true;
-            });
-            levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
-            const selectedProduct = selectBestAvailableProduct(levelProducts, preferences.mostAvailableMaterials, preferences.secondMostAvailableMaterials, preferences.leastAvailableMaterials, availableMaterials, multiplier);
+            levelProducts = applyLevelFilters(level, levelProducts, multiplier, { requireCtwOnly });
+
+            const selectedProduct = selectBestAvailableProduct(
+                levelProducts,
+                preferences.mostAvailableMaterials,
+                preferences.secondMostAvailableMaterials,
+                preferences.leastAvailableMaterials,
+                availableMaterials,
+                multiplier
+            );
 
             if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials, multiplier)) {
                 productionPlan[level].push({ name: selectedProduct.name, season: selectedProduct.season, setName: selectedProduct.setName, warlord: selectedProduct.warlord });
                 updateAvailableMaterials(availableMaterials, selectedProduct, multiplier);
                 remaining[level]--;
                 anySelected = true;
+                await progress();
             } else {
                 failed.add(level);
                 remaining[level] = 0;
             }
         }
 
-        if (!anySelected) break;
+        if (!anySelected) {
+            break;
+        }
     }
 
     return { plan: productionPlan, failedLevels: Array.from(failed) };
@@ -1124,11 +1748,10 @@ function displayUserMessage(message) {
 
 
 function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1) {
+    const availableMap = getNormalizedKeyMap(availableMaterials);
     Object.entries(selectedProduct.materials).forEach(([material, amountRequired]) => {
-        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
-        const matchedKey = Object.keys(availableMaterials).find(key =>
-            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
-        );
+        const normalizedMaterial = normalizeKey(material);
+        const matchedKey = availableMap[normalizedMaterial];
 
         if (matchedKey) {
             availableMaterials[matchedKey] -= amountRequired * multiplier;
@@ -1186,7 +1809,7 @@ function selectBestAvailableProduct(levelProducts, mostAvailableMaterials, secon
     const candidates = levelProducts
         .map(product => ({
             product,
-			score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier)
+            score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier)
         }))
         .sort((a, b) => b.score - a.score); // suurimmasta pienimpään
 
@@ -1201,12 +1824,10 @@ function selectBestAvailableProduct(levelProducts, mostAvailableMaterials, secon
 }
 
 function rollbackMaterials(availableMaterials, product, multiplier = 1) {
-
+    const availableMap = getNormalizedKeyMap(availableMaterials);
     Object.entries(product.materials).forEach(([material, amountRequired]) => {
-        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
-        const matchedKey = Object.keys(availableMaterials).find(key =>
-            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
-        );
+        const normalizedMaterial = normalizeKey(material);
+        const matchedKey = availableMap[normalizedMaterial];
 
         if (matchedKey) {
             availableMaterials[matchedKey] += amountRequired * multiplier;
@@ -1216,11 +1837,10 @@ function rollbackMaterials(availableMaterials, product, multiplier = 1) {
 
 function computeBaseUsageStd(materialsState) {
     const remaining = [];
+    const stateMap = getNormalizedKeyMap(materialsState);
     Object.entries(initialMaterials).forEach(([material, _]) => {
-        const normalized = material.toLowerCase().replace(/\s/g, '-');
-        const matchedKey = Object.keys(materialsState).find(key =>
-            key.toLowerCase().replace(/\s/g, '-') === normalized
-        );
+        const normalized = normalizeKey(material);
+        const matchedKey = stateMap[normalized];
         if (matchedKey && materialToSeason[normalized] === 0) {
             remaining.push(materialsState[matchedKey]);
         }
@@ -1235,11 +1855,10 @@ function computeBaseUsageStd(materialsState) {
 
 function computeBalancePenalty(product, availableMaterials, multiplier = 1) {
     const predicted = { ...availableMaterials };
+    const predictedMap = getNormalizedKeyMap(predicted);
     Object.entries(product.materials).forEach(([material, amt]) => {
-        const normalized = material.toLowerCase().replace(/\s/g, '-');
-        const matchedKey = Object.keys(predicted).find(key =>
-            key.toLowerCase().replace(/\s/g, '-') === normalized
-        );
+        const normalized = normalizeKey(material);
+        const matchedKey = predictedMap[normalized];
         if (matchedKey) {
             predicted[matchedKey] -= amt * multiplier;
         }
@@ -1249,6 +1868,9 @@ function computeBalancePenalty(product, availableMaterials, multiplier = 1) {
 
 function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier = 1) {
     let score = 0;
+    const availableMap = getNormalizedKeyMap(availableMaterials);
+    const seasonZeroPreference = getSeasonZeroPreference();
+    const shouldApplyGearBaselineBonus = true; // Season 0 slider should not modify non-season gear weighting
     Object.entries(product.materials).forEach(([material, _]) => {
         const season = materialToSeason[material] || 0;
         const isGear = season !== 0;
@@ -1261,16 +1883,17 @@ function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMa
         if (leastAvailableMaterials.includes(material)) {
             score -= 10;
         }
+        if (shouldApplyGearBaselineBonus && isGear) {
+            score += GEAR_BASELINE_BONUS;
+        }
     });
     if (product.warlord) {
         score -= WARLORD_PENALTY;
     }
 
     Object.entries(product.materials).forEach(([material, amount]) => {
-        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
-        const matchedKey = Object.keys(availableMaterials).find(key =>
-            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
-        );
+        const normalizedMaterial = normalizeKey(material);
+        const matchedKey = availableMap[normalizedMaterial];
         if (matchedKey) {
             const season = materialToSeason[normalizedMaterial] || 0;
             const weight = season === 0 ? LEFTOVER_WEIGHT_BASE : LEFTOVER_WEIGHT_GEAR;
@@ -1282,18 +1905,23 @@ function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMa
         }
     });
 	
-	const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
+    const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
     score -= balancePenalty * BALANCE_WEIGHT;
-	
+
+    const { seasonZero: seasonZeroAdjustment } = getSeasonZeroScoreAdjustments(seasonZeroPreference);
+
+    if (product.season === 0) {
+        score += seasonZeroAdjustment;
+    }
+
     return score;
 }
 
 function canProductBeProduced(product, availableMaterials, multiplier = 1) {
+    const availableMap = getNormalizedKeyMap(availableMaterials);
     return Object.entries(product.materials).every(([material, amountRequired]) => {
-        const normalizedMaterial = material.toLowerCase().replace(/\s/g, '-');
-        const matchedKey = Object.keys(availableMaterials).find(key =>
-            key.toLowerCase().replace(/\s/g, '-') === normalizedMaterial
-        );
+        const normalizedMaterial = normalizeKey(material);
+        const matchedKey = availableMap[normalizedMaterial];
 
         if (!matchedKey) {
             return false;
@@ -1359,7 +1987,7 @@ function inputActive(){
     });		
 
 	// Uusi osa: käsittele kaikki templateAmount-inputit tasoittain (1,5,10,...)
-	const levels = [1, 5, 10, 15, 20, 25];
+        const levels = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45];
 	levels.forEach(level => {
 		const input = document.querySelector(`#templateAmount${level}`);
 		const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
@@ -1475,11 +2103,12 @@ function initAdvMaterialSection() {
     select.multiple = true;
     select.style.display = 'none';
 
-    [5,10,15,20,25].forEach(l => {
+    const defaultGearLevels = [20, 25, 30, 35, 40, 45];
+    [5,10,15,20,25,30,35,40,45].forEach(l => {
         const optionDiv = document.createElement('div');
         optionDiv.dataset.value = l;
         optionDiv.textContent = l;
-        if (![5,10,15].includes(l)) {
+        if (defaultGearLevels.includes(l)) {
             optionDiv.classList.add('selected');
         }
         dropdown.appendChild(optionDiv);
@@ -1487,7 +2116,7 @@ function initAdvMaterialSection() {
         const opt = document.createElement('option');
         opt.value = l;
         opt.textContent = l;
-        if (![5,10,15].includes(l)) {
+        if (defaultGearLevels.includes(l)) {
             opt.selected = true;
         }
         select.appendChild(opt);
@@ -1507,4 +2136,9 @@ function initAdvMaterialSection() {
     levelWrap.appendChild(dropdown);
     levelWrap.appendChild(select);
     container.appendChild(levelWrap);
+
+    const seasonZeroSection = document.querySelector('.season-zero-section');
+    if (seasonZeroSection) {
+        container.appendChild(seasonZeroSection);
+    }
 }

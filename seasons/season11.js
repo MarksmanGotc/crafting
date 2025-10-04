@@ -1,6 +1,7 @@
 const season11 = {
-	season: 11,
-	sets: [
+        season: 11,
+        extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
+        sets: [
 		{
 		  "setName": "Flame Lit Lanister",
 		  "setMat": "Ash Cloaked Clow",
