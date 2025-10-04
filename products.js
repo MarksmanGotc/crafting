@@ -1,12 +1,12 @@
 let craftItem = {
-	products: [
-		...season0.sets.flatMap(set =>
-				set.products.map(product => ({
-						...product,
-						setName: product.setName || set.setName,
-						season: season0.season
-				}))
-		),
+        products: [
+                ...season0.sets.flatMap(set =>
+                                set.products.map(product => ({
+                                                ...product,
+                                                setName: product.setName || set.setName,
+                                                season: season0.season
+                                }))
+                ),
 		...season1.sets.flatMap(set =>
 				set.products.map(product => ({
 						...product,
@@ -21,18 +21,25 @@ let craftItem = {
 						season: season2.season
 				}))
 		),
-		...season3.sets.flatMap(set =>
-				set.products.map(product => ({
-						...product,
-						setName: product.setName || set.setName,
-						season: season3.season
-				}))
-		),
-		...season4.sets.flatMap(set =>
-				set.products.map(product => ({
-						...product,
-						setName: product.setName || set.setName,
-						season: season4.season
+                ...season3.sets.flatMap(set =>
+                                set.products.map(product => ({
+                                                ...product,
+                                                setName: product.setName || set.setName,
+                                                season: season3.season
+                                }))
+                ),
+                ...seasonctw.sets.flatMap(set =>
+                                set.products.map(product => ({
+                                                ...product,
+                                                setName: product.setName || set.setName,
+                                                season: seasonctw.season
+                                }))
+                ),
+                ...season4.sets.flatMap(set =>
+                                set.products.map(product => ({
+                                                ...product,
+                                                setName: product.setName || set.setName,
+                                                season: season4.season
 				}))
 		),
 		...season5.sets.flatMap(set =>
@@ -111,6 +118,20 @@ const seasonsMap = {
 };
 
 const extraProducts = [];
+
+const CTW_SET_NAME = 'Ceremonial Targaryen Warlord';
+const CTW_SEASON = season3.season;
+
+if (typeof window !== 'undefined') {
+  window.CTW_SET_NAME = CTW_SET_NAME;
+}
+
+craftItem.products = craftItem.products.map(product => {
+  if (product.setName === CTW_SET_NAME) {
+    return { ...product, season: CTW_SEASON };
+  }
+  return product;
+});
 
 craftItem.products.forEach(product => {
   if (product.level === 25 && product.season !== 0) {
