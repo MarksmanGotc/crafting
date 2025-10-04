@@ -14,9 +14,10 @@
     <link rel="stylesheet" href="style.css?v=1.115">
 	<script src="seasons/season0.js"></script>
 	<script src="seasons/season1.js"></script>
-	<script src="seasons/season2.js"></script>
-	<script src="seasons/season3.js"></script>
-	<script src="seasons/season4.js"></script>
+        <script src="seasons/season2.js"></script>
+        <script src="seasons/season3.js"></script>
+        <script src="seasons/seasonctw.js"></script>
+        <script src="seasons/season4.js"></script>
 	<script src="seasons/season5.js"></script>
 	<script src="seasons/season6.js"></script>
 	<script src="seasons/season7.js"></script>
@@ -39,9 +40,28 @@
 </head>
 <body>
     <div class="wrapper">
-		<!-- Materiaalien valinta -->
-		
-		<div id="generatebychoice">
+                
+                <!-- Materiaalien valinta -->
+
+                <div id="generatebychoice">
+					<div class="update-log-trigger">
+                        <button id="openUpdateLog" type="button" aria-label="View the latest updates" aria-haspopup="dialog" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Pro v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2025 Fonticons, Inc.--><path d="M518.6 109.3L530.7 121.4C543.2 133.9 543.2 154.2 530.7 166.7L504 193.4L446.6 136L473.4 109.3C485.9 96.8 506.2 96.8 518.7 109.3zM253 329.6L424 158.7L481.4 216.1L310.4 387.1C306.2 391.3 300.8 394.3 295 395.7L229.4 410.8L244.5 345.2C245.8 339.4 248.8 334 253.1 329.8zM450.7 86.6L230.4 307C221.9 315.5 216 326.2 213.3 337.9L192.4 428.5C191.2 433.9 192.8 439.5 196.7 443.4C200.6 447.3 206.2 448.9 211.6 447.7L302.2 426.8C313.9 424.1 324.6 418.2 333.1 409.7L553.4 189.3C578.4 164.3 578.4 123.8 553.4 98.8L541.3 86.6C516.3 61.6 475.8 61.6 450.8 86.6zM144 128C99.8 128 64 163.8 64 208L64 496C64 540.2 99.8 576 144 576L432 576C476.2 576 512 540.2 512 496L512 368C512 359.2 504.8 352 496 352C487.2 352 480 359.2 480 368L480 496C480 522.5 458.5 544 432 544L144 544C117.5 544 96 522.5 96 496L96 208C96 181.5 117.5 160 144 160L272 160C280.8 160 288 152.8 288 144C288 135.2 280.8 128 272 128L144 128z"/></svg>
+                        </button>
+                </div>
+                <div id="updateLogOverlay" class="info-overlay changelog-overlay" role="dialog" aria-modal="true" aria-labelledby="updateLogTitle" aria-hidden="true">
+                        <div class="info-content changelog-content">
+                                <button class="close-popup" type="button" aria-label="Close update log">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>
+                                </button>
+                                <h2 id="updateLogTitle">What&rsquo;s new &ndash; 10/04/2025</h2>
+                                <ul>
+                                        <li><strong>Levels 30&ndash;45 coverage:</strong> You can now prepare high-level templates without leaving the calculator, making late-game planning effortless.</li>
+                                        <li><strong>Season 0 weighting control:</strong> Choose how much influence Season 0 items have in the recommendations with an intuitive slider.</li>
+                                        <li><strong>Enhanced calculation algorithm:</strong> Behind-the-scenes logic improvements make the planner handle the expanded dataset more reliably.</li>
+                                </ul>
+                        </div>
+                </div>
 			<div class="donate-header">
 				<button id="openGiftFromHeader">
 					<span>Support this project</span>
@@ -372,3 +392,6 @@
 	</footer>
 </body>
 </html>
+
+
+
