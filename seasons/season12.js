@@ -964,6 +964,324 @@ const season12 = {
 			}
 		  ]
 		},
+				{
+		  "setName": "Frostfang Thenn",
+		  "setMat": "Frostfang Bronze Discs",
+		  "products": [
+			{
+			  "name": "Scarification knife",
+			  "level": 5,
+			  "materials": {
+				"frostfang-bronze-discs": 10,
+				"leather-straps": 10,
+				"copper-bar": 10
+			  },
+			  "img": "item/season12/frostfang-thenn/head.webp"
+			},
+			{
+			  "name": "Bronze Lamellar",
+			  "level": 5,
+			  "materials": {
+				"frostfang-bronze-discs": 10,
+				"hide": 10,
+				"wildfire": 10
+			  },
+			  "img": "item/season12/frostfang-thenn/chest.webp"
+			},
+			{
+			  "name": "Hide Pants",
+			  "level": 5,
+			  "materials": {
+				"frostfang-bronze-discs": 10,
+				"ironwood": 10,
+				"milk-of-the-poppy": 10
+			  },
+			  "img": "item/season12/frostfang-thenn/pants.webp"
+			},
+			{
+			  "name": "Mammoth-Fur Boots",
+			  "level": 5,
+			  "materials": {
+				"frostfang-bronze-discs": 10,
+				"black-iron": 10,
+				"goldenheart-wood": 10
+			  },
+			  "img": "item/season12/frostfang-thenn/boots.webp"
+			},
+			{
+			  "name": "Bronze Ring",
+			  "level": 5,
+			  "materials": {
+				"frostfang-bronze-discs": 10,
+				"weirwood": 10,
+				"goldenheart-wood": 10
+			  },
+			  "img": "item/season12/frostfang-thenn/ring.webp"
+			},
+			{
+			  "name": "Great Axe",
+			  "level": 5,
+			  "materials": {
+				"frostfang-bronze-discs": 10,
+				"dragonglass": 10,
+				"silk": 10
+			  },
+			  "img": "item/season12/frostfang-thenn/weapon.webp"
+			},
+			{
+			  "name": "Scarification knife",
+			  "level": 10,
+			  "materials": {
+				"frostfang-bronze-discs": 20,
+				"leather-straps": 20,
+				"copper-bar": 20
+			  },
+			  "img": "item/season12/frostfang-thenn/head.webp"
+			},
+			{
+			  "name": "Bronze Lamellar",
+			  "level": 10,
+			  "materials": {
+				"frostfang-bronze-discs": 20,
+				"hide": 20,
+				"wildfire": 20
+			  },
+			  "img": "item/season12/frostfang-thenn/chest.webp"
+			},
+			{
+			  "name": "Hide Pants",
+			  "level": 10,
+			  "materials": {
+				"frostfang-bronze-discs": 20,
+				"ironwood": 20,
+				"milk-of-the-poppy": 20
+			  },
+			  "img": "item/season12/frostfang-thenn/pants.webp"
+			},
+			{
+			  "name": "Mammoth-Fur Boots",
+			  "level": 10,
+			  "materials": {
+				"frostfang-bronze-discs": 20,
+				"black-iron": 20,
+				"goldenheart-wood": 20
+			  },
+			  "img": "item/season12/frostfang-thenn/boots.webp"
+			},
+			{
+			  "name": "Bronze Ring",
+			  "level": 10,
+			  "materials": {
+				"frostfang-bronze-discs": 20,
+				"weirwood": 20,
+				"goldenheart-wood": 20
+			  },
+			  "img": "item/season12/frostfang-thenn/ring.webp"
+			},
+			{
+			  "name": "Great Axe",
+			  "level": 10,
+			  "materials": {
+				"frostfang-bronze-discs": 20,
+				"dragonglass": 20,
+				"silk": 20
+			  },
+			  "img": "item/season12/frostfang-thenn/weapon.webp"
+			},
+			{
+			  "name": "Scarification knife",
+			  "level": 15,
+			  "materials": {
+				"frostfang-bronze-discs": 120,
+				"leather-straps": 120,
+				"copper-bar": 120
+			  },
+			  "img": "item/season12/frostfang-thenn/head.webp"
+			},
+			{
+			  "name": "Bronze Lamellar",
+			  "level": 15,
+			  "materials": {
+				"frostfang-bronze-discs": 120,
+				"hide": 120,
+				"wildfire": 120
+			  },
+			  "img": "item/season12/frostfang-thenn/chest.webp"
+			},
+			{
+			  "name": "Hide Pants",
+			  "level": 15,
+			  "materials": {
+				"frostfang-bronze-discs": 120,
+				"ironwood": 120,
+				"milk-of-the-poppy": 120
+			  },
+			  "img": "item/season12/frostfang-thenn/pants.webp"
+			},
+			{
+			  "name": "Mammoth-Fur Boots",
+			  "level": 15,
+			  "materials": {
+				"frostfang-bronze-discs": 120,
+				"black-iron": 120,
+				"goldenheart-wood": 120
+			  },
+			  "img": "item/season12/frostfang-thenn/boots.webp"
+			},
+			{
+			  "name": "Bronze Ring",
+			  "level": 15,
+			  "materials": {
+				"frostfang-bronze-discs": 120,
+				"weirwood": 120,
+				"goldenheart-wood": 120
+			  },
+			  "img": "item/season12/frostfang-thenn/ring.webp"
+			},
+			{
+			  "name": "Great Axe",
+			  "level": 15,
+			  "materials": {
+				"frostfang-bronze-discs": 120,
+				"dragonglass": 120,
+				"silk": 120
+			  },
+			  "img": "item/season12/frostfang-thenn/weapon.webp"
+			},
+			{
+			  "name": "Scarification knife",
+			  "level": 20,
+			  "materials": {
+				"frostfang-bronze-discs": 400,
+				"leather-straps": 400,
+				"copper-bar": 400,
+				"black-iron": 400
+			  },
+			  "img": "item/season12/frostfang-thenn/head.webp"
+			},
+			{
+			  "name": "Bronze Lamellar",
+			  "level": 20,
+			  "materials": {
+				"frostfang-bronze-discs": 400,
+				"hide": 400,
+				"wildfire": 400,
+				"leather-straps": 400
+			  },
+			  "img": "item/season12/frostfang-thenn/chest.webp"
+			},
+			{
+			  "name": "Hide Pants",
+			  "level": 20,
+			  "materials": {
+				"frostfang-bronze-discs": 400,
+				"ironwood": 400,
+				"milk-of-the-poppy": 400,
+				"weirwood": 400
+			  },
+			  "img": "item/season12/frostfang-thenn/pants.webp"
+			},
+			{
+			  "name": "Mammoth-Fur Boots",
+			  "level": 20,
+			  "materials": {
+				"frostfang-bronze-discs": 400,
+				"black-iron": 400,
+				"goldenheart-wood": 400,
+				"kingswood-oak": 400
+			  },
+			  "img": "item/season12/frostfang-thenn/boots.webp"
+			},
+			{
+			  "name": "Bronze Ring",
+			  "level": 20,
+			  "materials": {
+				"frostfang-bronze-discs": 400,
+				"weirwood": 400,
+				"goldenheart-wood": 400,
+				"hide": 400
+			  },
+			  "img": "item/season12/frostfang-thenn/ring.webp"
+			},
+			{
+			  "name": "Great Axe",
+			  "level": 20,
+			  "materials": {
+				"frostfang-bronze-discs": 400,
+				"dragonglass": 400,
+				"silk": 400,
+				"ironwood": 400
+			  },
+			  "img": "item/season12/frostfang-thenn/weapon.webp"
+			},
+			{
+			  "name": "Scarification knife",
+			  "level": 25,
+			  "materials": {
+				"frostfang-bronze-discs": 1200,
+				"leather-straps": 1200,
+				"copper-bar": 1200,
+				"black-iron": 1200
+			  },
+			  "img": "item/season12/frostfang-thenn/head.webp"
+			},
+			{
+			  "name": "Bronze Lamellar",
+			  "level": 25,
+			  "materials": {
+				"frostfang-bronze-discs": 1200,
+				"hide": 1200,
+				"wildfire": 1200,
+				"leather-straps": 1200
+			  },
+			  "img": "item/season12/frostfang-thenn/chest.webp"
+			},
+			{
+			  "name": "Hide Pants",
+			  "level": 25,
+			  "materials": {
+				"frostfang-bronze-discs": 1200,
+				"ironwood": 1200,
+				"milk-of-the-poppy": 1200,
+				"weirwood": 1200
+			  },
+			  "img": "item/season12/frostfang-thenn/pants.webp"
+			},
+			{
+			  "name": "Mammoth-Fur Boots",
+			  "level": 25,
+			  "materials": {
+				"frostfang-bronze-discs": 1200,
+				"black-iron": 1200,
+				"goldenheart-wood": 1200,
+				"kingswood-oak": 1200
+			  },
+			  "img": "item/season12/frostfang-thenn/boots.webp"
+			},
+			{
+			  "name": "Bronze Ring",
+			  "level": 25,
+			  "materials": {
+				"frostfang-bronze-discs": 1200,
+				"weirwood": 1200,
+				"goldenheart-wood": 1200,
+				"hide": 1200
+			  },
+			  "img": "item/season12/frostfang-thenn/ring.webp"
+			},
+			{
+			  "name": "Great Axe",
+			  "level": 25,
+			  "materials": {
+				"frostfang-bronze-discs": 1200,
+				"dragonglass": 1200,
+				"silk": 1200,
+				"ironwood": 1200
+			  },
+			  "img": "item/season12/frostfang-thenn/weapon.webp"
+			}
+		  ]
+		},
 		{
 		  "setName": "Golden Rose",
 		  "setMat": "Myrish Lace",

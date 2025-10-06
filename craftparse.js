@@ -156,9 +156,17 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2024-05-14';
+    const storageKey = 'noox-update-log-2025-06-10';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
+
+    const setUpdateIndicator = (hasUpdate) => {
+        if (hasUpdate) {
+            trigger.setAttribute('data-has-update', 'true');
+        } else {
+            trigger.removeAttribute('data-has-update');
+        }
+    };
 
     const markSeen = () => {
         if (storageSupported) {
@@ -168,6 +176,7 @@ function initializeUpdateLog() {
                 // Ignore storage failures silently
             }
         }
+        setUpdateIndicator(false);
     };
 
     const setExpandedState = (expanded) => {
@@ -178,6 +187,7 @@ function initializeUpdateLog() {
         overlay.style.display = 'flex';
         overlay.setAttribute('aria-hidden', 'false');
         setExpandedState(true);
+        setUpdateIndicator(false);
     };
 
     const closeOverlay = (shouldMarkSeen = false) => {
@@ -189,9 +199,39 @@ function initializeUpdateLog() {
         }
     };
 
-    if (!hasSeenUpdate) {
-        openOverlay();
-    }
+    setUpdateIndicator(!hasSeenUpdate);
+
+    const setPanelState = (button, expanded) => {
+        const panelId = button.getAttribute('aria-controls');
+        const panel = panelId ? overlay.querySelector(`#${panelId}`) : null;
+        if (!panel) {
+            return;
+        }
+
+        button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        panel.classList.toggle('open', expanded);
+    };
+
+    const closeAllPanels = () => {
+        const toggles = overlay.querySelectorAll('.changelog-toggle');
+        toggles.forEach(toggle => setPanelState(toggle, false));
+    };
+
+    const initializeAccordion = () => {
+        const toggles = overlay.querySelectorAll('.changelog-toggle');
+        toggles.forEach(toggle => {
+            const initiallyExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            setPanelState(toggle, initiallyExpanded);
+
+            toggle.addEventListener('click', () => {
+                const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                closeAllPanels();
+                setPanelState(toggle, !isExpanded);
+            });
+        });
+    };
+
+    initializeAccordion();
 
     trigger.addEventListener('click', () => {
         if (overlay.style.display === 'flex') {
@@ -1540,7 +1580,7 @@ function filterProductsByAvailableGear(products, availableMaterials, multiplier 
     });
 }
 
-const SEASONAL_ODDS_LEVELS = new Set([15, 20, 25, 30, 35, 40]);
+const SEASONAL_ODDS_LEVELS = new Set([15, 20, 25, 30, 35, 40, 45]);
 const EXTENDED_ODDS_LEVELS = new Set([20]);
 
 function shouldApplyOddsForProduct(product) {
@@ -2142,4 +2182,3 @@ function initAdvMaterialSection() {
         container.appendChild(seasonZeroSection);
     }
 }
-
