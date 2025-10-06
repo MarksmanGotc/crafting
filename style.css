@@ -462,12 +462,25 @@ button.info-btn:hover {
     margin: 0;
     height: 30px;
     width: 30px;
+    position: relative;
 }
 
 .update-log-trigger button svg {
     width: 22px;
     height: 22px;
     fill: currentColor;
+}
+
+.update-log-trigger button[data-has-update="true"]::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--button-bg);
+    box-shadow: 0 0 0 2px #fff;
 }
 
 .update-log-trigger button:hover,
@@ -481,6 +494,68 @@ button.info-btn:hover {
 .changelog-overlay .info-content {
     max-width: 480px;
     text-align: left;
+}
+
+.changelog-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.changelog-entry {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.changelog-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.changelog-toggle:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.changelog-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+button.changelog-toggle:hover {
+    background: initial;
+}
+
+.changelog-arrow {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s ease-in-out;
+    fill: currentColor;
+}
+
+.changelog-toggle[aria-expanded="true"] .changelog-arrow {
+    transform: rotate(180deg);
+}
+
+.changelog-panel {
+    padding: 0 14px 14px 14px;
+    display: none;
+}
+
+.changelog-panel.open {
+    display: block;
 }
 
 .changelog-overlay .info-content h2 {
