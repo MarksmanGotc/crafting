@@ -442,6 +442,10 @@ const materials = {
 				"img": "materials/season12/frost-crusted-abalone.png",
 				"Original-name": "Frost Crusted Abalone"
 			},
+			"frostfang-bronze-discs": {
+				"img": "materials/season12/frostfang-bronze-discs.webp",
+				"Original-name": "Frostfang Bronze Discs"
+			},
 			"myrish-lace": {
 				"img": "materials/season12/myrish-lace.png",
 				"Original-name": "Myrish Lace"
