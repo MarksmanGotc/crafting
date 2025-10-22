@@ -1,3 +1,4 @@
+
 let initialMaterials = {};
 const urlParams = new URLSearchParams(window.location.search);
 const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
@@ -22,7 +23,13 @@ Object.values(materials).forEach(season => {
         materialToSeason[normalized] = season.season;
     });
 });
+const WEIRWOOD_NORMALIZED_KEY = normalizeKey('weirwood');
 const normalizedKeyCache = new WeakMap();
+
+const CALCULATION_STORAGE_KEY = 'noox-calculation-v1';
+const CALCULATION_STORAGE_VERSION = 1;
+let latestCalculationPayload = null;
+let isViewingSavedCalculation = false;
 
 function getNormalizedKeyMap(source) {
     if (!source || typeof source !== 'object') {
@@ -39,15 +46,34 @@ function getNormalizedKeyMap(source) {
     return cached;
 }
 let qualityMultipliers = {};
-const WARLORD_PENALTY = 3;
-const BASE_MOST_WEIGHT = 12;
-const BASE_SECOND_WEIGHT = 6;
-const GEAR_MOST_WEIGHT = 6;
-const GEAR_SECOND_WEIGHT = 3;
-const GEAR_BASELINE_BONUS = BASE_MOST_WEIGHT;
-const LEFTOVER_WEIGHT_BASE = 7;
-const LEFTOVER_WEIGHT_GEAR = 3;
-const BALANCE_WEIGHT = 0.1;
+const MATERIAL_RANK_POINTS = Object.freeze({
+    1: 40,
+    2: 32,
+    3: 25,
+    4: 12,
+    5: 7,
+    6: 2,
+    7: 0,
+    8: -10,
+    9: -15,
+    10: -22,
+    11: -30,
+    12: -40
+});
+const MAX_DEFINED_MATERIAL_RANK = Math.max(
+    ...Object.keys(MATERIAL_RANK_POINTS)
+        .map(Number)
+        .filter(rank => Number.isFinite(rank))
+);
+const MATERIAL_NEUTRAL_RANKS = new Set();
+const INSUFFICIENT_MATERIAL_PENALTY = -1000;
+const LEAST_MATERIAL_PENALTY = -25;
+const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
+const GEAR_MATERIAL_SCORE = 22;
+const WEIRWOOD_PRIORITY_PENALTY = -20;
+const SEASON_ZERO_LOW_BONUS = -10;
+const SEASON_ZERO_HIGH_BONUS = 15;
+const DEFAULT_RANK_PENALTY = -30;
 const CTW_SET_NAME_FALLBACK = 'Ceremonial Targaryen Warlord';
 const ctwSetName =
     typeof window !== 'undefined' && window.CTW_SET_NAME
@@ -66,15 +92,6 @@ const seasonZeroValueText = {
     [SeasonZeroPreference.NORMAL]: 'Normal weighting',
     [SeasonZeroPreference.HIGH]: 'High weighting'
 };
-const SEASON_ZERO_SCORE_DEFAULT = Object.freeze({ seasonZero: 0, nonSeason: 0 });
-const SEASON_ZERO_SCORE_ADJUSTMENTS = Object.freeze({
-    // Non-season adjustments remain at zero so that the slider only influences Season 0 items.
-    [SeasonZeroPreference.LOW]: Object.freeze({ seasonZero: 100, nonSeason: 0 }),
-    // Normal weighting sits roughly halfway between the low and high configurations
-    // to provide a smoother progression without overwhelming the default results.
-    [SeasonZeroPreference.NORMAL]: Object.freeze({ seasonZero: 700, nonSeason: 0 }),
-    [SeasonZeroPreference.HIGH]: Object.freeze({ seasonZero: 1400, nonSeason: 0 })
-});
 let currentSeasonZeroPreference = SeasonZeroPreference.NORMAL;
 const qualityColorMap = {
     poor: '#A9A9A9',
@@ -86,7 +103,9 @@ const qualityColorMap = {
 };
 let qualitySelectHandlersAttached = false;
 let failedLevels = [];
+let pendingFailedLevels = null;
 let requestedTemplates = {};
+let preserveRequestedTemplates = false;
 let remainingUse = {};
 let ctwMediumNotice = false;
 let level20OnlyWarlordsActive = false;
@@ -156,7 +175,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2025-06-10';
+    const storageKey = 'noox-update-log-2025-10-22';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
@@ -256,77 +275,410 @@ function initializeUpdateLog() {
     });
 }
 
-const calculationProgressState = {
-    total: 0,
-    processed: 0
-};
+function loadSavedCalculation() {
+    if (!isLocalStorageAvailable()) {
+        return null;
+    }
 
-function resetCalculationProgress(total) {
-    calculationProgressState.total = total;
-    calculationProgressState.processed = 0;
-    updateCalculationProgress(0, total);
+    try {
+        const raw = window.localStorage.getItem(CALCULATION_STORAGE_KEY);
+        if (!raw) {
+            return null;
+        }
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object') {
+            return null;
+        }
+        if (parsed.version && parsed.version !== CALCULATION_STORAGE_VERSION) {
+            window.localStorage.removeItem(CALCULATION_STORAGE_KEY);
+            return null;
+        }
+        return parsed;
+    } catch (error) {
+        console.error('Failed to load saved calculation from storage', error);
+        try {
+            window.localStorage.removeItem(CALCULATION_STORAGE_KEY);
+        } catch (cleanupError) {
+            console.error('Failed to clear corrupt saved calculation', cleanupError);
+        }
+        return null;
+    }
 }
 
-function updateCalculationProgress(processed, totalOverride = calculationProgressState.total) {
-    calculationProgressState.processed = Math.min(processed, totalOverride);
+function saveCalculationToStorage(payload) {
+    if (!payload || !isLocalStorageAvailable()) {
+        return false;
+    }
+
+    try {
+        const dataToStore = {
+            ...payload,
+            version: CALCULATION_STORAGE_VERSION,
+            savedAt: new Date().toISOString()
+        };
+        window.localStorage.setItem(CALCULATION_STORAGE_KEY, JSON.stringify(dataToStore));
+        latestCalculationPayload = { ...dataToStore };
+        return true;
+    } catch (error) {
+        console.error('Failed to persist calculation to storage', error);
+        return false;
+    }
+}
+
+function clearSavedCalculationStorage() {
+    if (isLocalStorageAvailable()) {
+        try {
+            window.localStorage.removeItem(CALCULATION_STORAGE_KEY);
+        } catch (error) {
+            console.error('Failed to clear stored calculation', error);
+        }
+    }
+    latestCalculationPayload = null;
+    isViewingSavedCalculation = false;
+}
+
+function applyGearLevelSelections(levels = []) {
+    const select = document.getElementById('gearMaterialLevels');
+    const dropdown = document.querySelector('#advMaterials .level-dropdown');
+    if (!select || !dropdown) {
+        return;
+    }
+
+    const targetLevels = new Set((Array.isArray(levels) ? levels : []).map(value => parseInt(value, 10)));
+    Array.from(select.options).forEach(option => {
+        const numericValue = parseInt(option.value, 10);
+        const isSelected = targetLevels.has(numericValue);
+        option.selected = isSelected;
+        const optionDiv = dropdown.querySelector(`div[data-value="${option.value}"]`);
+        if (optionDiv) {
+            optionDiv.classList.toggle('selected', isSelected);
+        }
+    });
+}
+
+function applySettingsFromStorage(settings = {}, requestedTemplatesOverride = {}) {
+    const applyCheckboxState = (id, value) => {
+        if (typeof value === 'undefined') {
+            return;
+        }
+        const element = document.getElementById(id);
+        if (element) {
+            element.checked = Boolean(value);
+        }
+    };
+
+    if (settings && typeof settings === 'object') {
+        if (typeof settings.scale !== 'undefined') {
+            const scaleSelect = document.getElementById('scaleSelect');
+            if (scaleSelect) {
+                const scaleValue = String(settings.scale);
+                const match = Array.from(scaleSelect.options).some(option => option.value === scaleValue);
+                if (match) {
+                    scaleSelect.value = scaleValue;
+                }
+            }
+        }
+
+        applyCheckboxState('includeWarlords', settings.includeWarlords);
+        applyCheckboxState('level1OnlyWarlords', settings.level1OnlyWarlords);
+        applyCheckboxState('level20OnlyWarlords', settings.level20OnlyWarlords);
+        applyCheckboxState('includeLowOdds', settings.includeLowOdds);
+        applyCheckboxState('includeMediumOdds', settings.includeMediumOdds);
+
+        if (typeof settings.seasonZeroPreference === 'number' && !Number.isNaN(settings.seasonZeroPreference)) {
+            const slider = document.getElementById('seasonZeroPriority');
+            if (slider) {
+                slider.value = settings.seasonZeroPreference;
+                currentSeasonZeroPreference = settings.seasonZeroPreference;
+                updateSeasonZeroSliderLabel(settings.seasonZeroPreference);
+            }
+        }
+
+        if (Array.isArray(settings.gearLevels)) {
+            applyGearLevelSelections(settings.gearLevels);
+        }
+
+        if (settings.templateQualities && typeof settings.templateQualities === 'object') {
+            LEVELS.forEach(level => {
+                const select = document.getElementById(`temp${level}`);
+                const quality = settings.templateQualities[level] ?? settings.templateQualities[level.toString()];
+                if (select && typeof quality === 'string') {
+                    select.value = quality;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    qualityMultipliers[level] = getQualityMultiplier(quality);
+                }
+            });
+        }
+    }
+
+    const templateTargets = (settings && settings.requestedTemplates) || requestedTemplatesOverride;
+    if (templateTargets && typeof templateTargets === 'object') {
+        LEVELS.forEach(level => {
+            const amountInput = document.getElementById(`templateAmount${level}`);
+            if (!amountInput) {
+                return;
+            }
+            const rawValue = templateTargets[level] ?? templateTargets[level.toString()];
+            const numericValue = typeof rawValue === 'number' ? rawValue : parseInt(rawValue, 10);
+            const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+            if (!Number.isNaN(numericValue) && numericValue > 0) {
+                amountInput.value = numericValue;
+                wrap?.classList.add('active');
+            } else {
+                amountInput.value = '';
+                wrap?.classList.remove('active');
+            }
+        });
+    }
+}
+
+function resetUserInputs() {
+    document.querySelectorAll('.my-material input.numeric-input').forEach(input => {
+        input.value = '';
+        const parent = input.closest('.my-material');
+        if (parent) {
+            parent.classList.remove('active');
+        }
+    });
+
+    LEVELS.forEach(level => {
+        const amountInput = document.getElementById(`templateAmount${level}`);
+        if (amountInput) {
+            amountInput.value = '';
+            const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+            wrap?.classList.remove('active');
+        }
+        const levelItemsContainer = document.getElementById(`level-${level}-items`);
+        if (levelItemsContainer) {
+            levelItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
+                input.value = '';
+            });
+        }
+    });
+}
+
+function restoreSavedCalculation(savedData) {
+    if (!savedData || typeof savedData !== 'object') {
+        return false;
+    }
+
+    latestCalculationPayload = savedData;
+
+    try {
+        initialMaterials = savedData.initialMaterials ? { ...savedData.initialMaterials } : {};
+        requestedTemplates = savedData.requestedTemplates ? { ...savedData.requestedTemplates } : {};
+        qualityMultipliers = savedData.qualityMultipliers ? { ...savedData.qualityMultipliers } : {};
+        failedLevels = Array.isArray(savedData.failedLevels) ? [...savedData.failedLevels] : [];
+        pendingFailedLevels = null;
+        preserveRequestedTemplates = false;
+        ctwMediumNotice = Boolean(savedData.ctwMediumNotice);
+        level20OnlyWarlordsActive = Boolean(savedData.level20OnlyWarlordsActive);
+        isViewingSavedCalculation = true;
+
+        if (savedData.templates || savedData.initialMaterials) {
+            populateInputsFromShare({
+                initialMaterials: savedData.initialMaterials || {},
+                templates: savedData.templates || {}
+            });
+        }
+
+        applySettingsFromStorage(savedData.settings || {}, savedData.requestedTemplates || {});
+
+        renderResults(savedData.templateCounts || {}, savedData.materialCounts || {});
+        return true;
+    } catch (error) {
+        console.error('Failed to restore saved calculation', error);
+        isViewingSavedCalculation = false;
+        latestCalculationPayload = null;
+        return false;
+    }
+}
+
+function handleSaveCalculation(button) {
+    if (!button) {
+        return;
+    }
+
+    if (!latestCalculationPayload) {
+        const originalLabel = button.textContent;
+        button.textContent = 'Nothing to save';
+        button.disabled = true;
+        setTimeout(() => {
+            button.disabled = false;
+            button.textContent = originalLabel;
+        }, 1500);
+        return;
+    }
+
+    if (!isLocalStorageAvailable()) {
+        const originalLabel = button.textContent;
+        button.textContent = 'Storage unavailable';
+        button.disabled = true;
+        setTimeout(() => {
+            button.disabled = false;
+            button.textContent = originalLabel;
+        }, 2000);
+        return;
+    }
+
+    const originalText = button.textContent;
+    const success = saveCalculationToStorage(latestCalculationPayload);
+    button.disabled = true;
+    button.textContent = success ? 'Saved' : 'Save failed';
+    setTimeout(() => {
+        button.disabled = false;
+        button.textContent = originalText;
+    }, success ? 2000 : 2500);
+}
+
+function handleClearSavedCalculation() {
+    clearSavedCalculationStorage();
+    failedLevels = [];
+    pendingFailedLevels = null;
+    requestedTemplates = {};
+    preserveRequestedTemplates = false;
+    qualityMultipliers = {};
+    remainingUse = {};
+    ctwMediumNotice = false;
+    level20OnlyWarlordsActive = false;
+    closeResults();
+    resetUserInputs();
+}
+
+const calculationProgressState = {
+    total: 0,
+    processed: 0,
+    isActive: false,
+    isComplete: false,
+    lastTickTime: 0
+};
+
+function getNow() {
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+        return performance.now();
+    }
+    return Date.now();
+}
+
+function renderCalculationProgress() {
     const container = document.querySelector('.spinner-progress');
     const track = document.querySelector('.spinner-progress__track');
     const bar = document.querySelector('.spinner-progress__bar');
     const label = document.querySelector('.spinner-progress__label');
-    const total = Math.max(totalOverride, 0);
 
     if (!track || !bar || !label) {
         return;
     }
 
-    const hasTotal = total > 0;
-    const ratio = hasTotal ? Math.min(1, processed / total) : 0;
-    const percent = Math.round(ratio * 100);
+    const active = calculationProgressState.isActive;
+    const total = Math.max(0, calculationProgressState.total);
+    const processed = Math.max(0, Math.min(calculationProgressState.processed, total));
+    const actualRatio = active && total > 0 ? processed / total : 0;
+    const percentRaw = Math.round(actualRatio * 100);
+    const widthPercent = actualRatio * 100;
+    const labelPercent = calculationProgressState.isComplete
+        ? percentRaw
+        : Math.min(99, percentRaw);
 
-    bar.style.transform = `scaleX(${ratio})`;
-    track.setAttribute('aria-valuenow', hasTotal ? percent : 0);
+    bar.style.width = `${widthPercent}%`;
+    bar.style.removeProperty('transform');
+    track.setAttribute('aria-valuenow', active ? labelPercent : 0);
     track.setAttribute('aria-valuemin', 0);
     track.setAttribute('aria-valuemax', 100);
     if (container) {
-        container.classList.toggle('is-active', hasTotal);
+        container.classList.toggle('is-active', active);
     }
-    label.textContent = hasTotal ? `Calculating templates… ${percent}%` : 'Preparing templates…';
+
+    if (!active) {
+        label.textContent = 'Preparing templates…';
+    } else if (calculationProgressState.isComplete && actualRatio >= 1) {
+        label.textContent = 'Calculating templates… 100%';
+    } else {
+        label.textContent = `Calculating templates… ${labelPercent}%`;
+    }
+}
+
+function resetCalculationProgress(total) {
+    calculationProgressState.total = Math.max(0, total);
+    calculationProgressState.processed = 0;
+    calculationProgressState.isActive = total > 0;
+    calculationProgressState.isComplete = false;
+    calculationProgressState.lastTickTime = getNow();
+    renderCalculationProgress();
+}
+
+function updateCalculationProgress(processed, totalOverride = calculationProgressState.total) {
+    const total = Math.max(0, totalOverride);
+    const clampedProcessed = Math.max(0, Math.min(processed, total));
+
+    calculationProgressState.total = total;
+    calculationProgressState.processed = clampedProcessed;
+    calculationProgressState.isActive = total > 0;
+    if (!calculationProgressState.isComplete) {
+        calculationProgressState.isComplete = total > 0 && clampedProcessed >= total;
+    }
+
+    calculationProgressState.lastTickTime = getNow();
+
+    renderCalculationProgress();
 }
 
 function completeCalculationProgress() {
-    updateCalculationProgress(calculationProgressState.total, calculationProgressState.total);
+    if (!calculationProgressState.isActive) {
+        return;
+    }
+    calculationProgressState.isComplete = true;
+    calculationProgressState.processed = calculationProgressState.total;
+    calculationProgressState.lastTickTime = getNow();
+    renderCalculationProgress();
 }
 
 function clearCalculationProgress() {
     calculationProgressState.total = 0;
     calculationProgressState.processed = 0;
-    const container = document.querySelector('.spinner-progress');
-    const track = document.querySelector('.spinner-progress__track');
-    const bar = document.querySelector('.spinner-progress__bar');
-    const label = document.querySelector('.spinner-progress__label');
-    if (container) {
-        container.classList.remove('is-active');
+    calculationProgressState.isActive = false;
+    calculationProgressState.isComplete = false;
+    calculationProgressState.lastTickTime = 0;
+    renderCalculationProgress();
+}
+
+const PROGRESS_COMPLETION_FLASH_DELAY = 150;
+
+function deactivateSpinner(immediate = false) {
+    const spinner = document.querySelector('.spinner-wrap');
+    if (!spinner) {
+        clearCalculationProgress();
+        return;
     }
-    if (bar) {
-        bar.style.transform = 'scaleX(0)';
-    }
-    if (track) {
-        track.setAttribute('aria-valuenow', 0);
-    }
-    if (label) {
-        label.textContent = 'Preparing templates…';
+
+    if (!immediate && calculationProgressState.isActive) {
+        calculationProgressState.isComplete = true;
+        calculationProgressState.processed = calculationProgressState.total;
+        calculationProgressState.lastTickTime = getNow();
+        renderCalculationProgress();
+
+        setTimeout(() => {
+            spinner.classList.remove('active');
+            clearCalculationProgress();
+        }, PROGRESS_COMPLETION_FLASH_DELAY);
+    } else {
+        spinner.classList.remove('active');
+        clearCalculationProgress();
     }
 }
 
 function createProgressTracker(total) {
     resetCalculationProgress(total);
-    const chunkSize = Math.max(1, Math.floor(Math.max(total, 100) / 25));
+    const chunkSize = Math.max(1, Math.floor(Math.max(total, 200) / 40));
     let processed = 0;
+    let pendingYield = 0;
 
     const tick = async (increment = 1) => {
         processed += increment;
+        pendingYield += increment;
         updateCalculationProgress(processed, total);
-        if (processed % chunkSize === 0) {
+        while (pendingYield >= chunkSize) {
+            pendingYield -= chunkSize;
             await waitForNextFrame();
         }
     };
@@ -548,10 +900,6 @@ function getSeasonZeroPreference() {
     return currentSeasonZeroPreference;
 }
 
-function getSeasonZeroScoreAdjustments(preference) {
-    return SEASON_ZERO_SCORE_ADJUSTMENTS[preference] || SEASON_ZERO_SCORE_DEFAULT;
-}
-
 function updateSeasonZeroSliderLabel(value) {
     const sliderEl = document.getElementById('seasonZeroPriority');
     if (!sliderEl) return;
@@ -614,8 +962,17 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (e) {
             console.error('Invalid share data');
         }
+    } else {
+        const savedCalculation = loadSavedCalculation();
+        if (savedCalculation) {
+            const restored = restoreSavedCalculation(savedCalculation);
+            if (!restored) {
+                clearSavedCalculationStorage();
+                resetUserInputs();
+            }
+        }
     }
-	
+
     // Kun footerin sisällä olevaa SVG:tä painetaan
     document.querySelectorAll('footer svg, #openGiftFromHeader').forEach(element => {
 		element.addEventListener('click', function() {
@@ -751,14 +1108,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (e.key === 'Escape') {
+            const overlays = Array.from(document.querySelectorAll('.info-overlay'));
+            const openOverlays = overlays.filter(overlay => {
+                if (typeof window === 'undefined') {
+                    return false;
+                }
+                const display = window.getComputedStyle(overlay).display;
+                return display && display !== 'none';
+            });
+
+            if (openOverlays.length > 0) {
+                openOverlays.forEach(overlay => {
+                    overlay.style.display = 'none';
+                    if (overlay.hasAttribute('aria-hidden')) {
+                        overlay.setAttribute('aria-hidden', 'true');
+                    }
+                });
+                document.querySelectorAll('.info-btn[aria-expanded="true"]').forEach(btn => {
+                    btn.setAttribute('aria-expanded', 'false');
+                });
+                closeAllQualitySelects();
+                return;
+            }
+
             if (document.getElementById('results').style.display === 'block') {
                 closeResults();
             }
-            document.querySelectorAll('.info-overlay').forEach(overlay => {
-                if (overlay.style.display !== 'none') {
-                    overlay.style.display = 'none';
-                }
-            });
             closeAllQualitySelects();
         }
     });
@@ -951,17 +1326,23 @@ function showResults() {
         behavior: 'smooth'
     });
 
-    document.querySelector('.spinner-wrap').classList.remove('active');
-    clearCalculationProgress();
+    deactivateSpinner();
 
 }
 
 function closeResults() {
-	const resultsDiv = document.getElementById('results');
+        const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
-	document.getElementById('results').style.display = 'none';
-	document.getElementById('generatebychoice').style.display = 'block';
-	initialMaterials = {}; // Reset materials to allow fresh input values
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('generatebychoice').style.display = 'block';
+        if (isViewingSavedCalculation) {
+            const scaleSelect = document.getElementById('scaleSelect');
+            if (scaleSelect) {
+                scaleSelect.value = '1';
+            }
+        }
+        isViewingSavedCalculation = false;
+        initialMaterials = {}; // Reset materials to allow fresh input values
 }
 
 function createCloseButton(parentElement) {
@@ -970,6 +1351,105 @@ function createCloseButton(parentElement) {
     closeButton.onclick = closeResults;
     closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>`;
     parentElement.appendChild(closeButton);
+}
+
+function ensureSaveInfoOverlay() {
+    let overlay = document.getElementById('saveInfoOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'saveInfoOverlay';
+        overlay.className = 'info-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-labelledby', 'saveInfoTitle');
+        overlay.setAttribute('aria-describedby', 'saveInfoDescription');
+        overlay.innerHTML = `
+            <div class="info-content" role="document">
+                <button class="close-popup" type="button" aria-label="Close save info">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>
+                </button>
+                <p id="saveInfoTitle"><strong>Saving calculations:</strong> Saved plans are stored in your browser. Closing the tab or the browser keeps the calculation ready for your next visit.</p>
+                <p id="saveInfoDescription"><strong>Clear calculation:</strong> Removes the current plan and any saved version so you can start from scratch whenever you need.</p>
+            </div>
+        `;
+        overlay.style.display = 'none';
+        document.body.appendChild(overlay);
+
+        const closeOverlay = () => {
+            overlay.style.display = 'none';
+            overlay.setAttribute('aria-hidden', 'true');
+            const trigger = document.getElementById('saveInfoBtn');
+            trigger?.setAttribute('aria-expanded', 'false');
+        };
+
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay || event.target.closest('.close-popup')) {
+                closeOverlay();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && overlay.style.display === 'flex') {
+                closeOverlay();
+            }
+        });
+    }
+
+    return overlay;
+}
+
+function createResultsActions(parentElement) {
+    if (!parentElement) {
+        return;
+    }
+
+    const actionsContainer = document.createElement('div');
+    actionsContainer.className = 'results-actions';
+
+    const clearButton = document.createElement('button');
+    clearButton.type = 'button';
+    clearButton.className = 'results-actions__button results-actions__clear';
+    clearButton.textContent = 'Clear';
+    clearButton.addEventListener('click', handleClearSavedCalculation);
+
+    const storageAvailable = isLocalStorageAvailable();
+
+    if (!isViewingSavedCalculation && storageAvailable) {
+        const saveGroup = document.createElement('div');
+        saveGroup.className = 'results-actions__group';
+
+        const saveButton = document.createElement('button');
+        saveButton.type = 'button';
+        saveButton.className = 'results-actions__button results-actions__save';
+        saveButton.textContent = 'Save';
+        saveButton.addEventListener('click', () => handleSaveCalculation(saveButton));
+        saveGroup.appendChild(saveButton);
+        saveGroup.appendChild(clearButton);
+
+        const infoButton = document.createElement('button');
+        infoButton.type = 'button';
+        infoButton.id = 'saveInfoBtn';
+        infoButton.className = 'info-btn results-actions__info';
+        infoButton.setAttribute('aria-label', 'How saving works');
+        infoButton.setAttribute('aria-haspopup', 'dialog');
+        infoButton.setAttribute('aria-expanded', 'false');
+        infoButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>';
+
+        const saveInfoOverlay = ensureSaveInfoOverlay();
+        infoButton.addEventListener('click', () => {
+            saveInfoOverlay.style.display = 'flex';
+            saveInfoOverlay.setAttribute('aria-hidden', 'false');
+            infoButton.setAttribute('aria-expanded', 'true');
+        });
+
+        saveGroup.appendChild(infoButton);
+        actionsContainer.appendChild(saveGroup);
+    } else {
+        actionsContainer.appendChild(clearButton);
+    }
+
+    parentElement.appendChild(actionsContainer);
 }
 
 
@@ -1024,7 +1504,36 @@ function createLevelStructure() {
 }
 
 function calculateMaterials() {
-	
+    isViewingSavedCalculation = false;
+    latestCalculationPayload = null;
+    const hasPendingFailures = Array.isArray(pendingFailedLevels);
+    if (hasPendingFailures) {
+        failedLevels = [...pendingFailedLevels];
+        pendingFailedLevels = null;
+    } else {
+        failedLevels = [];
+    }
+
+    const shouldPreserveRequested = preserveRequestedTemplates;
+    preserveRequestedTemplates = false;
+
+    if (!shouldPreserveRequested) {
+        requestedTemplates = {};
+    }
+    qualityMultipliers = {};
+    const manualRequestedTotals = {};
+
+    LEVELS.forEach(level => {
+        const qualitySelect = document.getElementById(`temp${level}`);
+        if (!qualitySelect) {
+            return;
+        }
+
+        const selectedQuality = typeof qualitySelect.value === 'string' ? qualitySelect.value.trim() : '';
+        const qualityKey = selectedQuality !== '' ? selectedQuality : 'poor';
+        qualityMultipliers[level] = getQualityMultiplier(qualityKey);
+    });
+
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
 
@@ -1077,15 +1586,71 @@ function calculateMaterials() {
                     const multiplier = qualityMultipliers[level] || 1;
                     materialCounts[materialName].amount += requiredAmount * amount * multiplier;
                 });
+
+                if (!shouldPreserveRequested) {
+                    manualRequestedTotals[level] = (manualRequestedTotals[level] || 0) + amount;
+                }
             }
         });
     });
+
+    if (!shouldPreserveRequested) {
+        LEVELS.forEach(level => {
+            requestedTemplates[level] = manualRequestedTotals[level] || 0;
+        });
+    }
     renderResults(templateCounts, materialCounts);
+}
+
+function getCurrentUserSettings() {
+    const scaleSelect = document.getElementById('scaleSelect');
+    const parseCheckbox = (id, fallback = false) => {
+        const element = document.getElementById(id);
+        if (element === null) {
+            return fallback;
+        }
+        return element.checked;
+    };
+
+    const gearSelect = document.getElementById('gearMaterialLevels');
+    const gearLevels = gearSelect
+        ? Array.from(gearSelect.selectedOptions).map(option => parseInt(option.value, 10))
+        : [];
+
+    const templateQualities = {};
+    LEVELS.forEach(level => {
+        const select = document.getElementById(`temp${level}`);
+        if (select) {
+            templateQualities[level] = select.value;
+        }
+    });
+
+    return {
+        scale: scaleSelect ? scaleSelect.value : '1',
+        includeWarlords: parseCheckbox('includeWarlords', true),
+        level1OnlyWarlords: parseCheckbox('level1OnlyWarlords', false),
+        level20OnlyWarlords: parseCheckbox('level20OnlyWarlords', false),
+        includeLowOdds: parseCheckbox('includeLowOdds', true),
+        includeMediumOdds: parseCheckbox('includeMediumOdds', true),
+        seasonZeroPreference: getSeasonZeroPreference(),
+        gearLevels,
+        templateQualities,
+        requestedTemplates: { ...requestedTemplates }
+    };
 }
 
 function renderResults(templateCounts, materialCounts) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '';
+
+    remainingUse = {};
+    const previousSavedAt =
+        isViewingSavedCalculation && latestCalculationPayload && latestCalculationPayload.savedAt
+            ? latestCalculationPayload.savedAt
+            : undefined;
+    if (!isViewingSavedCalculation) {
+        latestCalculationPayload = null;
+    }
 
     const materialsDiv = document.createElement('div');
     materialsDiv.className = 'materials';
@@ -1168,7 +1733,6 @@ function renderResults(templateCounts, materialCounts) {
 
     const generateDiv = document.createElement('div');
     generateDiv.className = 'generate';
-    materialsDiv.after(generateDiv);
 
     const levelItemCounts = calculateTotalItemsByLevel(templateCounts);
     const allSameCount = areAllCountsSame(levelItemCounts);
@@ -1349,8 +1913,32 @@ function renderResults(templateCounts, materialCounts) {
         }));
     });
 
+    const templateCountsSnapshot = JSON.parse(JSON.stringify(templateCounts));
+    const materialCountsSnapshot = JSON.parse(JSON.stringify(materialCounts));
+    const minimalTemplatesSnapshot = JSON.parse(JSON.stringify(minimalTemplates));
+    const initialMaterialsSnapshot = JSON.parse(JSON.stringify(initialMaterials));
+    const requestedTemplatesSnapshot = { ...requestedTemplates };
+    const qualityMultipliersSnapshot = { ...qualityMultipliers };
+    const payload = {
+        templateCounts: templateCountsSnapshot,
+        materialCounts: materialCountsSnapshot,
+        templates: minimalTemplatesSnapshot,
+        initialMaterials: initialMaterialsSnapshot,
+        requestedTemplates: requestedTemplatesSnapshot,
+        qualityMultipliers: qualityMultipliersSnapshot,
+        settings: getCurrentUserSettings(),
+        failedLevels: [...failedLevels],
+        ctwMediumNotice,
+        level20OnlyWarlordsActive
+    };
+    if (previousSavedAt) {
+        payload.savedAt = previousSavedAt;
+    }
+    latestCalculationPayload = payload;
+
     generateDiv.after(itemsDiv);
     itemsDiv.after(itemsInfoPopup);
+    createResultsActions(resultsDiv);
     createCloseButton(resultsDiv);
 
     const seasonTotals = {};
@@ -1413,6 +2001,8 @@ function createMaterialImageElement(materialName, imgUrl, preference) {
 }
 
 async function calculateWithPreferences() {
+    isViewingSavedCalculation = false;
+    latestCalculationPayload = null;
     const templateAmountInputs = LEVELS.map(l => document.querySelector(`#templateAmount${l}`));
     let isValid = true;
         let hasValue = false;
@@ -1473,8 +2063,7 @@ async function calculateWithPreferences() {
                                 qualityMultipliers[level] = getQualityMultiplier(quality);
                 });
                 if (totalTemplates === 0) {
-                                document.querySelector('.spinner-wrap').classList.remove('active');
-                                clearCalculationProgress();
+                                deactivateSpinner(true);
                                 return;
                 } else {
                                 if (!isDebugMode){
@@ -1512,6 +2101,10 @@ async function calculateWithPreferences() {
                 const resultPlan = await calculateProductionPlan(availableMaterials, templatesByLevel, progressTracker.tick);
                 progressTracker.complete();
                 failedLevels = resultPlan.failedLevels;
+                pendingFailedLevels = Array.isArray(resultPlan.failedLevels)
+                    ? [...resultPlan.failedLevels]
+                    : null;
+                preserveRequestedTemplates = true;
 
                 document.querySelectorAll('#manualInput input[type="number"]').forEach(input => {
                         input.value = ''; // Nollaa kaikki input-kentät
@@ -1521,14 +2114,14 @@ async function calculateWithPreferences() {
                 if (calculateBtn) {
                         calculateBtn.click(); // Simuloi napin klikkausta
                 } else {
-                        document.querySelector('.spinner-wrap').classList.remove('active');
-                        clearCalculationProgress();
+                        deactivateSpinner(true);
+                        pendingFailedLevels = null;
+                        preserveRequestedTemplates = false;
                 }
         } catch (error) {
                 console.error('Failed to calculate templates with preferences:', error);
                 displayUserMessage('Something went wrong while calculating templates. Please try again.');
-                document.querySelector('.spinner-wrap').classList.remove('active');
-                clearCalculationProgress();
+                deactivateSpinner(true);
         }
 }
 
@@ -1606,6 +2199,63 @@ function shouldApplyOddsForProduct(product) {
 async function calculateProductionPlan(availableMaterials, templatesByLevel, progressTick = async () => {}) {
     const productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [], "30": [], "35": [], "40": [], "45": [] };
     const failed = new Set();
+    const levelScoreLog = {};
+    const loggedLevelSummary = new Set();
+    const producedCounts = LEVELS.reduce((acc, level) => {
+        acc[level] = 0;
+        return acc;
+    }, {});
+    const formatScore = (value) => (Number.isInteger(value) ? `${value}` : value.toFixed(2));
+    const recordSelection = (level, product, score, quantity = 1, materialBreakdown = []) => {
+        if (quantity <= 0) {
+            return;
+        }
+        const safeQuantity = Math.max(1, Math.floor(quantity));
+        if (!levelScoreLog[level]) {
+            levelScoreLog[level] = [];
+        }
+        const repeatedScores = new Array(safeQuantity).fill(score);
+        levelScoreLog[level].push(...repeatedScores);
+        const quantityLabel = safeQuantity > 1 ? ` x${safeQuantity}` : '';
+        const formatScoreWithSign = (value) => {
+            if (!Number.isFinite(value)) {
+                return `${value}`;
+            }
+            const formatted = formatScore(value);
+            if (value > 0 && !formatted.startsWith('+')) {
+                return `+${formatted}`;
+            }
+            return formatted;
+        };
+        let materialsDetail = '';
+        if (Array.isArray(materialBreakdown) && materialBreakdown.length > 0) {
+            const parts = materialBreakdown.map(({ name, amount, perUnitScore }) => {
+                const formattedAmount = Number.isFinite(amount)
+                    ? (Number.isInteger(amount) ? `${amount}` : amount.toFixed(2))
+                    : `${amount}`;
+                const amountLabel = Number.isFinite(amount) && Math.abs(amount - 1) < 1e-6
+                    ? ''
+                    : ` x${formattedAmount}`;
+                return `${name}${amountLabel} ${formatScoreWithSign(perUnitScore)}`;
+            });
+            materialsDetail = ` (${parts.join(', ')})`;
+        }
+        console.log(`Level ${level} - ${product.name}${quantityLabel} - ${formatScore(score)}${materialsDetail}`);
+    };
+    const logLevelSummary = (level) => {
+        if (loggedLevelSummary.has(level)) {
+            return;
+        }
+        const scores = levelScoreLog[level];
+        if (!scores || scores.length === 0) {
+            return;
+        }
+        const maxScore = Math.max(...scores);
+        const minScore = Math.min(...scores);
+        console.log(`Korkein valittu pistemäärä: ${formatScore(maxScore)} (Level ${level})`);
+        console.log(`Alin valittu pistemäärä: ${formatScore(minScore)} (Level ${level})`);
+        loggedLevelSummary.add(level);
+    };
     const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
     const level1OnlyWarlords = document.getElementById('level1OnlyWarlords')?.checked ?? false;
     const level20OnlyWarlords = document.getElementById('level20OnlyWarlords')?.checked ?? false;
@@ -1618,6 +2268,47 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         key => (materialToSeason[key] || materialToSeason[normalizeKey(key)] || 0) !== 0
     );
     const level20Allowed = hasGearMaterials && allowedGearLevels.includes(20);
+    const level15InitialTemplates = Math.max(0, Math.floor(templatesByLevel[15] || 0));
+    const level15AllowsGear = allowedGearLevels.includes(15);
+    const level15AllowsCtw = includeWarlords;
+    const shouldReserveWeirwoodForLevel15 =
+        level15InitialTemplates > 0 && !level15AllowsGear && !level15AllowsCtw;
+    let outstandingLevel15 = level15InitialTemplates;
+    let weirwoodPenaltyActive = shouldReserveWeirwoodForLevel15 && outstandingLevel15 > 0;
+    const weirwoodPenaltyMap = shouldReserveWeirwoodForLevel15
+        ? new Map([[WEIRWOOD_NORMALIZED_KEY, WEIRWOOD_PRIORITY_PENALTY]])
+        : null;
+    const updateWeirwoodPenaltyState = () => {
+        if (!shouldReserveWeirwoodForLevel15) {
+            weirwoodPenaltyActive = false;
+            return;
+        }
+        weirwoodPenaltyActive = outstandingLevel15 > 0;
+    };
+    const setOutstandingLevel15 = (value) => {
+        if (!shouldReserveWeirwoodForLevel15) {
+            return;
+        }
+        const numericValue = Number.isFinite(value) ? value : 0;
+        outstandingLevel15 = Math.max(0, Math.floor(numericValue));
+        updateWeirwoodPenaltyState();
+    };
+    const reduceOutstandingLevel15 = (amount) => {
+        if (!shouldReserveWeirwoodForLevel15) {
+            return;
+        }
+        if (!Number.isFinite(amount) || amount <= 0) {
+            return;
+        }
+        outstandingLevel15 = Math.max(0, outstandingLevel15 - Math.floor(amount));
+        updateWeirwoodPenaltyState();
+    };
+    const getMaterialPenaltiesForLevel = (level) => {
+        if (!weirwoodPenaltyActive || !weirwoodPenaltyMap || level === 15) {
+            return null;
+        }
+        return weirwoodPenaltyMap;
+    };
     level20OnlyWarlordsActive = level20OnlyWarlords;
     ctwMediumNotice = includeWarlords && !includeMediumOdds && !level20Allowed && !level20OnlyWarlords;
     const progress = typeof progressTick === 'function' ? progressTick : async () => {};
@@ -1657,65 +2348,149 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         return filtered;
     };
 
+    const appendPlanEntry = (level, product, quantity = 1, materialBreakdown = []) => {
+        if (quantity <= 0) {
+            return;
+        }
+        const safeQuantity = Math.max(1, Math.floor(quantity));
+        if (!Number.isFinite(safeQuantity)) {
+            return;
+        }
+        const levelEntries = productionPlan[level];
+        const lastEntry = levelEntries[levelEntries.length - 1];
+        if (
+            lastEntry &&
+            lastEntry.name === product.name &&
+            lastEntry.season === product.season &&
+            lastEntry.setName === product.setName &&
+            lastEntry.warlord === product.warlord
+        ) {
+            lastEntry.quantity = (lastEntry.quantity || 1) + safeQuantity;
+            if (!Array.isArray(lastEntry.materials) || lastEntry.materials.length === 0) {
+                lastEntry.materials = Array.isArray(materialBreakdown)
+                    ? materialBreakdown.map(entry => ({ ...entry }))
+                    : [];
+            }
+        } else {
+            levelEntries.push({
+                name: product.name,
+                season: product.season,
+                setName: product.setName,
+                warlord: product.warlord,
+                quantity: safeQuantity,
+                materials: Array.isArray(materialBreakdown)
+                    ? materialBreakdown.map(entry => ({ ...entry }))
+                    : []
+            });
+        }
+        producedCounts[level] = (producedCounts[level] || 0) + safeQuantity;
+    };
+
     const processNormalOddsLevel = async (level) => {
         if (
             templatesByLevel[level] > 0 &&
             !includeLowOdds &&
-			!includeMediumOdds &&
+            !includeMediumOdds &&
             seasonZeroPreference !== SeasonZeroPreference.OFF
         ) {
             let remaining = templatesByLevel[level];
             const multiplier = qualityMultipliers[level] || 1;
-            const isLegendary = multiplier >= 1024;
-			let produced = 0;
+            let produced = 0;
 
             while (remaining > 0) {
                 const prefs = getUserPreferences(availableMaterials);
                 let levelProducts = getLevelProducts(level);
-                levelProducts = applySeasonZeroPreference(levelProducts, seasonZeroPreference);
+                levelProducts = applyLevelFilters(level, levelProducts, multiplier);
                 if (levelProducts.length === 0) {
                     break;
                 }
-                levelProducts = levelProducts.filter(p => {
-                    const applyOdds = !isLegendary && shouldApplyOddsForProduct(p);
-                    if (!applyOdds) return true;
-                    if (p.odds === 'low') return includeLowOdds;
-                    if (p.odds === 'medium') return includeMediumOdds;
-                    return true;
-                });
-                levelProducts = filterProductsByAvailableGear(levelProducts, availableMaterials, multiplier);
-                if (levelProducts.length === 0) {
-                    break;
-                }
+                const levelAllowsGear = allowedGearLevels.includes(level);
                 const selected = selectBestAvailableProduct(
+                    level,
                     levelProducts,
-                    prefs.mostAvailableMaterials,
-                    prefs.secondMostAvailableMaterials,
-                    prefs.leastAvailableMaterials,
+                    prefs,
                     availableMaterials,
-                    multiplier
+                    multiplier,
+                    {
+                        levelAllowsGear,
+                        seasonZeroPreference,
+                        materialPenalties: getMaterialPenaltiesForLevel(level)
+                    }
                 );
 
                 if (selected && canProductBeProduced(selected, availableMaterials, multiplier)) {
-                    productionPlan[level].push({ name: selected.name, season: selected.season, setName: selected.setName, warlord: selected.warlord });
-                    updateAvailableMaterials(availableMaterials, selected, multiplier);
-                    remaining--;
-					produced++;
-                    await progress();
+                    const maxCraftable = getMaxCraftableQuantity(selected, availableMaterials, multiplier);
+                    const canFastTrack = shouldFastTrackLevel(level, levelProducts, selected, {
+                        allowedGearLevels,
+                        multiplier,
+                        includeWarlords
+                    });
+                    const chunkSize = determineChunkSize(level, remaining, maxCraftable, { fastTrack: canFastTrack });
+
+                    if (chunkSize <= 0) {
+                        break;
+                    }
+
+                    const materialBreakdown = [];
+                    const score = getMaterialScore(
+                        selected,
+                        prefs,
+                        availableMaterials,
+                        multiplier,
+                        level,
+                        {
+                            levelAllowsGear,
+                            seasonZeroPreference,
+                            materialPenalties: getMaterialPenaltiesForLevel(level)
+                        },
+                        materialBreakdown
+                    );
+                    const quantity = Math.max(1, Math.floor(chunkSize));
+                    recordSelection(level, selected, score, quantity, materialBreakdown);
+                    appendPlanEntry(level, selected, quantity, materialBreakdown);
+                    updateAvailableMaterials(availableMaterials, selected, multiplier, quantity);
+                    remaining -= quantity;
+                    if (remaining < 0) {
+                        remaining = 0;
+                    }
+                    if (level === 15) {
+                        reduceOutstandingLevel15(quantity);
+                    }
+                    produced += quantity;
+                    await progress(quantity);
                 } else {
                     break;
                 }
             }
 
             templatesByLevel[level] = remaining;
+            if (level === 15) {
+                setOutstandingLevel15(remaining);
+            }
 
             if (produced > 0) {
+                if (remaining <= 0) {
+                    templatesByLevel[level] = 0;
+                    logLevelSummary(level);
+                }
                 return;
             }
         }
     };
 
-    const normalOddsPriorityLevels = [35, 30, 15];
+    const shouldPrioritizeNormalOddsLevel = (level) => {
+        if (!(level === 30 || level === 35)) {
+            return false;
+        }
+        if (templatesByLevel[level] <= 0) {
+            return false;
+        }
+        const levelAllowsGear = allowedGearLevels.includes(level);
+        const levelAllowsCtw = includeWarlords;
+        return !levelAllowsGear && !levelAllowsCtw;
+    };
+
+    const normalOddsPriorityLevels = [35, 30].filter(shouldPrioritizeNormalOddsLevel);
     for (const level of normalOddsPriorityLevels) {
         await processNormalOddsLevel(level);
     }
@@ -1729,13 +2504,19 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         if (levelProducts.length === 0) {
             failed.add(level);
             templatesByLevel[level] = 0;
+            if (level === 15) {
+                setOutstandingLevel15(0);
+            }
         }
     }
 
     let remaining = { ...templatesByLevel };
+    if (shouldReserveWeirwoodForLevel15) {
+        setOutstandingLevel15(remaining[15] || 0);
+    }
 
     while (Object.values(remaining).some(v => v > 0)) {
-        const preferences = getUserPreferences(availableMaterials);
+        const preferenceInfo = getUserPreferences(availableMaterials);
         let anySelected = false;
 
         for (const level of LEVELS) {
@@ -1745,24 +2526,78 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
             const multiplier = qualityMultipliers[level] || 1;
             levelProducts = applyLevelFilters(level, levelProducts, multiplier, { requireCtwOnly });
 
+            const levelAllowsGear = allowedGearLevels.includes(level);
+
+            if (
+                level === 40 &&
+                remaining[45] > 0 &&
+                producedCounts[45] <= producedCounts[40]
+            ) {
+                continue;
+            }
+
             const selectedProduct = selectBestAvailableProduct(
+                level,
                 levelProducts,
-                preferences.mostAvailableMaterials,
-                preferences.secondMostAvailableMaterials,
-                preferences.leastAvailableMaterials,
+                preferenceInfo,
                 availableMaterials,
-                multiplier
+                multiplier,
+                {
+                    levelAllowsGear,
+                    seasonZeroPreference,
+                    materialPenalties: getMaterialPenaltiesForLevel(level)
+                }
             );
 
             if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials, multiplier)) {
-                productionPlan[level].push({ name: selectedProduct.name, season: selectedProduct.season, setName: selectedProduct.setName, warlord: selectedProduct.warlord });
-                updateAvailableMaterials(availableMaterials, selectedProduct, multiplier);
-                remaining[level]--;
+                const maxCraftable = getMaxCraftableQuantity(selectedProduct, availableMaterials, multiplier);
+                const canFastTrack = shouldFastTrackLevel(level, levelProducts, selectedProduct, {
+                    allowedGearLevels,
+                    multiplier,
+                    includeWarlords
+                });
+                const chunkSize = determineChunkSize(level, remaining[level], maxCraftable, { fastTrack: canFastTrack });
+
+                if (chunkSize <= 0) {
+                    failed.add(level);
+                    remaining[level] = 0;
+                    continue;
+                }
+
+                const materialBreakdown = [];
+                const score = getMaterialScore(
+                    selectedProduct,
+                    preferenceInfo,
+                    availableMaterials,
+                    multiplier,
+                    level,
+                    {
+                        levelAllowsGear,
+                        seasonZeroPreference,
+                        materialPenalties: getMaterialPenaltiesForLevel(level)
+                    },
+                    materialBreakdown
+                );
+                const quantity = Math.max(1, Math.floor(chunkSize));
+                recordSelection(level, selectedProduct, score, quantity, materialBreakdown);
+                appendPlanEntry(level, selectedProduct, quantity, materialBreakdown);
+                updateAvailableMaterials(availableMaterials, selectedProduct, multiplier, quantity);
+                remaining[level] -= quantity;
+                if (remaining[level] <= 0) {
+                    remaining[level] = 0;
+                    logLevelSummary(level);
+                }
+                if (level === 15) {
+                    reduceOutstandingLevel15(quantity);
+                }
                 anySelected = true;
-                await progress();
+                await progress(quantity);
             } else {
                 failed.add(level);
                 remaining[level] = 0;
+                if (level === 15) {
+                    setOutstandingLevel15(0);
+                }
             }
         }
 
@@ -1770,6 +2605,12 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
             break;
         }
     }
+
+    LEVELS.forEach(level => {
+        if (remaining[level] === 0) {
+            logLevelSummary(level);
+        }
+    });
 
     return { plan: productionPlan, failedLevels: Array.from(failed) };
 }
@@ -1787,14 +2628,15 @@ function displayUserMessage(message) {
 
 
 
-function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1) {
+function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1, quantity = 1) {
     const availableMap = getNormalizedKeyMap(availableMaterials);
     Object.entries(selectedProduct.materials).forEach(([material, amountRequired]) => {
         const normalizedMaterial = normalizeKey(material);
         const matchedKey = availableMap[normalizedMaterial];
 
         if (matchedKey) {
-            availableMaterials[matchedKey] -= amountRequired * multiplier;
+            const totalRequired = amountRequired * multiplier * quantity;
+            availableMaterials[matchedKey] -= totalRequired;
         }
     });
 }
@@ -1806,61 +2648,150 @@ function updateAvailableMaterials(availableMaterials, selectedProduct, multiplie
 
 
 function getUserPreferences(availableMaterials) {
-	let sortedMaterials = Object.entries(availableMaterials).sort((a, b) => b[1] - a[1]);
-    let uniqueAmounts = [...new Set(sortedMaterials.map(([_, amount]) => amount))];
+    const sortedMaterials = Object.entries(availableMaterials)
+        .map(([material, amount]) => [material, Number(amount) || 0])
+        .sort((a, b) => b[1] - a[1]);
 
-    let mostAvailableMaterials = [], secondMostAvailableMaterials = [], leastAvailableMaterials = [];
+    const rankByMaterial = {};
+    const normalizedLeastMaterials = new Set();
+    let currentRank = 1;
+    let index = 0;
 
-    // Määritä materiaalit, joita on eniten
-    let maxAmount = uniqueAmounts[0];
-    mostAvailableMaterials = sortedMaterials.filter(([_, amount]) => amount === maxAmount).map(([material, _]) => material);
-
-    if (mostAvailableMaterials.length < 4) {
-        let nextAmountIndex = 1;
-        while (secondMostAvailableMaterials.length < 4 - mostAvailableMaterials.length && nextAmountIndex < uniqueAmounts.length) {
-            let currentAmount = uniqueAmounts[nextAmountIndex];
-            let currentMaterials = sortedMaterials.filter(([_, amount]) => amount === currentAmount).map(([material, _]) => material);
-            secondMostAvailableMaterials.push(...currentMaterials);
-            nextAmountIndex++;
+    while (index < sortedMaterials.length) {
+        const groupAmount = sortedMaterials[index][1];
+        let groupEnd = index + 1;
+        while (groupEnd < sortedMaterials.length && sortedMaterials[groupEnd][1] === groupAmount) {
+            groupEnd++;
         }
-        secondMostAvailableMaterials = secondMostAvailableMaterials.slice(0, 4 - mostAvailableMaterials.length);
+
+        for (let i = index; i < groupEnd; i++) {
+            const [materialName] = sortedMaterials[i];
+            rankByMaterial[normalizeKey(materialName)] = currentRank;
+        }
+
+        currentRank += groupEnd - index;
+        index = groupEnd;
     }
 
-    // Määritä materiaalit, joita on vähiten, huomioiden most ja second
-    if (mostAvailableMaterials.length + secondMostAvailableMaterials.length < 12) {
-        let leastAmountsNeeded = 4;
-        if (mostAvailableMaterials.length + secondMostAvailableMaterials.length > 8) {
-            leastAmountsNeeded = 12 - (mostAvailableMaterials.length + secondMostAvailableMaterials.length);
-        }
-
-        let leastIndexStart = uniqueAmounts.length - leastAmountsNeeded;
-        for (let i = leastIndexStart; i < uniqueAmounts.length; i++) {
-            let currentAmount = uniqueAmounts[i];
-            leastAvailableMaterials.push(...sortedMaterials.filter(([_, amount]) => amount === currentAmount).map(([material, _]) => material));
-        }
-        leastAvailableMaterials = leastAvailableMaterials.slice(0, leastAmountsNeeded);
+    if (sortedMaterials.length > 0) {
+        const leastAmount = sortedMaterials[sortedMaterials.length - 1][1];
+        sortedMaterials.forEach(([materialName, amount]) => {
+            if (amount === leastAmount) {
+                normalizedLeastMaterials.add(normalizeKey(materialName));
+            }
+        });
     }
 
-    return { mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials };
+    const preferenceDetails = {
+        rankByMaterial,
+        leastMaterials: normalizedLeastMaterials,
+        sortedMaterials,
+    };
+
+    logMaterialPreferenceDetails(
+        preferenceDetails.sortedMaterials,
+        preferenceDetails.rankByMaterial,
+        preferenceDetails.leastMaterials
+    );
+
+    return preferenceDetails;
 }
 
-function selectBestAvailableProduct(levelProducts, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier = 1) {
-    // Järjestä tuotteet pisteiden mukaan
+function logMaterialPreferenceDetails(sortedMaterials, rankByMaterial, leastMaterials) {
+    if (!Array.isArray(sortedMaterials)) {
+        return;
+    }
+
+    const formatAmount = (value) => {
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) {
+            return `${value}`;
+        }
+        return Number.isInteger(numeric) ? `${numeric}` : numeric.toFixed(2);
+    };
+
+    const formatScoreWithSign = (value) => {
+        if (!Number.isFinite(value)) {
+            return `${value}`;
+        }
+        const isInteger = Number.isInteger(value);
+        const formatted = isInteger ? `${value}` : value.toFixed(2);
+        if (value > 0 && !formatted.startsWith('+')) {
+            return `+${formatted}`;
+        }
+        return formatted;
+    };
+
+    if (sortedMaterials.length === 0) {
+        console.log('Materiaali tasot päivitetty: ei materiaaleja saatavilla.');
+        return;
+    }
+
+    console.log('Materiaali tasot päivitetty:');
+    sortedMaterials.forEach(([materialName, rawAmount]) => {
+        const normalized = normalizeKey(materialName);
+        const rank = rankByMaterial ? rankByMaterial[normalized] : undefined;
+        const isLeast = leastMaterials ? leastMaterials.has(normalized) : false;
+        const materialScore = getRankScore(rank, isLeast);
+        console.log(` - ${materialName}: ${formatAmount(rawAmount)} (${formatScoreWithSign(materialScore)})`);
+    });
+}
+
+function getRankScore(rank, isLeastMaterial) {
+    let baseScore;
+
+    if (!Number.isFinite(rank)) {
+        baseScore = DEFAULT_RANK_PENALTY;
+    } else if (Object.prototype.hasOwnProperty.call(MATERIAL_RANK_POINTS, rank)) {
+        baseScore = MATERIAL_RANK_POINTS[rank];
+    } else if (MATERIAL_NEUTRAL_RANKS.has(rank)) {
+        baseScore = 0;
+    } else if (rank > MAX_DEFINED_MATERIAL_RANK) {
+        baseScore = MATERIAL_RANK_POINTS[MAX_DEFINED_MATERIAL_RANK] || DEFAULT_RANK_PENALTY;
+    } else {
+        baseScore = DEFAULT_RANK_PENALTY;
+    }
+
+    if (isLeastMaterial) {
+        return Math.min(baseScore, LEAST_MATERIAL_PENALTY);
+    }
+
+    return baseScore;
+}
+
+function selectBestAvailableProduct(
+    level,
+    levelProducts,
+    preferenceInfo,
+    availableMaterials,
+    multiplier = 1,
+    {
+        levelAllowsGear = false,
+        seasonZeroPreference = SeasonZeroPreference.NORMAL,
+        materialPenalties = null
+    } = {}
+) {
     const candidates = levelProducts
         .map(product => ({
             product,
-            score: getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier)
+            score: getMaterialScore(
+                product,
+                preferenceInfo,
+                availableMaterials,
+                multiplier,
+                level,
+                { levelAllowsGear, seasonZeroPreference, materialPenalties }
+            )
         }))
-        .sort((a, b) => b.score - a.score); // suurimmasta pienimpään
+        .sort((a, b) => b.score - a.score);
 
-    // Etsi ensimmäinen tuote, jonka materiaalit riittävät
     for (const { product } of candidates) {
         if (canProductBeProduced(product, availableMaterials, multiplier)) {
             return product;
         }
     }
 
-    return null; // Mikään tuote ei kelpaa
+    return null;
 }
 
 function rollbackMaterials(availableMaterials, product, multiplier = 1) {
@@ -1875,83 +2806,100 @@ function rollbackMaterials(availableMaterials, product, multiplier = 1) {
     });
 }
 
-function computeBaseUsageStd(materialsState) {
-    const remaining = [];
-    const stateMap = getNormalizedKeyMap(materialsState);
-    Object.entries(initialMaterials).forEach(([material, _]) => {
-        const normalized = normalizeKey(material);
-        const matchedKey = stateMap[normalized];
-        if (matchedKey && materialToSeason[normalized] === 0) {
-            remaining.push(materialsState[matchedKey]);
-        }
-    });
-    if (remaining.length === 0) {
-        return 0;
+function getMaterialScore(
+    product,
+    preferenceInfo,
+    availableMaterials,
+    multiplier = 1,
+    level,
+    {
+        levelAllowsGear = false,
+        seasonZeroPreference = SeasonZeroPreference.NORMAL,
+        materialPenalties = null
+    } = {},
+    breakdownCollector = null
+) {
+    if (!product || !product.materials) {
+        return INSUFFICIENT_MATERIAL_PENALTY;
     }
-    const mean = remaining.reduce((a, b) => a + b, 0) / remaining.length;
-    const variance = remaining.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / remaining.length;
-    return Math.sqrt(variance);
-}
 
-function computeBalancePenalty(product, availableMaterials, multiplier = 1) {
-    const predicted = { ...availableMaterials };
-    const predictedMap = getNormalizedKeyMap(predicted);
-    Object.entries(product.materials).forEach(([material, amt]) => {
-        const normalized = normalizeKey(material);
-        const matchedKey = predictedMap[normalized];
-        if (matchedKey) {
-            predicted[matchedKey] -= amt * multiplier;
-        }
-    });
-    return computeBaseUsageStd(predicted);
-}
-
-function getMaterialScore(product, mostAvailableMaterials, secondMostAvailableMaterials, leastAvailableMaterials, availableMaterials, multiplier = 1) {
-    let score = 0;
     const availableMap = getNormalizedKeyMap(availableMaterials);
-    const seasonZeroPreference = getSeasonZeroPreference();
-    const shouldApplyGearBaselineBonus = true; // Season 0 slider should not modify non-season gear weighting
-    Object.entries(product.materials).forEach(([material, _]) => {
-        const season = materialToSeason[material] || 0;
-        const isGear = season !== 0;
-        if (mostAvailableMaterials.includes(material)) {
-            score += isGear ? GEAR_MOST_WEIGHT : BASE_MOST_WEIGHT;
-        }
-        if (secondMostAvailableMaterials.includes(material)) {
-            score += isGear ? GEAR_SECOND_WEIGHT : BASE_SECOND_WEIGHT;
-        }
-        if (leastAvailableMaterials.includes(material)) {
-            score -= 10;
-        }
-        if (shouldApplyGearBaselineBonus && isGear) {
-            score += GEAR_BASELINE_BONUS;
-        }
-    });
-    if (product.warlord) {
-        score -= WARLORD_PENALTY;
-    }
+    const { rankByMaterial, leastMaterials } = preferenceInfo || {};
+    let totalPoints = 0;
+    let totalRequiredUnits = 0;
 
-    Object.entries(product.materials).forEach(([material, amount]) => {
+    for (const [material, amountRequired] of Object.entries(product.materials)) {
         const normalizedMaterial = normalizeKey(material);
         const matchedKey = availableMap[normalizedMaterial];
-        if (matchedKey) {
-            const season = materialToSeason[normalizedMaterial] || 0;
-            const weight = season === 0 ? LEFTOVER_WEIGHT_BASE : LEFTOVER_WEIGHT_GEAR;
-            const available = availableMaterials[matchedKey];
-            const remaining = available - amount * multiplier;
-            if (available > 0) {
-                score -= (remaining / available) * weight;
+        const normalizedMatchedKey = normalizeKey(matchedKey || material);
+
+        if (!matchedKey) {
+            return INSUFFICIENT_MATERIAL_PENALTY;
+        }
+
+        const availableAmount = Number(availableMaterials[matchedKey]) || 0;
+        const totalRequired = Number(amountRequired) * multiplier;
+        if (availableAmount < totalRequired) {
+            return INSUFFICIENT_MATERIAL_PENALTY;
+        }
+
+        const rank = rankByMaterial ? rankByMaterial[normalizedMatchedKey] : undefined;
+        const isLeastMaterial = leastMaterials ? leastMaterials.has(normalizedMatchedKey) : false;
+        let materialScore = getRankScore(rank, isLeastMaterial);
+
+        const season = materialToSeason[normalizedMaterial] || materialToSeason[normalizedMatchedKey] || 0;
+        const isGearMaterial = levelAllowsGear && season !== 0;
+        if (isGearMaterial) {
+            materialScore = GEAR_MATERIAL_SCORE;
+        }
+
+        if (materialPenalties) {
+            let penalty;
+            if (materialPenalties instanceof Map) {
+                penalty = materialPenalties.get(normalizedMatchedKey);
+            } else if (typeof materialPenalties === 'object' && materialPenalties !== null) {
+                penalty = materialPenalties[normalizedMatchedKey];
+            }
+            if (Number.isFinite(penalty)) {
+                materialScore += penalty;
             }
         }
-    });
-	
-    const balancePenalty = computeBalancePenalty(product, availableMaterials, multiplier);
-    score -= balancePenalty * BALANCE_WEIGHT;
 
-    const { seasonZero: seasonZeroAdjustment } = getSeasonZeroScoreAdjustments(seasonZeroPreference);
+        if (Array.isArray(breakdownCollector)) {
+            const displayName = isGearMaterial
+                ? 'gear mat'
+                : materialKeyMap[normalizedMatchedKey] || matchedKey || material;
+            breakdownCollector.push({
+                name: displayName,
+                normalized: normalizedMatchedKey,
+                amount: totalRequired,
+                perUnitScore: materialScore,
+                totalScore: materialScore * totalRequired,
+                season,
+                isGearMaterial
+            });
+        }
+
+        totalPoints += materialScore * totalRequired;
+        totalRequiredUnits += totalRequired;
+    }
+
+    if (totalRequiredUnits === 0) {
+        return INSUFFICIENT_MATERIAL_PENALTY;
+    }
+
+    let score = totalPoints / totalRequiredUnits;
+
+    if (product.setName === ctwSetName && CTW_LOW_LEVELS.has(level)) {
+        score -= 5;
+    }
 
     if (product.season === 0) {
-        score += seasonZeroAdjustment;
+        if (seasonZeroPreference === SeasonZeroPreference.HIGH) {
+            score += SEASON_ZERO_HIGH_BONUS;
+        } else if (seasonZeroPreference === SeasonZeroPreference.LOW) {
+            score += SEASON_ZERO_LOW_BONUS;
+        }
     }
 
     return score;
@@ -1971,17 +2919,159 @@ function canProductBeProduced(product, availableMaterials, multiplier = 1) {
     });
 }
 
+function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1) {
+    if (!product || !product.materials) {
+        return 0;
+    }
+    const availableMap = getNormalizedKeyMap(availableMaterials);
+    let maxCraftable = Infinity;
+
+    for (const [material, amountRequired] of Object.entries(product.materials)) {
+        const normalizedMaterial = normalizeKey(material);
+        const matchedKey = availableMap[normalizedMaterial];
+
+        if (!matchedKey) {
+            return 0;
+        }
+
+        const totalRequired = amountRequired * multiplier;
+        if (totalRequired <= 0) {
+            continue;
+        }
+
+        const available = Number(availableMaterials[matchedKey]) || 0;
+        const craftableWithMaterial = Math.max(0, Math.floor(available / totalRequired));
+        maxCraftable = Math.min(maxCraftable, craftableWithMaterial);
+
+        if (maxCraftable === 0) {
+            return 0;
+        }
+    }
+
+    return Number.isFinite(maxCraftable) ? maxCraftable : 0;
+}
+
+function usesOnlyBaseMaterials(product) {
+    if (!product || !product.materials) {
+        return false;
+    }
+    return Object.keys(product.materials).every(material => {
+        const normalized = normalizeKey(material);
+        const season = materialToSeason[normalized] || materialToSeason[material] || 0;
+        return season === 0;
+    });
+}
+
+function shouldFastTrackLevel(level, levelProducts, selectedProduct, { allowedGearLevels = [], includeWarlords = true } = {}) {
+    if (!selectedProduct || !Array.isArray(levelProducts)) {
+        return false;
+    }
+
+    if (!(level === 30 || level === 35)) {
+        return false;
+    }
+
+    if (allowedGearLevels.includes(level)) {
+        return false;
+    }
+
+    if (includeWarlords) {
+        return false;
+    }
+
+    if (levelProducts.length !== 1) {
+        return false;
+    }
+
+    if (selectedProduct.season !== 0) {
+        return false;
+    }
+
+    if (selectedProduct.odds && selectedProduct.odds !== 'normal') {
+        return false;
+    }
+
+    return usesOnlyBaseMaterials(selectedProduct);
+}
+
+function determineChunkSize(level, requested, maxCraftable, { fastTrack = false } = {}) {
+    const needed = Math.max(0, Math.floor(requested));
+    const available = Math.max(0, Math.floor(maxCraftable));
+
+    if (needed === 0 || available === 0) {
+        return 0;
+    }
+
+    if (fastTrack) {
+        return Math.min(needed, available);
+    }
+
+    if (level === 45) {
+        return Math.min(1, needed, available);
+    }
+
+    const defaultThresholds = [
+        { min: 5000, size: 500 },
+        { min: 3000, size: 300 },
+        { min: 2000, size: 200 },
+        { min: 1500, size: 150 },
+        { min: 1000, size: 100 },
+        { min: 600, size: 60 },
+        { min: 400, size: 30 },
+        { min: 200, size: 15 },
+        { min: 100, size: 5 },
+        { min: 50, size: 3 },
+        { min: 20, size: 1 }
+    ];
+
+    const midLevelThresholds = [
+        { min: 2000, size: 80 },
+        { min: 1500, size: 60 },
+        { min: 1000, size: 40 },
+        { min: 600, size: 20 },
+        { min: 200, size: 10 },
+        { min: 100, size: 5 },
+        { min: 50, size: 3 },
+        { min: 20, size: 2 }
+    ];
+
+    const highLevelThresholds = [
+        { min: 200, size: 5 },
+        { min: 120, size: 3 },
+        { min: 60, size: 2 }
+    ];
+
+    let thresholds = defaultThresholds;
+    if ([20, 25, 30].includes(level)) {
+        thresholds = midLevelThresholds;
+    } else if ([35, 40].includes(level)) {
+        thresholds = highLevelThresholds;
+    }
+
+    for (const { min, size } of thresholds) {
+        if (needed >= min) {
+            const chunk = Math.min(size, needed, available);
+            if (chunk > 0) {
+                return chunk;
+            }
+        }
+    }
+
+    return Math.min(needed, available, thresholds.length > 0 ? thresholds[thresholds.length - 1].size : needed);
+}
+
 
 
 
 
 function listSelectedProducts(productionPlan) {
     Object.entries(productionPlan).forEach(([level, products]) => {
-        products.forEach(({ name, season, setName }) => {
+        products.forEach(({ name, season, setName, quantity = 1 }) => {
             const selector = `#level-${level}-items input[name="${slug(name)}_${season}_${slug(setName || 'no-set')}"]`;
             const inputElement = document.querySelector(selector);
             if (inputElement) {
-                inputElement.value = (parseInt(inputElement.value) || 0) + 1;
+                const currentValue = parseInt(inputElement.value, 10) || 0;
+                inputElement.value = currentValue + quantity;
             }
         });
     });
