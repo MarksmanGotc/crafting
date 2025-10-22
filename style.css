@@ -1,3 +1,4 @@
+
 :root {
     --primary-color: #08425a;
     --secondary-color: #e5dfbc;
@@ -309,6 +310,22 @@ p.craft-extra-info {
     font-size: 15px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     text-align: center;
+}
+
+.score-explanation {
+    background: #ffffff;
+    border: 1px solid rgba(8, 66, 90, 0.15);
+    border-radius: 10px;
+    margin: 20px 0;
+    padding: 18px 20px;
+    line-height: 1.6;
+    color: #1f2c33;
+}
+
+.score-explanation h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--primary-color);
 }
 
 .section-title {
@@ -705,16 +722,83 @@ div#results h3 ~ #closeResults {
 }
 
 #results .level-group img {
-    
- 	object-fit: scale-down;
-	border-radius: 0;
+
+        object-fit: scale-down;
+        border-radius: 0;
 }
 #results img{
-	width: 50px;
-	height: 50px;
-	object-fit: scale-down;
+        width: 50px;
+        height: 50px;
+        object-fit: scale-down;
 }
 
+
+.results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px 0 10px;
+}
+
+
+.results-actions button#saveInfoBtn {
+    position: absolute;
+    right: 0;
+    height: 20px;
+    width: 20px;
+    margin: 0 6px 0 0;
+}
+
+.results-actions button#saveInfoBtn svg:hover {
+	transform: none;
+}
+
+.results-actions__group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 100%;
+    justify-content: center;
+}
+
+.results-actions__button {
+    width: auto;
+    min-width: 100px;
+    margin-top: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.results-actions__button:disabled {
+    opacity: 0.75;
+    cursor: default;
+}
+
+.results-actions__save {
+    background-color: var(--button-bg);
+}
+
+.results-actions__save:hover {
+    background-color: var(--button-bg-hover);
+}
+
+.results-actions__clear {
+    background-color: #b63a3a;
+}
+
+.results-actions__clear:hover {
+    background-color: #992f2f;
+}
+
+.results-actions__info {
+    margin-left: auto;
+}
+
+.results-actions__info svg:hover {
+    transform: none;
+}
 
 .materials {
     display: flex;
@@ -1157,6 +1241,7 @@ button.multiplier-btn {
     color: #920b0b;
     font-style: italic;
     margin-bottom: 0;
+    font-size: 14px;
 }
 
 .materials p.available-materials {
@@ -1241,9 +1326,9 @@ button.multiplier-btn {
     position: absolute;
     inset: 0;
     background: var(--primary-color);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.2s ease-in-out;
+    width: 0%;
+    transition: width 0.1s;
+    border-radius: 10px;
 }
 .spinner-progress__label {
     display: block;
