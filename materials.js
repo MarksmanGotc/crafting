@@ -438,6 +438,10 @@ const materials = {
 				"img": "materials/season12/combusted-leather.png",
 				"Original-name": "Combusted Leather"
 			},
+			"fireborn-silk": {
+				"img": "materials/season12/fireborn-silk.png",
+				"Original-name": "Fireborn Silk"
+			},
 			"frost-crusted-abalone": {
 				"img": "materials/season12/frost-crusted-abalone.png",
 				"Original-name": "Frost Crusted Abalone"
@@ -457,3 +461,4 @@ const materials = {
 		}
 	}
 }
+
