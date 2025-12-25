@@ -1,4 +1,3 @@
-
 let initialMaterials = {};
 const urlParams = new URLSearchParams(window.location.search);
 const isDebugMode = urlParams.has('debug') && urlParams.get('debug') === 'true';
@@ -1399,6 +1398,200 @@ function ensureSaveInfoOverlay() {
     return overlay;
 }
 
+function ensureContinueInfoOverlay() {
+    let overlay = document.getElementById('continueInfoOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'continueInfoOverlay';
+        overlay.className = 'info-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-labelledby', 'continueInfoTitle');
+        overlay.setAttribute('aria-describedby', 'continueInfoDescription');
+        overlay.innerHTML = `
+            <div class="info-content" role="document">
+                <button class="close-popup" type="button" aria-label="Close continue info">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg>
+                </button>
+                <p id="continueInfoTitle"><strong>Plan next batch:</strong> This feature allows you to continue planning with the materials that remain after the current calculation. When you click this button, you'll be taken back to the material input page with the remaining material amounts automatically filled in.</p>
+            </div>
+        `;
+        overlay.style.display = 'none';
+        document.body.appendChild(overlay);
+
+        const closeOverlay = () => {
+            overlay.style.display = 'none';
+            overlay.setAttribute('aria-hidden', 'true');
+            const trigger = document.getElementById('continueInfoBtn');
+            trigger?.setAttribute('aria-expanded', 'false');
+        };
+
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay || event.target.closest('.close-popup')) {
+                closeOverlay();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && overlay.style.display === 'flex') {
+                closeOverlay();
+            }
+        });
+    }
+
+    return overlay;
+}
+
+function handleContinueWithRemaining() {
+    if (!latestCalculationPayload || !latestCalculationPayload.initialMaterials) {
+        return;
+    }
+
+    // Hae laskennassa käytetty scale (tallennettu stringinä, pitää parsia)
+    const scaleValue = latestCalculationPayload.settings?.scale || '1';
+    const calculationScale = parseFloat(scaleValue) || 1;
+    
+    // Lue jäljellä olevat määrät suoraan tulosten DOM:sta
+    // "available-materials" elementit näyttävät jäljellä olevat määrät jotka ovat jo 1:1-tilassa
+    const remainingMaterials = {};
+    const resultsDiv = document.getElementById('results');
+    if (resultsDiv) {
+        const materialContainers = resultsDiv.querySelectorAll('.materials > div[data-material]');
+        materialContainers.forEach(container => {
+            const materialName = container.dataset.material;
+            const availableMaterialsElement = container.querySelector('.available-materials');
+            if (availableMaterialsElement && materialName) {
+                // Parsii tekstisisällön (poistaa pilkut ja muuntaa numeroksi)
+                const remainingText = availableMaterialsElement.textContent.trim();
+                const remainingAmount = parseFloat(remainingText.replace(/,/g, '')) || 0;
+                if (remainingAmount > 0) {
+                    remainingMaterials[materialName] = remainingAmount;
+                }
+            }
+        });
+    }
+    
+    // Hae kaikki alkuperäiset materiaalit payload:sta käsitelläksemme käyttämättömiä materiaaleja
+    const initialMaterialsFromPayload = latestCalculationPayload.initialMaterials || {};
+    const materialCountsFromPayload = latestCalculationPayload.materialCounts || {};
+    const initialMaterialMap = getNormalizedKeyMap(initialMaterialsFromPayload);
+    
+    // Materiaaleille joita ei käytetty laskennassa, käytä alkuperäistä syötearvoa
+    // Muunna takaisin 1:1-tilaan jos scale oli käytössä
+    Object.entries(initialMaterialsFromPayload).forEach(([materialName, originalAmount]) => {
+        // Tarkista käytettiinkö tätä materiaalia (esiintyy materialCounts-objektissa)
+        const normalizedKey = normalizeKey(materialName);
+        const materialCountEntry = Object.entries(materialCountsFromPayload).find(([name]) => {
+            return normalizeKey(name) === normalizedKey;
+        });
+        
+        // Jos materiaalia ei käytetty, se ei ole remainingMaterials-objektissa
+        // Lisätään se alkuperäisellä syötearvolla (muunnettu 1:1-tilaan jos tarvitaan)
+        if (!materialCountEntry && !remainingMaterials[materialName] && originalAmount > 0) {
+            // Materiaalia ei käytetty, joten käytetään initialMaterials-objektin arvoa
+            // initialMaterials sisältää absoluuttiset arvot (jo kerrottu scale:lla syötön aikana)
+            // Koska asetamme nyt scale:n 1:1:ksi, käytämme absoluuttista arvoa suoraan
+            // Jos scale oli 1:1, originalAmount on jo oikein (esim. 20 → 20)
+            // Jos scale oli 1:1,000,000, originalAmount on 20,000,000 joka on oikein 1:1-tilassa
+            // Käytetään siis originalAmount:ia sellaisenaan, ei muunnosta tarvita
+            remainingMaterials[materialName] = originalAmount;
+        }
+    });
+    
+    // Jos emme voineet lukea DOM:sta (ei pitäisi tapahtua), lasketaan fallbackina payload-tiedoista
+    if (Object.keys(remainingMaterials).length === 0) {
+        Object.entries(initialMaterialsFromPayload).forEach(([materialName, originalAmount]) => {
+            const normalizedKey = normalizeKey(materialName);
+            let usedAmount = 0;
+            
+            const materialCountEntry = Object.entries(materialCountsFromPayload).find(([name]) => {
+                return normalizeKey(name) === normalizedKey;
+            });
+            
+            if (materialCountEntry) {
+                usedAmount = materialCountEntry[1].amount || 0;
+            }
+            
+            const remainingAmount = Math.max(0, originalAmount - usedAmount);
+            
+            // Muunna takaisin syöteformattiin scale-arvon perusteella
+            let inputAmount;
+            if (calculationScale === 1) {
+                inputAmount = remainingAmount;
+            } else {
+                inputAmount = remainingAmount / calculationScale;
+            }
+            remainingMaterials[materialName] = inputAmount;
+        });
+    }
+    
+    // Sulje tulokset
+    closeResults();
+    
+    // Palauta scale normaaliin (1:1) - tämä täytyy tehdä ennen materiaalien täyttöä
+    const scaleSelect = document.getElementById('scaleSelect');
+    if (scaleSelect) {
+        scaleSelect.value = '1';
+    }
+    
+    // Tyhjennä template-määrät
+    LEVELS.forEach(level => {
+        const amountInput = document.getElementById(`templateAmount${level}`);
+        if (amountInput) {
+            amountInput.value = '';
+            const wrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+            wrap?.classList.remove('active');
+        }
+        const levelItemsContainer = document.getElementById(`level-${level}-items`);
+        if (levelItemsContainer) {
+            levelItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
+                input.value = '';
+            });
+        }
+    });
+    
+    // Tyhjennä materiaalisyötteet ensin
+    document.querySelectorAll('.my-material input.numeric-input').forEach(input => {
+        input.value = '';
+        const parent = input.closest('.my-material');
+        if (parent) {
+            parent.classList.remove('active');
+        }
+    });
+    
+    // Täytä materiaalisyötteet jäljellä olevilla määrillä
+    // Huom: Olemme jo muuntaneet 1:1-tilaan yllä, ja scale on nyt asetettu 1:1:ksi
+    Object.entries(remainingMaterials).forEach(([materialName, amount]) => {
+        if (amount > 0) {
+            const input = document.getElementById(`my-${slug(materialName)}`);
+            if (input) {
+                // Pyöristä lähimpään kokonaislukuun näyttöä varten (syötteet odottavat yleensä kokonaislukuja)
+                // Määrä on jo 1:1-tilassa yllä tehdyn muunnoksen jälkeen
+                const roundedAmount = Math.round(amount);
+                input.value = formatPlaceholderWithCommas(roundedAmount);
+                const parent = input.closest('.my-material');
+                if (parent) {
+                    parent.classList.add('active');
+                }
+            }
+        }
+    });
+    
+    // Siirry ensimmäiselle sivulle (materiaalisyötteiden osio)
+    const generatebychoice = document.getElementById('generatebychoice');
+    if (generatebychoice) {
+        generatebychoice.style.display = 'block';
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+    
+    // Nollaa initialMaterials seuraavaa laskentaa varten
+    initialMaterials = {};
+}
+
 function createResultsActions(parentElement) {
     if (!parentElement) {
         return;
@@ -1447,6 +1640,40 @@ function createResultsActions(parentElement) {
         actionsContainer.appendChild(saveGroup);
     } else {
         actionsContainer.appendChild(clearButton);
+    }
+
+    // Lisää "Plan next batch" -nappi
+    // Näytetään tämä nappi jos meillä on alkuperäisiä materiaaleja (joko nykyisestä laskennasta tai tallennetusta laskennasta)
+    if (Object.keys(initialMaterials).length > 0) {
+        const continueGroup = document.createElement('div');
+        continueGroup.className = 'results-actions__group';
+        continueGroup.style.marginTop = '10px';
+
+        const continueButton = document.createElement('button');
+        continueButton.type = 'button';
+        continueButton.className = 'results-actions__button results-actions__continue';
+        continueButton.textContent = 'Plan next batch';
+        continueButton.addEventListener('click', handleContinueWithRemaining);
+
+        const continueInfoButton = document.createElement('button');
+        continueInfoButton.type = 'button';
+        continueInfoButton.id = 'continueInfoBtn';
+        continueInfoButton.className = 'info-btn results-actions__info';
+        continueInfoButton.setAttribute('aria-label', 'How continue with remaining works');
+        continueInfoButton.setAttribute('aria-haspopup', 'dialog');
+        continueInfoButton.setAttribute('aria-expanded', 'false');
+        continueInfoButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>';
+
+        const continueInfoOverlay = ensureContinueInfoOverlay();
+        continueInfoButton.addEventListener('click', () => {
+            continueInfoOverlay.style.display = 'flex';
+            continueInfoOverlay.setAttribute('aria-hidden', 'false');
+            continueInfoButton.setAttribute('aria-expanded', 'true');
+        });
+
+        continueGroup.appendChild(continueButton);
+        continueGroup.appendChild(continueInfoButton);
+        actionsContainer.appendChild(continueGroup);
     }
 
     parentElement.appendChild(actionsContainer);
@@ -1729,6 +1956,7 @@ function renderResults(templateCounts, materialCounts) {
         return;
     }
 
+    // Add materials div (this will show "Materials" title via CSS :before)
     resultsDiv.appendChild(materialsDiv);
 
     const generateDiv = document.createElement('div');
@@ -1938,6 +2166,7 @@ function renderResults(templateCounts, materialCounts) {
 
     generateDiv.after(itemsDiv);
     itemsDiv.after(itemsInfoPopup);
+    // Luo alhaalla olevat toiminnot (Plan next batch -nappi) alhaalle
     createResultsActions(resultsDiv);
     createCloseButton(resultsDiv);
 
@@ -1983,23 +2212,6 @@ function areAllCountsSame(levelItemCounts) {
     const counts = Object.values(levelItemCounts);
     return counts.every(count => count === counts[0]);
 }
-
-function createMaterialImageElement(materialName, imgUrl, preference) {
-    const imgElement = document.createElement('img');
-    imgElement.src = imgUrl;
-    imgElement.alt = materialName;
-    imgElement.className = 'material-image';
-    imgElement.dataset.materialName = materialName;
-    imgElement.dataset.preference = preference;
-
-    imgElement.addEventListener('click', function() {
-        this.classList.toggle('selected');
-        // Täällä voit lisätä logiikkaa valintojen tallentamiseen tai käsittelyyn
-    });
-
-    return imgElement;
-}
-
 async function calculateWithPreferences() {
     isViewingSavedCalculation = false;
     latestCalculationPayload = null;
@@ -2794,17 +3006,6 @@ function selectBestAvailableProduct(
     return null;
 }
 
-function rollbackMaterials(availableMaterials, product, multiplier = 1) {
-    const availableMap = getNormalizedKeyMap(availableMaterials);
-    Object.entries(product.materials).forEach(([material, amountRequired]) => {
-        const normalizedMaterial = normalizeKey(material);
-        const matchedKey = availableMap[normalizedMaterial];
-
-        if (matchedKey) {
-            availableMaterials[matchedKey] += amountRequired * multiplier;
-        }
-    });
-}
 
 function getMaterialScore(
     product,
@@ -3272,4 +3473,3 @@ function initAdvMaterialSection() {
         container.appendChild(seasonZeroSection);
     }
 }
-

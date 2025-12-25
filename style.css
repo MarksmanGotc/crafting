@@ -741,6 +741,15 @@ div#results h3 ~ #closeResults {
     margin: 24px 0 10px;
 }
 
+.results-actions--top {
+    width: 100%;
+    margin: 0 0 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
 
 .results-actions button#saveInfoBtn {
     position: absolute;
@@ -751,6 +760,17 @@ div#results h3 ~ #closeResults {
 }
 
 .results-actions button#saveInfoBtn svg:hover {
+	transform: none;
+}
+
+.results-actions button#continueInfoBtn {
+    position: absolute;
+    right: 0;
+    height: 20px;
+    width: 20px;
+    margin: 0 6px 0 0;
+}
+.results-actions button#continueInfoBtn svg:hover {
 	transform: none;
 }
 
@@ -888,7 +908,7 @@ h4{
     font-weight: bold;
 }
 
-.materials > div {
+.materials > div:not(.results-actions) {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -898,21 +918,21 @@ h4{
 }
 
 @media only screen and (max-width: 620px) {
-  .materials > div {
+  .materials > div:not(.results-actions) {
   flex: 1 1 20%;
   max-width: initial;
   }
 }
 
 @media only screen and (max-width: 420px) {
-  .materials > div {
+  .materials > div:not(.results-actions) {
   flex: 1 1 25%;
   max-width: initial;
   }
 }
 
 @media only screen and (max-width: 325px) {
-  .materials > div {
+  .materials > div:not(.results-actions) {
   flex: 1 1 30%;
   max-width: initial;
   }
