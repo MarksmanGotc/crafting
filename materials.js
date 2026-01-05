@@ -459,6 +459,16 @@ const materials = {
 				"Original-name": "Scorched Horsehair Tassel"
 			}
 		}
+	},
+	13: {
+		season: 13,
+		mats: {
+			"silver-ore": {
+				"img": "materials/season13/silver-ore.png",
+				"Original-name": "Silver Ore"
+			}
+		}
 	}
+	
 }
 
