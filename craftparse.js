@@ -26,6 +26,14 @@ const WEIRWOOD_NORMALIZED_KEY = normalizeKey('weirwood');
 const BASIC_FLUX_KEY = 'basic-flux';
 const normalizedKeyCache = new WeakMap();
 
+/** Palauttaa availableMaterials-objektissa olevan avaimen, joka vastaa fluxia (normalisoitu avain). */
+function getResolvedFluxKey(availableMaterials, requestedFluxKey = BASIC_FLUX_KEY) {
+    if (!availableMaterials || !requestedFluxKey) return null;
+    const map = getNormalizedKeyMap(availableMaterials);
+    const actualKey = map[normalizeKey(requestedFluxKey)];
+    return actualKey != null && availableMaterials[actualKey] !== undefined ? actualKey : null;
+}
+
 const CALCULATION_STORAGE_KEY = 'noox-calculation-v1';
 const CALCULATION_STORAGE_VERSION = 1;
 const QUALITY_STORAGE_KEY_PREFIX = 'craftparse_quality_level_';
@@ -83,6 +91,10 @@ const GEAR_MATERIAL_SCORE = 22;
 const SURPLUS_MATERIAL_BONUS = 50;
 /** Max extra score per unit for surplus amount (iso ylijäämä = paljon bonusia, jotta se palaa ensin). */
 const SURPLUS_AMOUNT_CAP = 80;
+/** From materials: -40 pistettä per puuttuva perusmateriaali (katetaan Basic Fluxilla), jotta no-flux reseptit ovat etusijalla. */
+const FLUX_MISSING_MATERIAL_PENALTY = 40;
+/** From materials: max tuotantomäärä per taso per kierros kun usealla tasolla remaining > 0, jotta L1 ei tyhjennä kaikkea ja L5/L10 saavat tuotteita. */
+const FROM_MATERIALS_MAX_CHUNK_PER_LEVEL = 50;
 /** Tasolla 15 ilman gear/CTW: varataan weirwood L15:lle, joten muilla tasoilla (1,5,10) weirwood saa penaliteetin ettei sitä kuluteta. */
 const WEIRWOOD_PRIORITY_PENALTY = -20;
 const SEASON_ZERO_LOW_BONUS = -10;
@@ -1902,7 +1914,36 @@ function handleContinueWithRemaining() {
             }
         }
     });
-    
+
+    // From materials -tilassa: palauta oletusprosentit (ja lukitse level 1), jotta kentät eivät jää tyhjiksi
+    const useAllChecked = document.getElementById('templateModeUseAll')?.checked === true;
+    if (useAllChecked) {
+        LEVELS.forEach(level => {
+            const input = document.getElementById(`templateAmount${level}`);
+            const sel = document.getElementById(`temp${level}`);
+            if (!input || !sel) return;
+            const quality = (sel.value || '').trim() || 'legendary';
+            const pct = getDefaultPercentForLevelQuality(level, quality);
+            if (pct != null) input.value = pct;
+            if (level === 1) {
+                input.value = '100';
+                input.readOnly = true;
+                sel.value = 'legendary';
+                sel.disabled = true;
+                const wrapper = sel.closest('.quality-select');
+                if (wrapper) {
+                    const trigger = wrapper.querySelector('.quality-select__display');
+                    const opts = wrapper.querySelector('.quality-select__options');
+                    if (typeof updateQualitySelectUI === 'function') updateQualitySelectUI(sel, trigger, opts);
+                }
+                const wrap = document.querySelector('.leveltmp1');
+                if (wrap) wrap.classList.add('use-all-level1-locked');
+            }
+            const amountWrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+            if (amountWrap && input.value) amountWrap.classList.add('active');
+        });
+    }
+
     // Siirry ensimmäiselle sivulle (materiaalisyötteiden osio)
     const generatebychoice = document.getElementById('generatebychoice');
     if (generatebychoice) {
@@ -2853,6 +2894,13 @@ async function runUseAllMaterialsCalculation() {
             }
         }
 
+        if (achievableLevelsForChain.size === 0) {
+            deactivateSpinner(true);
+            setUseAllCalculationWarning('Trial produced no items. Ensure Basic Flux and material amounts are set, then try again.', true);
+            displayUserMessage('Trial produced no items. Check materials and Basic Flux, then try again.');
+            return;
+        }
+
         const maxIter = 25;
         const progressTracker = createProgressTracker(maxIter);
         const noopTick = async () => {};
@@ -3124,9 +3172,9 @@ function gatherMaterialsFromInputs() {
         }
         const raw = (input.value || '').replace(/,/g, '').trim();
         const amount = parseFloat(raw);
-        if (!isNaN(amount)) {
-            materialsInput[canonicalName] = amount * scale;
-        }
+        /* Flux-jokeri vaatii että myös tyhjät perusmateriaalit ovat mukana 0-arvolla,
+           muuten recipe-mats puuttuvat keymapista ja yksikin puuttuva mat tekee productista "uncraftable". */
+        materialsInput[canonicalName] = !isNaN(amount) ? (amount * scale) : 0;
     });
 
     return materialsInput;
@@ -3183,7 +3231,8 @@ function shouldApplyOddsForProduct(product) {
 
 async function calculateProductionPlan(availableMaterials, templatesByLevel, progressTick = async () => {}) {
     const runOptions = (arguments.length > 3 && typeof arguments[3] === 'object' && arguments[3] !== null) ? arguments[3] : {};
-    const fluxKey = runOptions.fluxKey && availableMaterials[runOptions.fluxKey] !== undefined ? runOptions.fluxKey : null;
+    /* Flux-avain: matchaa myös eri kirjoitusasu (esim. "Basic Flux"). */
+    const fluxKey = runOptions.fluxKey ? (getResolvedFluxKey(availableMaterials, runOptions.fluxKey) || null) : null;
     const fluxUsed = fluxKey ? {} : null;
 
     const productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [], "30": [], "35": [], "40": [], "45": [] };
@@ -3412,14 +3461,16 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                         levelAllowsGear,
                         seasonZeroPreference,
                         materialPenalties: getMaterialPenaltiesForLevel(level),
-                        fluxKey
+                        fluxKey,
+                        fromMaterials: runOptions.fromMaterials
                     }
                 );
 
                 if (selected && canProductBeProduced(selected, availableMaterials, multiplier, fluxKey)) {
                     const maxCraftable = getMaxCraftableQuantity(selected, availableMaterials, multiplier, fluxKey);
                     const maxCraftableNoFlux = fluxKey ? getMaxCraftableQuantity(selected, availableMaterials, multiplier, null) : 0;
-                    const effectiveMax = (fluxKey && maxCraftableNoFlux > 0) ? maxCraftableNoFlux : maxCraftable;
+                    /* From materials: chunkSize saa käyttää fluxia (myös sekoitus). Muussa moodissa säästetään fluxia kun mahdollista. */
+                    const effectiveMax = runOptions.fromMaterials ? maxCraftable : ((fluxKey && maxCraftableNoFlux > 0) ? maxCraftableNoFlux : maxCraftable);
                     const canFastTrack = shouldFastTrackLevel(level, levelProducts, selected, {
                         allowedGearLevels,
                         multiplier,
@@ -3442,7 +3493,8 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                             levelAllowsGear,
                             seasonZeroPreference,
                             materialPenalties: getMaterialPenaltiesForLevel(level),
-                            fluxKey
+                            fluxKey,
+                            fromMaterials: runOptions.fromMaterials
                         },
                         materialBreakdown
                     );
@@ -3553,7 +3605,8 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                             levelAllowsGear: levelAllowsGearHere,
                             seasonZeroPreference,
                             materialPenalties: getMaterialPenaltiesForLevel(level),
-                            fluxKey
+                            fluxKey,
+                            fromMaterials: runOptions.fromMaterials
                         })
                     }))
                     .sort((a, b) => (b.score || -1e9) - (a.score || -1e9))
@@ -3581,7 +3634,8 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                     levelAllowsGear,
                     seasonZeroPreference,
                     materialPenalties: getMaterialPenaltiesForLevel(level),
-                    fluxKey
+                    fluxKey,
+                    fromMaterials: runOptions.fromMaterials
                 }
             );
 
@@ -3589,7 +3643,16 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                 const maxCraftable = getMaxCraftableQuantity(selectedProduct, availableMaterials, multiplier, fluxKey);
                 /* Kun flux on käytössä: tee ensin vain niin monta kuin voidaan ILMAN fluxia, jotta perusmateriaalit kuluvat ensin. */
                 const maxCraftableNoFlux = fluxKey ? getMaxCraftableQuantity(selectedProduct, availableMaterials, multiplier, null) : 0;
-                const effectiveMax = (fluxKey && maxCraftableNoFlux > 0) ? maxCraftableNoFlux : maxCraftable;
+                /* From materials: chunkSize saa käyttää fluxia (myös sekoitus). Muussa moodissa säästetään fluxia kun mahdollista. */
+                let effectiveMax = runOptions.fromMaterials ? maxCraftable : ((fluxKey && maxCraftableNoFlux > 0) ? maxCraftableNoFlux : maxCraftable);
+                /* From materials: älä käytä kaikkea yhdellä tasolla – jaa tuotanto tasoille (L1, L5, L10), jotta kaikki tasot saavat tuotteita. */
+                if (runOptions.fromMaterials) {
+                    const numLevelsWithRemaining = LEVELS.filter(l => remaining[l] > 0).length;
+                    if (numLevelsWithRemaining > 1) {
+                        const fairShare = Math.floor(effectiveMax / numLevelsWithRemaining);
+                        effectiveMax = Math.max(1, Math.min(fairShare, FROM_MATERIALS_MAX_CHUNK_PER_LEVEL));
+                    }
+                }
                 const canFastTrack = shouldFastTrackLevel(level, levelProducts, selectedProduct, {
                     allowedGearLevels,
                     multiplier,
@@ -3614,7 +3677,8 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                         levelAllowsGear,
                         seasonZeroPreference,
                         materialPenalties: getMaterialPenaltiesForLevel(level),
-                        fluxKey
+                        fluxKey,
+                        fromMaterials: runOptions.fromMaterials
                     },
                     materialBreakdown
                 );
@@ -3855,7 +3919,8 @@ function selectBestAvailableProduct(
         levelAllowsGear = false,
         seasonZeroPreference = SeasonZeroPreference.NORMAL,
         materialPenalties = null,
-        fluxKey = null
+        fluxKey = null,
+        fromMaterials = false
     } = {}
 ) {
     const candidates = levelProducts
@@ -3867,7 +3932,7 @@ function selectBestAvailableProduct(
                 availableMaterials,
                 multiplier,
                 level,
-                { levelAllowsGear, seasonZeroPreference, materialPenalties, fluxKey }
+                { levelAllowsGear, seasonZeroPreference, materialPenalties, fluxKey, fromMaterials }
             )
         }))
         .sort((a, b) => b.score - a.score);
@@ -3892,7 +3957,8 @@ function getMaterialScore(
         levelAllowsGear = false,
         seasonZeroPreference = SeasonZeroPreference.NORMAL,
         materialPenalties = null,
-        fluxKey = null
+        fluxKey = null,
+        fromMaterials = false
     } = {},
     breakdownCollector = null
 ) {
@@ -3906,6 +3972,7 @@ function getMaterialScore(
     const canMakeWithFlux = fluxKey && canProductBeProduced(product, availableMaterials, multiplier, fluxKey);
     let totalPoints = 0;
     let totalRequiredUnits = 0;
+    let missingBasicMaterialCount = 0;
 
     for (const [material, amountRequired] of Object.entries(product.materials)) {
         const normalizedMaterial = normalizeKey(material);
@@ -3923,6 +3990,9 @@ function getMaterialScore(
             const isBasicNotFlux = seasonHere === 0 && matchedKey !== fluxKey;
             if (fluxKey && canMakeWithFlux && isBasicNotFlux) {
                 /* Puute katetaan fluxilla: jatketaan rank-pisteillä, ei surplus-bonusta (ei ylijäämää). */
+                if (fromMaterials) {
+                    missingBasicMaterialCount += 1;
+                }
             } else {
                 return INSUFFICIENT_MATERIAL_PENALTY;
             }
@@ -3985,6 +4055,11 @@ function getMaterialScore(
     }
 
     let score = totalPoints / totalRequiredUnits;
+
+    /* From materials: -40 pistettä per puuttuva perusmateriaali (fluxilla katettava). */
+    if (fromMaterials && fluxKey && canMakeWithFlux && missingBasicMaterialCount > 0) {
+        score -= FLUX_MISSING_MATERIAL_PENALTY * missingBasicMaterialCount;
+    }
 
     if (product.setName === ctwSetName && CTW_LOW_LEVELS.has(level)) {
         score -= 5;
