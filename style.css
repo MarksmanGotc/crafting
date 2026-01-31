@@ -29,8 +29,22 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: stretch;
     margin: 10px 0px;
     column-gap: 10px;
+}
+
+/* Vasen sarake: määrä/prosentti = loput (100% − 150px − väli). Oikea sarake: laatu = 150px kiinteä. */
+[class^="leveltmp"] > .templateAmountWrap {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+}
+[class^="leveltmp"] > .temps {
+    flex: 0 0 150px;
+    width: 150px;
+    min-width: 150px;
+    box-sizing: border-box;
 }
 
 h1.calc-header {
@@ -43,9 +57,206 @@ h1.calc-header {
 .leveltmp1 {
     margin-top: 15px;
 }
+.use-all-level1-locked input[readonly],
+.use-all-level1-locked .quality-select__display {
+    background-color: var(--light-bg);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Template mode: segmented control (pill) */
+.template-mode-radio-group {
+    display: inline-flex;
+    margin: 10px 0;
+    background: var(--input-bg);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+    width: 100%;
+}
+.template-mode-radio-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: background 0.2s ease, color 0.2s ease;
+    color: var(--text-color);
+}
+.template-mode-radio-option:hover {
+    background: rgba(0,0,0,0.04);
+}
+.template-mode-radio-option:has(.radio input:checked) {
+    background: var(--primary-color);
+    color: var(--button-text-color);
+}
+.template-mode-radio-option:has(.radio input:checked):hover {
+    background: var(--button-bg-hover);
+    color: var(--button-text-color);
+}
+.template-mode-radio-option {
+    position: relative;
+}
+.template-mode-radio-option .radio {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+.template-mode-radio-option .radio input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+.template-mode-radio-option .radio svg {
+    display: none;
+}
+.template-mode-radio-option .radio-label {
+    margin: 0;
+    position: relative;
+    z-index: 0;
+    white-space: nowrap;
+}
+.template-mode-radio-option {
+    width: 50%;
+}
+
+.template-count-section {
+    display: block;
+}
+.use-all-materials-section {
+    margin-top: 12px;
+}
+.use-all-materials-section .section-title {
+    margin-bottom: 6px;
+}
+
+.use-all-level-range {
+    margin-bottom: 12px;
+}
+.use-all-level-range .use-all-level-range-title {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+.dual-range {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    height: 28px;
+    margin-bottom: 6px;
+}
+.dual-range-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 8px;
+    background: var(--input-bg, #e8e8e8);
+    border-radius: 4px;
+}
+.dual-range-fill {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 4px;
+    pointer-events: none;
+    transition: left 0.05s ease, width 0.05s ease;
+}
+.dual-range-thumb {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 100%;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.dual-range-thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: grab;
+    margin-top: -5px;
+}
+.dual-range-thumb::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: grab;
+}
+.dual-range-thumb::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background: transparent;
+    height: 28px;
+}
+.dual-range-thumb::-moz-range-track {
+    background: transparent;
+    height: 28px;
+}
+.dual-range-low {
+    z-index: 2;
+}
+.dual-range-high {
+    z-index: 3;
+}
+.use-all-level-range-label {
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+}
+
+.use-all-per-level-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.use-all-level-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.use-all-level-label {
+    min-width: 58px;
+    font-size: 14px;
+}
+.use-all-pct {
+    width: 48px;
+    padding: 4px 6px;
+}
+.use-all-quality {
+    min-width: 100px;
+}
 
 #generatebychoice {
-    max-width: 306px;
+    width: 100%;
+    width: 306px;
 }
 .temps {
     padding: 0;
@@ -159,6 +370,9 @@ button.quality-select__display:hover {
     border-top: 6px solid var(--primary-color);
     transition: transform 0.2s ease;
     margin-left: auto;
+}
+.use-all-level1-locked span.quality-select__chevron {
+    visibility: hidden;
 }
 
 .quality-select.open .quality-select__chevron {
@@ -508,8 +722,18 @@ button.info-btn:hover {
     background: initial;
 }
 
+/* Changelog: boksia ei keskitetä pystysuunnassa – kiinnitetään yläosaan; scroll kun sisältö ei mahdu. */
+.changelog-overlay {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
 .changelog-overlay .info-content {
     max-width: 480px;
+    max-height: calc(100vh - 5rem);
+    overflow-y: auto;
     text-align: left;
 }
 
@@ -1250,7 +1474,15 @@ button.multiplier-btn {
 
 .templateAmountWrap {
     width: 100%;
-    max-width: 100%;!;
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Template-rivin input täyttää wrapin, ei pakota leveyttä – leveys tulee flex-sarakkeesta */
+#templateCountSection .templateAmountWrap input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .templateAmountWrap input::placeholder {
@@ -1261,6 +1493,13 @@ button.multiplier-btn {
     color: #920b0b;
     font-style: italic;
     margin-bottom: 0;
+    font-size: 14px;
+}
+
+.materials p.flux-added {
+    color: #0a6b0a;
+    font-style: italic;
+    margin: 2px 0 0 0;
     font-size: 14px;
 }
 
@@ -1323,6 +1562,16 @@ button.multiplier-btn {
     font-size: 16px;
     font-weight: 600;
     color: var(--primary-color);
+}
+
+.use-all-warning {
+    margin: 0.75em 0 0;
+    padding: 0.5em 0.75em;
+    font-size: 0.9rem;
+    color: #b45309;
+    background: #fef3e2;
+    border-radius: 6px;
+    border: 1px solid #e8c89a;
 }
 
 .spinner-progress {

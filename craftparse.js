@@ -23,10 +23,14 @@ Object.values(materials).forEach(season => {
     });
 });
 const WEIRWOOD_NORMALIZED_KEY = normalizeKey('weirwood');
+const BASIC_FLUX_KEY = 'basic-flux';
 const normalizedKeyCache = new WeakMap();
 
 const CALCULATION_STORAGE_KEY = 'noox-calculation-v1';
 const CALCULATION_STORAGE_VERSION = 1;
+const QUALITY_STORAGE_KEY_PREFIX = 'craftparse_quality_level_';
+const USE_ALL_PERCENT_STORAGE_KEY_PREFIX = 'craftparse_useall_percent_';
+const VALID_QUALITIES = new Set(['poor', 'common', 'fine', 'exquisite', 'epic', 'legendary']);
 let latestCalculationPayload = null;
 let isViewingSavedCalculation = false;
 
@@ -68,7 +72,18 @@ const MATERIAL_NEUTRAL_RANKS = new Set();
 const INSUFFICIENT_MATERIAL_PENALTY = -1000;
 const LEAST_MATERIAL_PENALTY = -25;
 const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
+/** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER (suositaan näitä tasoja). Medium / Low odds itemeissä*/
+const LEVEL_SCORE_BOOST_LEVELS = new Set([15, 30, 35]);
+const LEVEL_SCORE_BOOST_MULTIPLIER = 1.5;
+/** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
+const MEDIUM_ODDS_PENALTY = 40;
+const LOW_ODDS_PENALTY = 120;
 const GEAR_MATERIAL_SCORE = 22;
+/** Bonus for using a basic material we have in surplus (Use all materials → pyrkiä nollaan). Tuote joka käyttää ylijäämämateriaalia saa enemmän pisteitä → valitaan. */
+const SURPLUS_MATERIAL_BONUS = 50;
+/** Max extra score per unit for surplus amount (iso ylijäämä = paljon bonusia, jotta se palaa ensin). */
+const SURPLUS_AMOUNT_CAP = 80;
+/** Tasolla 15 ilman gear/CTW: varataan weirwood L15:lle, joten muilla tasoilla (1,5,10) weirwood saa penaliteetin ettei sitä kuluteta. */
 const WEIRWOOD_PRIORITY_PENALTY = -20;
 const SEASON_ZERO_LOW_BONUS = -10;
 const SEASON_ZERO_HIGH_BONUS = 15;
@@ -78,6 +93,50 @@ const ctwSetName =
     typeof window !== 'undefined' && window.CTW_SET_NAME
         ? window.CTW_SET_NAME
         : CTW_SET_NAME_FALLBACK;
+
+/** Use all materials: oletusprosentit taso × laatu. Level 1 aina 100 % legendary (lukittu). */
+const USE_ALL_DEFAULT_PERCENTS = Object.freeze({
+    1: { legendary: 100 },
+    5: { legendary: 100, epic: 45, exquisite: 40, fine: 30, common: 25, poor: 20 },
+    10: { legendary: 100, epic: 45, exquisite: 40, fine: 30, common: 25, poor: 20 },
+    15: { legendary: 100, epic: 46, exquisite: 40, fine: 33, common: 27.3, poor: 22 },
+    20: { legendary: 100, epic: 45, exquisite: 40, fine: 35, common: 30, poor: 25 },
+    25: { legendary: 100, epic: 45, exquisite: 40, fine: 35, common: 30, poor: 25 },
+    30: { legendary: 100, epic: 47, exquisite: 42, fine: 36, common: 30, poor: 25 },
+    35: { legendary: 100, epic: 47, exquisite: 42, fine: 36, common: 30, poor: 25 },
+    40: { legendary: 100, epic: 47, exquisite: 42, fine: 36, common: 30, poor: 25 },
+    45: { legendary: 100, epic: 47, exquisite: 42, fine: 36, common: 30, poor: 25 }
+});
+
+function getDefaultPercentForLevelQuality(level, quality) {
+    const q = (quality || '').toLowerCase().trim();
+    if (!q || !VALID_QUALITIES.has(q)) return undefined;
+    /* Ensin käyttäjän tallentama oletus (taso + laatu), sitten kovakoodattu taulukko */
+    if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+            const key = USE_ALL_PERCENT_STORAGE_KEY_PREFIX + level + '_' + q;
+            const stored = window.localStorage.getItem(key);
+            if (stored != null && stored !== '') {
+                const num = parseFloat(stored);
+                if (Number.isFinite(num) && num >= 0 && num <= 100) return num;
+            }
+        } catch (e) { /* ignore */ }
+    }
+    const row = USE_ALL_DEFAULT_PERCENTS[level];
+    if (!row) return undefined;
+    return row[q];
+}
+
+function savePercentForLevelQuality(level, quality, percent) {
+    if (typeof window === 'undefined' || !window.localStorage || !VALID_QUALITIES.has((quality || '').toLowerCase().trim())) return;
+    try {
+        const key = USE_ALL_PERCENT_STORAGE_KEY_PREFIX + level + '_' + (quality || '').toLowerCase().trim();
+        const num = parseFloat(percent);
+        if (Number.isFinite(num) && num >= 0 && num <= 100) {
+            window.localStorage.setItem(key, String(num));
+        }
+    } catch (e) { /* ignore */ }
+}
 
 const SeasonZeroPreference = Object.freeze({
     OFF: 0,
@@ -106,8 +165,11 @@ let pendingFailedLevels = null;
 let requestedTemplates = {};
 let preserveRequestedTemplates = false;
 let remainingUse = {};
+/** When By count runs the planner and uses flux, store fluxUsed here so calculateMaterials can pass it to renderResults. */
+let pendingFluxUsedForResults = null;
 let ctwMediumNotice = false;
 let level20OnlyWarlordsActive = false;
+let useAllMaterialsAttemptedByLevel = null;
 const productsByLevel = craftItem.products.reduce((acc, product) => {
     const levelKey = product.level.toString();
     if (!acc[levelKey]) {
@@ -174,7 +236,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-01-05';
+    const storageKey = 'noox-update-log-2026-01-31';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
@@ -321,6 +383,40 @@ function saveCalculationToStorage(payload) {
     } catch (error) {
         console.error('Failed to persist calculation to storage', error);
         return false;
+    }
+}
+
+function loadQualityDefaultsFromStorage() {
+    if (!isLocalStorageAvailable()) return;
+    LEVELS.forEach(level => {
+        if (level === 1) return; /* Level 1 on aina legendary, ei ladata storagesta */
+        const select = document.getElementById(`temp${level}`);
+        if (!select) return;
+        try {
+            const stored = window.localStorage.getItem(QUALITY_STORAGE_KEY_PREFIX + level);
+            if (stored && VALID_QUALITIES.has(stored)) {
+                select.value = stored;
+                const wrapper = select.closest('.quality-select');
+                if (wrapper) {
+                    const trigger = wrapper.querySelector('.quality-select__display');
+                    const optionsContainer = wrapper.querySelector('.quality-select__options');
+                    if (trigger && optionsContainer && typeof updateQualitySelectUI === 'function') {
+                        updateQualitySelectUI(select, trigger, optionsContainer);
+                    }
+                }
+            }
+        } catch (e) {
+            /* ignore */
+        }
+    });
+}
+
+function saveQualityLevelToStorage(level, value) {
+    if (!isLocalStorageAvailable() || !VALID_QUALITIES.has(value)) return;
+    try {
+        window.localStorage.setItem(QUALITY_STORAGE_KEY_PREFIX + level, value);
+    } catch (e) {
+        /* ignore */
     }
 }
 
@@ -473,6 +569,11 @@ function restoreSavedCalculation(savedData) {
         ctwMediumNotice = Boolean(savedData.ctwMediumNotice);
         level20OnlyWarlordsActive = Boolean(savedData.level20OnlyWarlordsActive);
         isViewingSavedCalculation = true;
+        if (savedData.useAllMaterialsAttemptedByLevel && typeof savedData.useAllMaterialsAttemptedByLevel === 'object') {
+            useAllMaterialsAttemptedByLevel = { ...savedData.useAllMaterialsAttemptedByLevel };
+        } else {
+            useAllMaterialsAttemptedByLevel = null;
+        }
 
         if (savedData.templates || savedData.initialMaterials) {
             populateInputsFromShare({
@@ -955,7 +1056,8 @@ document.addEventListener('DOMContentLoaded', function() {
             initialMaterials = data.initialMaterials || {};
             populateInputsFromShare(data);
             // Show loading overlay before automatic calculation
-            document.querySelector('.spinner-wrap').classList.add('active');
+            const spinnerWrap = document.querySelector('.spinner-wrap');
+            if (spinnerWrap) spinnerWrap.classList.add('active');
             // Automatically trigger calculation based on the populated inputs
             calculateMaterials();
         } catch (e) {
@@ -1090,6 +1192,217 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    const templateCountSection = document.getElementById('templateCountSection');
+    const templateModeByCount = document.getElementById('templateModeByCount');
+    const templateModeUseAll = document.getElementById('templateModeUseAll');
+    const useAllLevelRangeWrap = document.getElementById('useAllLevelRangeWrap');
+    const useAllLevelFrom = document.getElementById('useAllLevelFrom');
+    const useAllLevelTo = document.getElementById('useAllLevelTo');
+    const useAllLevelRangeLabel = document.getElementById('useAllLevelRangeLabel');
+    const useAllLevelRangeFill = document.getElementById('useAllLevelRangeFill');
+
+    const LEVEL_RANGE_MAX_IDX = LEVELS.length - 1; // 0..9 → level 1..45
+
+    function updateUseAllLevelVisibility() {
+        if (!useAllLevelFrom || !useAllLevelTo) return;
+        let fromIdx = parseInt(useAllLevelFrom.value, 10);
+        let toIdx = parseInt(useAllLevelTo.value, 10);
+        if (Number.isNaN(fromIdx)) fromIdx = 0;
+        if (Number.isNaN(toIdx)) toIdx = LEVEL_RANGE_MAX_IDX;
+        fromIdx = Math.max(0, Math.min(LEVEL_RANGE_MAX_IDX, fromIdx));
+        toIdx = Math.max(0, Math.min(LEVEL_RANGE_MAX_IDX, toIdx));
+        if (fromIdx > toIdx) {
+            useAllLevelFrom.value = toIdx;
+            useAllLevelTo.value = fromIdx;
+            const smaller = toIdx;
+            const larger = fromIdx;
+            fromIdx = smaller;
+            toIdx = larger;
+        }
+        const firstLevel = LEVELS[fromIdx];
+        const lastLevel = LEVELS[toIdx];
+        if (useAllLevelRangeLabel) useAllLevelRangeLabel.textContent = `Levels included ${firstLevel} – ${lastLevel}`;
+        if (useAllLevelRangeFill) {
+            const leftPct = (fromIdx / LEVEL_RANGE_MAX_IDX) * 100;
+            const widthPct = ((toIdx - fromIdx) / LEVEL_RANGE_MAX_IDX) * 100;
+            useAllLevelRangeFill.style.left = leftPct + '%';
+            useAllLevelRangeFill.style.width = widthPct + '%';
+        }
+        LEVELS.forEach(l => {
+            const wrap = document.querySelector(`.leveltmp${l}`);
+            if (!wrap) return;
+            wrap.style.display = (l >= firstLevel && l <= lastLevel) ? '' : 'none';
+        });
+    }
+
+    function setTemplateMode(useAll) {
+        const isUseAll = !!useAll;
+        if (templateModeByCount) templateModeByCount.checked = !isUseAll;
+        if (templateModeUseAll) templateModeUseAll.checked = isUseAll;
+        if (useAllLevelRangeWrap) useAllLevelRangeWrap.style.display = isUseAll ? 'block' : 'none';
+        LEVELS.forEach(level => {
+            const label = document.querySelector(`.leveltmp${level} label[for="templateAmount${level}"]`);
+            const input = document.getElementById(`templateAmount${level}`);
+            if (label) label.textContent = isUseAll ? `level ${level} (%)` : `level ${level}`;
+            if (input) {
+                input.placeholder = isUseAll ? '%' : '120';
+                input.setAttribute('aria-label', isUseAll ? `Success rate level ${level} %` : `Templates level ${level}`);
+                if (isUseAll) {
+                    input.setAttribute('min', '1');
+                    input.setAttribute('max', '100');
+                    input.setAttribute('step', '0.1');
+                } else {
+                    input.setAttribute('min', '0');
+                    input.removeAttribute('max');
+                    input.removeAttribute('step');
+                }
+            }
+        });
+        if (isUseAll) {
+            /* Esitäytä prosentit oletuksilla taso × laatu; level 1 aina 100 % ja legendary, lukittu. */
+            LEVELS.forEach(level => {
+                const input = document.getElementById(`templateAmount${level}`);
+                const sel = document.getElementById(`temp${level}`);
+                if (!input || !sel) return;
+                const quality = (sel.value || '').trim() || 'legendary';
+                const pct = getDefaultPercentForLevelQuality(level, quality);
+                if (pct != null) input.value = pct;
+                if (level === 1) {
+                    input.value = '100';
+                    input.readOnly = true;
+                    sel.value = 'legendary';
+                    sel.disabled = true;
+                    const wrapper = sel.closest('.quality-select');
+                    if (wrapper) {
+                        const trigger = wrapper.querySelector('.quality-select__display');
+                        const opts = wrapper.querySelector('.quality-select__options');
+                        updateQualitySelectUI(sel, trigger, opts);
+                    }
+                    const wrap = document.querySelector(`.leveltmp1`);
+                    if (wrap) wrap.classList.add('use-all-level1-locked');
+                }
+                const amountWrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+                if (amountWrap && input.value) amountWrap.classList.add('active');
+            });
+            updateUseAllLevelVisibility();
+        } else {
+            setUseAllCalculationWarning('', false);
+            /* By count: tyhjennä templatemäärät (prosentit). Level 1 laatu pysyy lukittuna legendary. */
+            LEVELS.forEach(level => {
+                const input = document.getElementById(`templateAmount${level}`);
+                if (input) {
+                    input.value = '';
+                    input.readOnly = false;
+                }
+                const amountWrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
+                if (amountWrap) amountWrap.classList.remove('active');
+            });
+            /* Level 1 on aina legendary, älä vapauta materiaalivalintaa */
+        }
+        if (isUseAll) {
+            updateUseAllLevelVisibility();
+            if (useAllLevelFrom && useAllLevelTo) {
+                useAllLevelFrom.style.zIndex = '3';
+                useAllLevelTo.style.zIndex = '2';
+            }
+            document.querySelectorAll('.use-all-only').forEach(el => { el.style.display = ''; });
+        } else {
+            LEVELS.forEach(l => { const w = document.querySelector(`.leveltmp${l}`); if (w) w.style.display = ''; });
+            document.querySelectorAll('.use-all-only').forEach(el => { el.style.display = 'none'; });
+        }
+    }
+
+    /* Use all materials: kun vaihdat tasolla (5–45) materiaalilaatua, prosenttikenttä päivittyy oletuksella. */
+    LEVELS.forEach(level => {
+        if (level === 1) return;
+        const sel = document.getElementById(`temp${level}`);
+        if (sel) {
+            sel.addEventListener('change', () => {
+                const useAllBtn = document.getElementById('templateModeUseAll');
+                const isUseAll = useAllBtn?.checked === true;
+                if (!isUseAll) return;
+                const pct = getDefaultPercentForLevelQuality(level, sel.value);
+                if (pct != null) {
+                    const input = document.getElementById(`templateAmount${level}`);
+                    if (input && !input.readOnly) input.value = pct;
+                }
+            });
+        }
+    });
+
+    /* From materials: kun muutat prosenttia tasolla, tallenna oletus (taso + nykyinen laatu) muistiin. */
+    LEVELS.forEach(level => {
+        const input = document.getElementById(`templateAmount${level}`);
+        if (!input) return;
+        const savePercentForThisLevel = () => {
+            const useAllBtn = document.getElementById('templateModeUseAll');
+            if (!useAllBtn?.checked) return;
+            const sel = document.getElementById(`temp${level}`);
+            const quality = sel ? sel.value : '';
+            if (quality) savePercentForLevelQuality(level, quality, input.value);
+        };
+        input.addEventListener('change', savePercentForThisLevel);
+        input.addEventListener('blur', savePercentForThisLevel);
+    });
+
+    templateModeByCount?.addEventListener('change', () => setTemplateMode(false));
+    templateModeUseAll?.addEventListener('change', () => setTemplateMode(true));
+
+    /* Level 1 on aina legendary, materiaalivalintaa ei voi avata. */
+    function lockLevel1Quality() {
+        const sel1 = document.getElementById('temp1');
+        if (!sel1) return;
+        sel1.value = 'legendary';
+        sel1.disabled = true;
+        const wrapper = sel1.closest('.quality-select');
+        if (wrapper) {
+            const trigger = wrapper.querySelector('.quality-select__display');
+            const opts = wrapper.querySelector('.quality-select__options');
+            if (trigger && opts && typeof updateQualitySelectUI === 'function') {
+                updateQualitySelectUI(sel1, trigger, opts);
+            }
+        }
+        const wrap = document.querySelector('.leveltmp1');
+        if (wrap) wrap.classList.add('use-all-level1-locked');
+    }
+    lockLevel1Quality();
+
+    if (useAllLevelFrom && useAllLevelTo) {
+        const dualRangeEl = useAllLevelFrom.closest('.dual-range');
+        function setDualRangeZIndex(e) {
+            if (!dualRangeEl) return;
+            const fromIdx = parseInt(useAllLevelFrom.value, 10) || 0;
+            const toIdx = parseInt(useAllLevelTo.value, 10) ?? LEVEL_RANGE_MAX_IDX;
+            const rect = dualRangeEl.getBoundingClientRect();
+            const x = (e && e.clientX != null) ? e.clientX - rect.left : rect.width / 2;
+            const frac = rect.width > 0 ? x / rect.width : 0;
+            const midFrac = (fromIdx + toIdx) / (2 * LEVEL_RANGE_MAX_IDX);
+            const fromOnTop = frac < midFrac;
+            useAllLevelFrom.style.zIndex = fromOnTop ? '3' : '2';
+            useAllLevelTo.style.zIndex = fromOnTop ? '2' : '3';
+        }
+        if (dualRangeEl) {
+            dualRangeEl.addEventListener('mousemove', setDualRangeZIndex);
+            dualRangeEl.addEventListener('mouseenter', setDualRangeZIndex);
+            dualRangeEl.addEventListener('pointermove', setDualRangeZIndex);
+            dualRangeEl.addEventListener('pointerenter', setDualRangeZIndex);
+        }
+        useAllLevelFrom.addEventListener('input', () => {
+            let toIdx = parseInt(useAllLevelTo.value, 10);
+            if (Number.isNaN(toIdx)) toIdx = LEVEL_RANGE_MAX_IDX;
+            let fromIdx = parseInt(useAllLevelFrom.value, 10) || 0;
+            if (fromIdx > toIdx) useAllLevelTo.value = fromIdx;
+            updateUseAllLevelVisibility();
+        });
+        useAllLevelTo.addEventListener('input', () => {
+            let fromIdx = parseInt(useAllLevelFrom.value, 10) || 0;
+            let toIdx = parseInt(useAllLevelTo.value, 10);
+            if (Number.isNaN(toIdx)) toIdx = LEVEL_RANGE_MAX_IDX;
+            if (toIdx < fromIdx) useAllLevelFrom.value = toIdx;
+            updateUseAllLevelVisibility();
+        });
+    }
+
     // Trigger calculation when pressing Enter on any input
     document.addEventListener('keydown', e => {
         const activeEl = document.activeElement;
@@ -1134,6 +1447,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeResults();
             }
             closeAllQualitySelects();
+        }
+    });
+
+    // Level-kohtainen materiaalilaatu: ladataan oletukset localStoragesta, tallennetaan muutokset
+    loadQualityDefaultsFromStorage();
+    LEVELS.forEach(level => {
+        const select = document.getElementById(`temp${level}`);
+        if (select) {
+            select.addEventListener('change', () => {
+                const value = (select.value || '').trim();
+                if (value) saveQualityLevelToStorage(level, value);
+            });
         }
     });
 
@@ -1825,8 +2150,11 @@ function calculateMaterials() {
         LEVELS.forEach(level => {
             requestedTemplates[level] = manualRequestedTotals[level] || 0;
         });
+        useAllMaterialsAttemptedByLevel = null;
     }
-    renderResults(templateCounts, materialCounts);
+    const fluxUsed = pendingFluxUsedForResults;
+    pendingFluxUsedForResults = null;
+    renderResults(templateCounts, materialCounts, fluxUsed);
 }
 
 function getCurrentUserSettings() {
@@ -1866,7 +2194,19 @@ function getCurrentUserSettings() {
     };
 }
 
-function renderResults(templateCounts, materialCounts) {
+/** Resolve flux used for a material; matches by exact key or normalized key so display works from both By count and Use all. */
+function getFluxUsedForMaterial(fluxUsed, materialName) {
+    if (!fluxUsed || typeof fluxUsed !== 'object') return 0;
+    const exact = fluxUsed[materialName];
+    if (exact != null && exact > 0) return exact;
+    const n = normalizeKey(materialName);
+    for (const [k, v] of Object.entries(fluxUsed)) {
+        if (v > 0 && normalizeKey(k) === n) return v;
+    }
+    return 0;
+}
+
+function renderResults(templateCounts, materialCounts, fluxUsed = null) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '';
 
@@ -1892,60 +2232,111 @@ function renderResults(templateCounts, materialCounts) {
 
     const initialMaterialMap = getNormalizedKeyMap(initialMaterials);
 
-    Object.entries(materialCounts)
+    /* Näytetään vain materiaalit joiden määrä kerrottiin (alkumäärä > 0). Käytetty määrä materialCountsista (0 jos ei käytetty). */
+    const materialsToShow = Object.entries(initialMaterials)
+        .filter(([key, amount]) => key !== BASIC_FLUX_KEY && Number(amount) > 0)
         .sort(([aName], [bName]) => {
             const seasonA = materialToSeason[aName] || 0;
             const seasonB = materialToSeason[bName] || 0;
             if (seasonA !== seasonB) {
                 return seasonA - seasonB;
             }
-            return aName.localeCompare(bName);
-        })
-        .forEach(([materialName, data]) => {
-            const materialContainer = document.createElement('div');
-            const img = document.createElement('img');
-            img.src = data.img;
-            img.alt = materialName;
-            materialContainer.appendChild(img);
-
-            const pMatName = document.createElement('p');
-            const pMatAmount = document.createElement('p');
-            const pRemaining = document.createElement('p');
-            const pAvailableMaterials = document.createElement('p');
-            const pSeason = document.createElement('p');
-            pMatName.className = 'material-name';
-            pMatAmount.className = 'amount';
-            pRemaining.className = 'remaining-to-use';
-            pAvailableMaterials.className = 'available-materials';
-            pSeason.className = 'season-id';
-
-            let matText = allMaterials[materialName] ? allMaterials[materialName]["Original-name"] || materialName : materialName;
-            const matSeason = materialToSeason[materialName] || 0;
-            if (matSeason !== 0) {
-                pSeason.textContent = `Season ${matSeason}`;
-            }
-            pMatName.textContent = matText;
-            pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(data.amount)}`;
-            pRemaining.textContent = pMatAmount.textContent;
-            remainingUse[materialName] = data.amount;
-            const matchedKey = initialMaterialMap[normalizeKey(materialName)];
-            const originalAmount = matchedKey ? initialMaterials[matchedKey] : 0;
-            if (originalAmount > 0) {
-                const remainingAmount = originalAmount - data.amount;
-                pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(Math.max(remainingAmount, 0))}`;
-            }
-
-            materialContainer.dataset.material = materialName;
-            if (matSeason !== 0) {
-                materialContainer.appendChild(pSeason);
-            }
-            materialContainer.appendChild(pMatName);
-            materialContainer.appendChild(pMatAmount);
-            materialContainer.appendChild(pRemaining);
-            materialContainer.appendChild(pAvailableMaterials);
-
-            materialsDiv.appendChild(materialContainer);
+            return (aName || '').localeCompare(bName || '');
         });
+
+    materialsToShow.forEach(([materialName, originalAmount]) => {
+        const data = materialCounts[materialName];
+        const usedAmount = data ? data.amount : 0;
+        const materialContainer = document.createElement('div');
+        const img = document.createElement('img');
+        img.src = (data && data.img) ? data.img : (allMaterials[materialName] && allMaterials[materialName].img ? allMaterials[materialName].img : '');
+        img.alt = materialName;
+        materialContainer.appendChild(img);
+
+        const pMatName = document.createElement('p');
+        const pMatAmount = document.createElement('p');
+        const pRemaining = document.createElement('p');
+        const pAvailableMaterials = document.createElement('p');
+        const pSeason = document.createElement('p');
+        pMatName.className = 'material-name';
+        pMatAmount.className = 'amount';
+        pRemaining.className = 'remaining-to-use';
+        pAvailableMaterials.className = 'available-materials';
+        pSeason.className = 'season-id';
+
+        /* Varastosta käytetty ei voi ylittää alkumäärää; loput = flux. Jäljelle jäävä = alkumäärä - käytetty. */
+        const usedFromStock = Math.min(originalAmount, usedAmount);
+        const fluxAdded = usedAmount - usedFromStock;
+        const remainingAmount = Math.max(0, originalAmount - usedFromStock);
+        /* Kun fluxia ei käytetty: älä näytä käytettyä enempää kuin alkumäärä (suojaa virheiltä). */
+        const displayUsed = fluxAdded > 0 ? usedAmount : Math.min(usedAmount, originalAmount);
+
+        let matText = allMaterials[materialName] ? allMaterials[materialName]["Original-name"] || materialName : materialName;
+        const matSeason = materialToSeason[materialName] || 0;
+        if (matSeason !== 0) {
+            pSeason.textContent = `Season ${matSeason}`;
+        }
+        pMatName.textContent = matText;
+        /* Punainen miinus = kokonaan käytetty määrä (varasto + flux), tai enintään alkumäärä jos ei fluxia. */
+        pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(displayUsed)}`;
+        pRemaining.textContent = pMatAmount.textContent;
+        remainingUse[materialName] = usedAmount;
+        if (originalAmount > 0 || remainingAmount > 0) {
+            pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingAmount)}`;
+        }
+
+        materialContainer.dataset.material = materialName;
+        if (matSeason !== 0) {
+            materialContainer.appendChild(pSeason);
+        }
+        materialContainer.appendChild(pMatName);
+        materialContainer.appendChild(pMatAmount);
+        /* Perusmateriaaleille (season 0) vihreä + flux vain jos fluxia siirrettiin (ei näytetä +0) */
+        if (fluxUsed && typeof fluxUsed === 'object' && matSeason === 0 && fluxAdded > 0) {
+            const pFluxAdded = document.createElement('p');
+            pFluxAdded.className = 'flux-added';
+            pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxAdded)}`;
+            materialContainer.appendChild(pFluxAdded);
+        }
+        materialContainer.appendChild(pRemaining);
+        materialContainer.appendChild(pAvailableMaterials);
+
+        materialsDiv.appendChild(materialContainer);
+    });
+
+    /* Basic Flux -rivi: näytetään vain jos käyttäjä merkitsi fluxia > 0. Jos 0, ei näytetä. Jos merkitsi mutta laskenta ei käyttänyt, näytetään silti (käytetty 0, jäljellä X). */
+    const originalFlux = initialMaterials[BASIC_FLUX_KEY] ?? 0;
+    if (Number(originalFlux) > 0) {
+        const totalFluxUsed = (fluxUsed && typeof fluxUsed === 'object')
+            ? Object.values(fluxUsed).reduce((s, v) => s + v, 0)
+            : 0;
+        const fluxData = allMaterials[BASIC_FLUX_KEY];
+        const materialContainer = document.createElement('div');
+        const img = document.createElement('img');
+        img.src = fluxData && fluxData.img ? fluxData.img : '';
+        img.alt = 'Basic Flux';
+        materialContainer.appendChild(img);
+        const pMatName = document.createElement('p');
+        const pMatAmount = document.createElement('p');
+        const pRemaining = document.createElement('p');
+        const pAvailableMaterials = document.createElement('p');
+        pMatName.className = 'material-name';
+        pMatAmount.className = 'amount';
+        pRemaining.className = 'remaining-to-use';
+        pAvailableMaterials.className = 'available-materials';
+        pMatName.textContent = fluxData && fluxData['Original-name'] ? fluxData['Original-name'] : 'Basic Flux';
+        pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(totalFluxUsed)}`;
+        pRemaining.textContent = pMatAmount.textContent;
+        remainingUse[BASIC_FLUX_KEY] = totalFluxUsed;
+        const remainingFlux = Math.max(0, Number(originalFlux) - totalFluxUsed);
+        pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingFlux)}`;
+        materialContainer.dataset.material = BASIC_FLUX_KEY;
+        materialContainer.appendChild(pMatName);
+        materialContainer.appendChild(pMatAmount);
+        materialContainer.appendChild(pRemaining);
+        materialContainer.appendChild(pAvailableMaterials);
+        materialsDiv.appendChild(materialContainer);
+    }
 
     if (materialsDiv.children.length === 0) {
         const msg = document.createElement('h3');
@@ -2018,10 +2409,16 @@ function renderResults(templateCounts, materialCounts) {
 
     let firstLevelHeader = true;
     Object.entries(templateCounts).forEach(([level, templates]) => {
+        const stacked = stackTemplatesInLevel(templates);
         const lvl = parseInt(level, 10);
-        if (templates.length > 0 || (failedLevels.includes(lvl) && requestedTemplates[lvl] > 0)) {
+        if (stacked.length > 0 || (failedLevels.includes(lvl) && requestedTemplates[lvl] > 0)) {
             const levelHeader = document.createElement('h4');
-            levelHeader.textContent = allSameCount ? `Level ${level}` : `Level ${level} (${new Intl.NumberFormat('en-US').format(levelItemCounts[level])} pcs)`;
+            const attempted = useAllMaterialsAttemptedByLevel && useAllMaterialsAttemptedByLevel[level];
+            if (attempted != null && attempted > levelItemCounts[level]) {
+                levelHeader.textContent = `Level ${level} (${new Intl.NumberFormat('en-US').format(levelItemCounts[level])} successful of ${new Intl.NumberFormat('en-US').format(attempted)} attempted)`;
+            } else {
+                levelHeader.textContent = allSameCount ? `Level ${level}` : `Level ${level} (${new Intl.NumberFormat('en-US').format(levelItemCounts[level])} pcs)`;
+            }
 
 
             if (firstLevelHeader) {
@@ -2045,8 +2442,8 @@ function renderResults(templateCounts, materialCounts) {
             levelGroup.className = 'level-group';
             itemsDiv.appendChild(levelGroup);
 
-            if (templates.length > 0) {
-                templates.forEach(template => {
+            if (stacked.length > 0) {
+                stacked.forEach(template => {
                     const templateDiv = document.createElement('div');
                     templateDiv.classList.add('item');
                     if (template.warlord) {
@@ -2159,6 +2556,9 @@ function renderResults(templateCounts, materialCounts) {
         ctwMediumNotice,
         level20OnlyWarlordsActive
     };
+    if (useAllMaterialsAttemptedByLevel && Object.keys(useAllMaterialsAttemptedByLevel).length > 0) {
+        payload.useAllMaterialsAttemptedByLevel = { ...useAllMaterialsAttemptedByLevel };
+    }
     if (previousSavedAt) {
         payload.savedAt = previousSavedAt;
     }
@@ -2184,15 +2584,59 @@ function renderResults(templateCounts, materialCounts) {
     });
 
     const nf = new Intl.NumberFormat('fi-FI');
-    console.log(`Käytetty perusmateriaali: ${nf.format(totalBasicMat)}`);
-    Object.keys(seasonTotals)
-        .sort((a, b) => a - b)
-        .forEach(season => {
-            console.log(`Käytetty materiaali Season ${season}: ${nf.format(seasonTotals[season])}`);
-        });
-    console.log(`Käytetty Gear materiaali yhteensä: ${nf.format(totalAllSeason)}`);
+    if (isDebugMode) {
+        console.log(`Käytetty perusmateriaali: ${nf.format(totalBasicMat)}`);
+        Object.keys(seasonTotals)
+            .sort((a, b) => a - b)
+            .forEach(season => {
+                console.log(`Käytetty materiaali Season ${season}: ${nf.format(seasonTotals[season])}`);
+            });
+        console.log(`Käytetty Gear materiaali yhteensä: ${nf.format(totalAllSeason)}`);
+    }
 
     showResults();
+}
+
+/** Järjestys seasonX.js:n mukaan: kypärä, rintapanssari, housut, kengät, sormus, ase. */
+function getSlotSortIndex(img) {
+    const lower = (img || '').toLowerCase();
+    if (lower.includes('helmet') || /head\.(png|webp)/.test(lower)) return 0;
+    if (lower.includes('chest')) return 1;
+    if (lower.includes('pants')) return 2;
+    if (lower.includes('boots')) return 3;
+    if (lower.includes('ring')) return 4;
+    if (lower.includes('weapon')) return 5;
+    return 6;
+}
+
+function stackTemplatesInLevel(templates) {
+    if (!Array.isArray(templates) || templates.length === 0) return [];
+    const byKey = {};
+    templates.forEach(t => {
+        const key = [t.name, t.season, t.setName || '', t.warlord ? 1 : 0].join('\0');
+        if (!byKey[key]) {
+            byKey[key] = {
+                name: t.name,
+                amount: 0,
+                img: t.img,
+                materials: t.materials,
+                multiplier: t.multiplier || 1,
+                setName: t.setName,
+                season: t.season,
+                warlord: t.warlord || false
+            };
+        }
+        byKey[key].amount += t.amount;
+    });
+    const stacked = Object.values(byKey);
+    /* Järjestä: ensin season 0, sitten 1, 2, …; seasonin sisällä slot-järjestyksessä (kypärä, rintapanssari, …). */
+    stacked.sort((a, b) => {
+        const seasonA = a.season ?? 0;
+        const seasonB = b.season ?? 0;
+        if (seasonA !== seasonB) return seasonA - seasonB;
+        return getSlotSortIndex(a.img) - getSlotSortIndex(b.img);
+    });
+    return stacked;
 }
 
 function calculateTotalItemsByLevel(templateCounts) {
@@ -2212,9 +2656,308 @@ function areAllCountsSame(levelItemCounts) {
     const counts = Object.values(levelItemCounts);
     return counts.every(count => count === counts[0]);
 }
+
+function sumPlanLevel(plan, level) {
+    const arr = plan[level];
+    if (!Array.isArray(arr)) return 0;
+    return arr.reduce((s, e) => s + (e.quantity || 0), 0);
+}
+
+function buildTemplateCountsFromPlan(plan, qualityMultipliers) {
+    const templateCounts = { 1: [], 5: [], 10: [], 15: [], 20: [], 25: [], 30: [], 35: [], 40: [], 45: [] };
+    LEVELS.forEach(level => {
+        const entries = plan[level];
+        if (!Array.isArray(entries)) return;
+        const mult = qualityMultipliers[level] || 1;
+        entries.forEach(entry => {
+            const product = productLookup.get([
+                level,
+                entry.season,
+                slug(entry.name),
+                slug(entry.setName || 'no-set')
+            ].join('|'));
+            if (!product) return;
+            const amount = Math.max(0, Math.floor(entry.quantity || 0));
+            if (amount <= 0) return;
+            templateCounts[level].push({
+                name: product.name,
+                amount,
+                img: product.img,
+                materials: product.materials,
+                multiplier: mult,
+                setName: product.setName,
+                season: product.season,
+                warlord: product.warlord || false
+            });
+        });
+    });
+    return templateCounts;
+}
+
+function buildMaterialCountsFromUsed(initialMaterials, remainingMaterials) {
+    const materialCounts = {};
+    const remMap = getNormalizedKeyMap(remainingMaterials);
+    Object.entries(initialMaterials).forEach(([matKey, originalAmount]) => {
+        const normalized = normalizeKey(matKey);
+        const remKey = remMap[normalized];
+        const remainingAmount = remKey ? (remainingMaterials[remKey] || 0) : 0;
+        const used = Math.max(0, (originalAmount || 0) - remainingAmount);
+        if (used <= 0) return;
+        const materialName = materialKeyMap[normalized] || matKey;
+        const img = allMaterials[materialName] && allMaterials[materialName].img ? allMaterials[materialName].img : '';
+        if (!materialCounts[materialName]) materialCounts[materialName] = { amount: 0, img };
+        materialCounts[materialName].amount += used;
+    });
+    return materialCounts;
+}
+
+/** Use-all: materiaalit raw-planista (yritysten määrä), ei onnistuneiden. */
+function buildMaterialCountsFromPlan(plan, qualityMultipliers) {
+    const materialCounts = {};
+    LEVELS.forEach(level => {
+        const entries = plan[level];
+        if (!Array.isArray(entries)) return;
+        const mult = qualityMultipliers[level] || 1;
+        entries.forEach(entry => {
+            const product = productLookup.get([
+                level,
+                entry.season,
+                slug(entry.name),
+                slug(entry.setName || 'no-set')
+            ].join('|'));
+            if (!product || !product.materials) return;
+            const quantity = Math.max(0, Math.floor(entry.quantity || 0));
+            if (quantity <= 0) return;
+            Object.entries(product.materials).forEach(([rawName, requiredAmount]) => {
+                const materialName = materialKeyMap[normalizeKey(rawName)] || rawName;
+                if (!materialCounts[materialName]) {
+                    materialCounts[materialName] = {
+                        amount: 0,
+                        img: allMaterials[materialName] && allMaterials[materialName].img ? allMaterials[materialName].img : ''
+                    };
+                }
+                materialCounts[materialName].amount += requiredAmount * quantity * mult;
+            });
+        });
+    });
+    return materialCounts;
+}
+
+function setUseAllCalculationWarning(text, visible) {
+    const el = document.getElementById('useAllCalculationWarning');
+    if (!el) return;
+    if (text != null && text !== '') el.textContent = text;
+    el.style.display = visible ? 'block' : 'none';
+}
+
+async function runUseAllMaterialsCalculation() {
+    const useAllActive = document.getElementById('templateModeUseAll')?.checked === true;
+    if (!useAllActive) return;
+
+    setUseAllCalculationWarning('', false);
+
+    const levelRangeMaxIdx = LEVELS.length - 1;
+    const fromSlider = document.getElementById('useAllLevelFrom');
+    const toSlider = document.getElementById('useAllLevelTo');
+    let fromIdx = fromSlider ? (parseInt(fromSlider.value, 10) || 0) : 0;
+    let toIdx = toSlider ? (parseInt(toSlider.value, 10) ?? levelRangeMaxIdx) : levelRangeMaxIdx;
+    fromIdx = Math.max(0, Math.min(levelRangeMaxIdx, fromIdx));
+    toIdx = Math.max(0, Math.min(levelRangeMaxIdx, toIdx));
+    if (fromIdx > toIdx) { const t = fromIdx; fromIdx = toIdx; toIdx = t; }
+    const firstLevel = LEVELS[fromIdx];
+    const lastLevel = LEVELS[toIdx];
+    const levelsInRange = LEVELS.filter(l => l >= firstLevel && l <= lastLevel);
+    if (levelsInRange.length === 0) {
+        displayUserMessage('Select at least one level in the level range.');
+        return;
+    }
+
+    const successRates = {};
+    LEVELS.forEach(level => {
+        const el = document.getElementById(`templateAmount${level}`);
+        const raw = el ? parseFloat(String(el.value).replace(/,/g, '')) : NaN;
+        const pct = Number.isNaN(raw) ? (level <= 10 ? 100 : 40) : Math.min(100, Math.max(0, raw));
+        successRates[level] = pct / 100;
+    });
+
+    /* Kaikki tasot valitulla välillä mukana; 0 % tason jälkeen ketju loppuu (seuraavia tasoja ei lasketa). */
+    const effectiveLevels = [];
+    for (const l of levelsInRange) {
+        effectiveLevels.push(l);
+        if (successRates[l] === 0) break;
+    }
+    let selectedLevels = effectiveLevels;
+
+    const spinnerWrapEl = document.querySelector('.spinner-wrap');
+    if (spinnerWrapEl) spinnerWrapEl.classList.add('active');
+    await waitForNextFrame();
+
+    try {
+        let availableMaterials = gatherMaterialsFromInputs();
+        availableMaterials = sanitizeGearMaterials(availableMaterials);
+        if (Object.keys(availableMaterials).length === 0 || Object.values(availableMaterials).every(v => !v || v <= 0)) {
+            deactivateSpinner(true);
+            displayUserMessage('Enter at least one material amount.');
+            return;
+        }
+        initialMaterials = { ...availableMaterials };
+
+        /* Ilman gear-materiaaleja kaikki valitut tasot lasketaan – L20+ käyttävät perus/CTW (medium/low jos sallittu). Jos medium/low ei sallittu, L20/L25 tuottavat 0 → ketju rajoittuu L1,5,10,15 → kaikki materiaali menee niihin. */
+        const planOptions = availableMaterials[BASIC_FLUX_KEY] != null ? { fluxKey: BASIC_FLUX_KEY, fromMaterials: true } : { fromMaterials: true };
+
+        LEVELS.forEach(level => {
+            const sel = document.getElementById(`temp${level}`);
+            if (sel) qualityMultipliers[level] = getQualityMultiplier(sel.value);
+        });
+
+        let legendaryLevels = selectedLevels.filter(l => l <= 10).sort((a, b) => a - b);
+        let higherLevels = selectedLevels.filter(l => l > 10).sort((a, b) => a - b);
+        // Jos vain ylemmät tasot valittu (esim. vain 20): aja ketju 1→10→15→20, näytä vain valitut tasot.
+        // "Voin tehdä 420" = L20 yrityksiä (ketjun mukaan), niistä 40 % onnistuu = 168.
+        const onlyHigherSelected = legendaryLevels.length === 0 && higherLevels.length > 0;
+        if (onlyHigherSelected) {
+            legendaryLevels = [1, 5, 10];
+            const maxSelected = Math.max(...higherLevels);
+            higherLevels = LEVELS.filter(l => l > 10 && l <= maxSelected).sort((a, b) => a - b);
+        }
+
+        // Ylempi taso tehdään MAKSIMISSAAN alempien onnistuneiden määrä. achievableSet = vain tasot joilla voidaan tuottaa → muut tasot req=0, kaikki materiaali menee saavutettaviin tasoihin.
+        function buildRequestedForN(N, achievableSet = null) {
+            const req = {};
+            LEVELS.forEach(l => { req[l] = 0; });
+            const inAchievable = (l) => achievableSet == null || achievableSet.has(l);
+            legendaryLevels.forEach(l => {
+                if (inAchievable(l)) req[l] = N;
+            });
+            let successfulPrev = N;
+            higherLevels.forEach((l, idx) => {
+                const attempted = idx === 0 ? N : Math.max(0, Math.floor(successfulPrev));
+                if (inAchievable(l)) req[l] = attempted;
+                successfulPrev = Math.floor(successfulPrev * (successRates[l] ?? 0.4));
+            });
+            return req;
+        }
+
+        /* Trial: mitkä tasot saadaan tuotettua – ei max-tuotantoa, vain “onko tasolla tuotteita”. N riittävän suuri jotta L15..L45 saavat requested > 0 (0.4^8·N ≥ 1 → N ≥ 1526). Pieni N välttää stack overflow ja pitää trial-ajan lyhyenä. */
+        const TRIAL_N = 2000;
+        const trialRequested = buildRequestedForN(TRIAL_N);
+        const trialMaterials = JSON.parse(JSON.stringify(availableMaterials));
+        const trialResult = await calculateProductionPlan(trialMaterials, trialRequested, async () => {}, planOptions);
+        const levelsOrdered = [...legendaryLevels, ...higherLevels];
+        const achievableLevelsForChain = new Set();
+        for (const l of levelsOrdered) {
+            if (sumPlanLevel(trialResult.plan, l) > 0) {
+                achievableLevelsForChain.add(l);
+            } else {
+                break;
+            }
+        }
+
+        const maxIter = 25;
+        const progressTracker = createProgressTracker(maxIter);
+        const noopTick = async () => {};
+
+        /* Rajataan yläraja välttääksemme liian suuria laskentoja (stack overflow kun N on miljoonia). */
+        const MAX_N_CAP = 200000;
+        let low = 0;
+        let high = Math.min(5000000, MAX_N_CAP);
+        let bestN = 0;
+        let bestResult = null;
+        let bestRemaining = null;
+        let iter = 0;
+
+        while (low <= high && iter < maxIter) {
+            iter++;
+            const mid = Math.floor((low + high + 1) / 2);
+            const requested = buildRequestedForN(mid, achievableLevelsForChain);
+            const materialsCopy = JSON.parse(JSON.stringify(availableMaterials));
+            const result = await calculateProductionPlan(materialsCopy, requested, noopTick, planOptions);
+            await progressTracker.tick(1);
+            let feasible = true;
+            achievableLevelsForChain.forEach(l => {
+                const produced = sumPlanLevel(result.plan, l);
+                if (produced < (requested[l] || 0)) feasible = false;
+            });
+            if (feasible) {
+                bestN = mid;
+                bestResult = result;
+                bestRemaining = materialsCopy;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        if (bestN <= 0 || !bestResult) {
+            progressTracker.complete();
+            useAllMaterialsAttemptedByLevel = null;
+            deactivateSpinner(true);
+            displayUserMessage('Could not find a feasible plan with current materials and settings.');
+            return;
+        }
+
+        progressTracker.complete();
+
+        const requestedForBest = buildRequestedForN(bestN, achievableLevelsForChain);
+        /* Jos jokin taso ei toteudu (tuotettu < pyydetty), sen jälkeisiä tasoja ei näytetä eikä lasketa. */
+        const achievableLevels = [];
+        for (const l of selectedLevels) {
+            const produced = sumPlanLevel(bestResult.plan, l);
+            if (produced >= (requestedForBest[l] || 0)) {
+                achievableLevels.push(l);
+            } else {
+                break;
+            }
+        }
+        const filteredPlan = {};
+        achievableLevels.forEach(l => {
+            filteredPlan[l] = Array.isArray(bestResult.plan[l]) ? bestResult.plan[l] : [];
+        });
+        LEVELS.forEach(l => {
+            requestedTemplates[l] = 0;
+        });
+        achievableLevels.forEach(l => {
+            const arr = (bestResult.plan[l] || []);
+            requestedTemplates[l] = arr.reduce((s, e) => s + (e.quantity || 0), 0);
+        });
+        failedLevels = selectedLevels.filter(l => !achievableLevels.includes(l));
+        useAllMaterialsAttemptedByLevel = null;
+
+        const templateCountsFull = buildTemplateCountsFromPlan(filteredPlan, qualityMultipliers);
+        const materialCounts = buildMaterialCountsFromPlan(filteredPlan, qualityMultipliers);
+        const templateCounts = Object.fromEntries(achievableLevels.map(l => [l, templateCountsFull[l] || []]));
+        preserveRequestedTemplates = true;
+        // Älä tyhjennä onnistumisprosenttikenttiä (templateAmount) – säilytä tasot 20, 25, jne. seuraavaa ajoa varten
+        LEVELS.forEach(level => {
+            const container = document.getElementById(`level-${level}-items`);
+            if (container) container.querySelectorAll('input[type="number"]').forEach(input => { input.value = ''; });
+        });
+        renderResults(templateCounts, materialCounts, bestResult.fluxUsed || null);
+        useAllMaterialsAttemptedByLevel = null;
+        deactivateSpinner();
+    } catch (err) {
+        console.error('Use all materials calculation failed:', err);
+        useAllMaterialsAttemptedByLevel = null;
+        const isStackOrTooLarge = err instanceof RangeError || (err && /stack|too large/i.test(String(err.message)));
+        if (isStackOrTooLarge) {
+            setUseAllCalculationWarning('Calculation too large. Please reduce material amounts and try again.', true);
+        }
+        displayUserMessage('Something went wrong. Please try again.');
+        deactivateSpinner(true);
+    }
+}
+
 async function calculateWithPreferences() {
     isViewingSavedCalculation = false;
     latestCalculationPayload = null;
+
+    const useAllBtn = document.getElementById('templateModeUseAll');
+    const isUseAllMode = useAllBtn?.checked === true;
+    if (isUseAllMode) {
+        await runUseAllMaterialsCalculation();
+        return;
+    }
+
     const templateAmountInputs = LEVELS.map(l => document.querySelector(`#templateAmount${l}`));
     let isValid = true;
         let hasValue = false;
@@ -2248,12 +2991,17 @@ async function calculateWithPreferences() {
                 return; // Estä laskennan suoritus
         }
 
-        document.querySelector('.spinner-wrap').classList.add('active');
+        const spinnerWrapForCalc = document.querySelector('.spinner-wrap');
+        if (spinnerWrapForCalc) spinnerWrapForCalc.classList.add('active');
         await waitForNextFrame();
 
         try {
                 let availableMaterials = gatherMaterialsFromInputs();
                 availableMaterials = sanitizeGearMaterials(availableMaterials);
+                /* By count: Basic Flux aina mukana, jotta fluxUsed tulee plannerilta ja näytetään tuloksissa */
+                if (!(BASIC_FLUX_KEY in availableMaterials)) {
+                    availableMaterials[BASIC_FLUX_KEY] = 0;
+                }
                 if (Object.keys(initialMaterials).length === 0) {
                                 initialMaterials = { ...availableMaterials };
                 } else {
@@ -2310,7 +3058,9 @@ async function calculateWithPreferences() {
                 }
 
                 const progressTracker = createProgressTracker(totalTemplates);
-                const resultPlan = await calculateProductionPlan(availableMaterials, templatesByLevel, progressTracker.tick);
+                /* By count: aina fluxKey mukana, jotta fluxUsed palautuu ja Basic Flux + vihreä + näkyvät */
+                const planOptions = { fluxKey: BASIC_FLUX_KEY };
+                const resultPlan = await calculateProductionPlan(availableMaterials, templatesByLevel, progressTracker.tick, planOptions);
                 progressTracker.complete();
                 failedLevels = resultPlan.failedLevels;
                 pendingFailedLevels = Array.isArray(resultPlan.failedLevels)
@@ -2322,17 +3072,20 @@ async function calculateWithPreferences() {
                         input.value = ''; // Nollaa kaikki input-kentät
                 });
                 listSelectedProducts(resultPlan.plan);
-                const calculateBtn = document.querySelector('.calculate-button');
-                if (calculateBtn) {
-                        calculateBtn.click(); // Simuloi napin klikkausta
-                } else {
-                        deactivateSpinner(true);
-                        pendingFailedLevels = null;
-                        preserveRequestedTemplates = false;
-                }
+
+                /* Tulokset suoraan planista + fluxUsed, jotta Basic Flux ja +flux näkyvät varmasti */
+                const templateCounts = buildTemplateCountsFromPlan(resultPlan.plan, qualityMultipliers);
+                const materialCounts = buildMaterialCountsFromPlan(resultPlan.plan, qualityMultipliers);
+                LEVELS.forEach(l => {
+                    requestedTemplates[l] = (templateCounts[l] || []).reduce((s, t) => s + (t.amount || 0), 0);
+                });
+                renderResults(templateCounts, materialCounts, resultPlan.fluxUsed || null);
+                showResults();
+                deactivateSpinner();
         } catch (error) {
                 console.error('Failed to calculate templates with preferences:', error);
                 displayUserMessage('Something went wrong while calculating templates. Please try again.');
+                pendingFluxUsedForResults = null;
                 deactivateSpinner(true);
         }
 }
@@ -2343,16 +3096,36 @@ function gatherMaterialsFromInputs() {
     const scaleSelect = document.getElementById('scaleSelect');
     const scale = scaleSelect ? parseFloat(scaleSelect.value) || 1 : 1;
     let materialsInput = {};
+
+    /* Kerätään kaikki .my-material -kentät (perus- ja kausimateriaalit). */
     document.querySelectorAll('.my-material input[type="text"]').forEach(input => {
-        const id = input.getAttribute('id').replace('my-', '');
-        const materialName = materialKeyMap[normalizeKey(id)];
-        const raw = input.value.replace(/,/g, '');
+        const id = (input.getAttribute('id') || '').replace(/^my-/, '');
+        const materialName = materialKeyMap[normalizeKey(id)] || (id ? materialKeyMap[id] : null);
+        const raw = (input.value || '').replace(/,/g, '').trim();
         const materialAmount = parseFloat(raw);
         if (!materialName) {
             return;
         }
         if (!isNaN(materialAmount)) {
             materialsInput[materialName] = materialAmount * scale;
+        }
+    });
+
+    /* Varmistetaan kaikki perusmateriaalit (season 0): luetaan jokaisen kenttä id:llä, jotta mikään ei jää pois. */
+    const basicMats = materials[0] && materials[0].mats ? materials[0].mats : {};
+    Object.keys(basicMats).forEach(matKey => {
+        const canonicalName = materialKeyMap[normalizeKey(matKey)] || matKey;
+        if (materialsInput[canonicalName] !== undefined) {
+            return; /* jo kerätty yllä */
+        }
+        const input = document.getElementById('my-' + matKey);
+        if (!input || input.type !== 'text') {
+            return;
+        }
+        const raw = (input.value || '').replace(/,/g, '').trim();
+        const amount = parseFloat(raw);
+        if (!isNaN(amount)) {
+            materialsInput[canonicalName] = amount * scale;
         }
     });
 
@@ -2409,6 +3182,10 @@ function shouldApplyOddsForProduct(product) {
 }
 
 async function calculateProductionPlan(availableMaterials, templatesByLevel, progressTick = async () => {}) {
+    const runOptions = (arguments.length > 3 && typeof arguments[3] === 'object' && arguments[3] !== null) ? arguments[3] : {};
+    const fluxKey = runOptions.fluxKey && availableMaterials[runOptions.fluxKey] !== undefined ? runOptions.fluxKey : null;
+    const fluxUsed = fluxKey ? {} : null;
+
     const productionPlan = { "1": [], "5": [], "10": [], "15": [], "20": [], "25": [], "30": [], "35": [], "40": [], "45": [] };
     const failed = new Set();
     const levelScoreLog = {};
@@ -2452,7 +3229,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
             });
             materialsDetail = ` (${parts.join(', ')})`;
         }
-        console.log(`Level ${level} - ${product.name}${quantityLabel} - ${formatScore(score)}${materialsDetail}`);
+        if (isDebugMode) console.log(`Level ${level} - ${product.name}${quantityLabel} - ${formatScore(score)}${materialsDetail}`);
     };
     const logLevelSummary = (level) => {
         if (loggedLevelSummary.has(level)) {
@@ -2464,8 +3241,10 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         }
         const maxScore = Math.max(...scores);
         const minScore = Math.min(...scores);
-        console.log(`Korkein valittu pistemäärä: ${formatScore(maxScore)} (Level ${level})`);
-        console.log(`Alin valittu pistemäärä: ${formatScore(minScore)} (Level ${level})`);
+        if (isDebugMode) {
+            console.log(`Korkein valittu pistemäärä: ${formatScore(maxScore)} (Level ${level})`);
+            console.log(`Alin valittu pistemäärä: ${formatScore(minScore)} (Level ${level})`);
+        }
         loggedLevelSummary.add(level);
     };
     const includeWarlords = document.getElementById('includeWarlords')?.checked ?? true;
@@ -2475,11 +3254,13 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
     const includeMediumOdds = document.getElementById('includeMediumOdds')?.checked ?? true;
     const seasonZeroPreference = getSeasonZeroPreference();
     const gearLevelSelect = document.getElementById('gearMaterialLevels');
-    const allowedGearLevels = gearLevelSelect ? Array.from(gearLevelSelect.selectedOptions).map(o => parseInt(o.value, 10)) : [];
+    const allowedGearLevelsRaw = gearLevelSelect ? Array.from(gearLevelSelect.selectedOptions).map(o => parseInt(o.value, 10)) : [];
     const hasGearMaterials = Object.keys(availableMaterials).some(
         key => (materialToSeason[key] || materialToSeason[normalizeKey(key)] || 0) !== 0
     );
-    const level20Allowed = hasGearMaterials && allowedGearLevels.includes(20);
+    /* Ilman gear-materiaaleja kaikki tasot saavat vain perus/CTW (L20+ lasketaan medium/low sallituissa). */
+    const allowedGearLevels = hasGearMaterials ? allowedGearLevelsRaw : [];
+    const level20Allowed = hasGearMaterials && allowedGearLevelsRaw.includes(20);
     const level15InitialTemplates = Math.max(0, Math.floor(templatesByLevel[15] || 0));
     const level15AllowsGear = allowedGearLevels.includes(15);
     const level15AllowsCtw = includeWarlords;
@@ -2532,6 +3313,10 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         }
         if (level === 1 && level1OnlyWarlords) {
             return baseList.filter(p => p.warlord);
+        }
+        /* From materials -poikkeus L20: jos medium sallittu mutta CTW "use when needed" ei, hyväksytään silti CTW tasolla 20 (L20:llä ei ole muita medium-tuotteita). */
+        if (level === 20 && includeMediumOdds && !includeWarlords) {
+            return baseList.slice();
         }
         if (includeWarlords) {
             return baseList.slice();
@@ -2610,7 +3395,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
             let produced = 0;
 
             while (remaining > 0) {
-                const prefs = getUserPreferences(availableMaterials);
+                const prefs = getUserPreferences(availableMaterials, fluxKey);
                 let levelProducts = getLevelProducts(level);
                 levelProducts = applyLevelFilters(level, levelProducts, multiplier);
                 if (levelProducts.length === 0) {
@@ -2626,18 +3411,21 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                     {
                         levelAllowsGear,
                         seasonZeroPreference,
-                        materialPenalties: getMaterialPenaltiesForLevel(level)
+                        materialPenalties: getMaterialPenaltiesForLevel(level),
+                        fluxKey
                     }
                 );
 
-                if (selected && canProductBeProduced(selected, availableMaterials, multiplier)) {
-                    const maxCraftable = getMaxCraftableQuantity(selected, availableMaterials, multiplier);
+                if (selected && canProductBeProduced(selected, availableMaterials, multiplier, fluxKey)) {
+                    const maxCraftable = getMaxCraftableQuantity(selected, availableMaterials, multiplier, fluxKey);
+                    const maxCraftableNoFlux = fluxKey ? getMaxCraftableQuantity(selected, availableMaterials, multiplier, null) : 0;
+                    const effectiveMax = (fluxKey && maxCraftableNoFlux > 0) ? maxCraftableNoFlux : maxCraftable;
                     const canFastTrack = shouldFastTrackLevel(level, levelProducts, selected, {
                         allowedGearLevels,
                         multiplier,
                         includeWarlords
                     });
-                    const chunkSize = determineChunkSize(level, remaining, maxCraftable, { fastTrack: canFastTrack });
+                    const chunkSize = determineChunkSize(level, remaining, effectiveMax, { fastTrack: canFastTrack, fromMaterials: runOptions.fromMaterials });
 
                     if (chunkSize <= 0) {
                         break;
@@ -2653,14 +3441,15 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                         {
                             levelAllowsGear,
                             seasonZeroPreference,
-                            materialPenalties: getMaterialPenaltiesForLevel(level)
+                            materialPenalties: getMaterialPenaltiesForLevel(level),
+                            fluxKey
                         },
                         materialBreakdown
                     );
                     const quantity = Math.max(1, Math.floor(chunkSize));
                     recordSelection(level, selected, score, quantity, materialBreakdown);
                     appendPlanEntry(level, selected, quantity, materialBreakdown);
-                    updateAvailableMaterials(availableMaterials, selected, multiplier, quantity);
+                    updateAvailableMaterials(availableMaterials, selected, multiplier, quantity, fluxUsed, fluxKey);
                     remaining -= quantity;
                     if (remaining < 0) {
                         remaining = 0;
@@ -2727,16 +3516,50 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         setOutstandingLevel15(remaining[15] || 0);
     }
 
+    let fluxLoggingActive = false;
+
     while (Object.values(remaining).some(v => v > 0)) {
-        const preferenceInfo = getUserPreferences(availableMaterials);
         let anySelected = false;
 
         for (const level of LEVELS) {
             if (remaining[level] <= 0) continue;
+            /* Päivitä preferenssit jokaisen valinnan jälkeen: ylijäämä (Goldenheart jne.) päivittyy → oikea tuote valitaan. */
+            const preferenceInfo = getUserPreferences(availableMaterials, fluxKey);
             const requireCtwOnly = level === 20 && level20OnlyWarlords;
             let levelProducts = getLevelProducts(level, { requireCtwOnly });
             const multiplier = qualityMultipliers[level] || 1;
             levelProducts = applyLevelFilters(level, levelProducts, multiplier, { requireCtwOnly });
+
+            /* Debug-logitus From materials -haarassa: materiaalimäärät + pisteet, top 5 itemiä. */
+            if (runOptions.fromMaterials) {
+                const basicEntries = Object.entries(availableMaterials)
+                    .filter(([name]) => (materialToSeason[name] ?? materialToSeason[normalizeKey(name)] ?? 0) === 0 && name !== fluxKey)
+                    .map(([name, amt]) => ({ name, amount: Number(amt) || 0 }))
+                    .sort((a, b) => b.amount - a.amount);
+                const materialPoints = basicEntries.map(({ name, amount }) => {
+                    const n = normalizeKey(name);
+                    const rank = preferenceInfo?.rankByMaterial?.[n];
+                    const surplus = preferenceInfo?.surplusMaterials?.has(n);
+                    const surplusScore = preferenceInfo?.surplusScores?.[n];
+                    return { name, amount, rank, surplus, surplusScore };
+                });
+                const levelAllowsGearHere = allowedGearLevels.includes(level);
+                const top5 = levelProducts
+                    .filter(p => canProductBeProduced(p, availableMaterials, multiplier, fluxKey))
+                    .map(p => ({
+                        name: p.name,
+                        setName: p.setName,
+                        score: getMaterialScore(p, preferenceInfo, availableMaterials, multiplier, level, {
+                            levelAllowsGear: levelAllowsGearHere,
+                            seasonZeroPreference,
+                            materialPenalties: getMaterialPenaltiesForLevel(level),
+                            fluxKey
+                        })
+                    }))
+                    .sort((a, b) => (b.score || -1e9) - (a.score || -1e9))
+                    .slice(0, 5);
+                if (isDebugMode) console.warn('[flux] level', level, 'materials (amount desc)', materialPoints, 'top 5 items', top5);
+            }
 
             const levelAllowsGear = allowedGearLevels.includes(level);
 
@@ -2757,18 +3580,22 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                 {
                     levelAllowsGear,
                     seasonZeroPreference,
-                    materialPenalties: getMaterialPenaltiesForLevel(level)
+                    materialPenalties: getMaterialPenaltiesForLevel(level),
+                    fluxKey
                 }
             );
 
-            if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials, multiplier)) {
-                const maxCraftable = getMaxCraftableQuantity(selectedProduct, availableMaterials, multiplier);
+            if (selectedProduct && canProductBeProduced(selectedProduct, availableMaterials, multiplier, fluxKey)) {
+                const maxCraftable = getMaxCraftableQuantity(selectedProduct, availableMaterials, multiplier, fluxKey);
+                /* Kun flux on käytössä: tee ensin vain niin monta kuin voidaan ILMAN fluxia, jotta perusmateriaalit kuluvat ensin. */
+                const maxCraftableNoFlux = fluxKey ? getMaxCraftableQuantity(selectedProduct, availableMaterials, multiplier, null) : 0;
+                const effectiveMax = (fluxKey && maxCraftableNoFlux > 0) ? maxCraftableNoFlux : maxCraftable;
                 const canFastTrack = shouldFastTrackLevel(level, levelProducts, selectedProduct, {
                     allowedGearLevels,
                     multiplier,
                     includeWarlords
                 });
-                const chunkSize = determineChunkSize(level, remaining[level], maxCraftable, { fastTrack: canFastTrack });
+                const chunkSize = determineChunkSize(level, remaining[level], effectiveMax, { fastTrack: canFastTrack, fromMaterials: runOptions.fromMaterials });
 
                 if (chunkSize <= 0) {
                     failed.add(level);
@@ -2786,14 +3613,18 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                     {
                         levelAllowsGear,
                         seasonZeroPreference,
-                        materialPenalties: getMaterialPenaltiesForLevel(level)
+                        materialPenalties: getMaterialPenaltiesForLevel(level),
+                        fluxKey
                     },
                     materialBreakdown
                 );
                 const quantity = Math.max(1, Math.floor(chunkSize));
                 recordSelection(level, selectedProduct, score, quantity, materialBreakdown);
                 appendPlanEntry(level, selectedProduct, quantity, materialBreakdown);
-                updateAvailableMaterials(availableMaterials, selectedProduct, multiplier, quantity);
+                updateAvailableMaterials(availableMaterials, selectedProduct, multiplier, quantity, fluxUsed, fluxKey);
+                if (fluxKey && fluxUsed && Object.values(fluxUsed).some(v => (v || 0) > 0)) {
+                    fluxLoggingActive = true;
+                }
                 remaining[level] -= quantity;
                 if (remaining[level] <= 0) {
                     remaining[level] = 0;
@@ -2824,6 +3655,9 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
         }
     });
 
+    if (fluxKey && fluxUsed) {
+        return { plan: productionPlan, failedLevels: Array.from(failed), fluxUsed };
+    }
     return { plan: productionPlan, failedLevels: Array.from(failed) };
 }
 
@@ -2840,15 +3674,24 @@ function displayUserMessage(message) {
 
 
 
-function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1, quantity = 1) {
+function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1, quantity = 1, fluxUsed = null, fluxKey = null) {
     const availableMap = getNormalizedKeyMap(availableMaterials);
+    const fluxKeyNorm = fluxKey ? normalizeKey(fluxKey) : null;
     Object.entries(selectedProduct.materials).forEach(([material, amountRequired]) => {
         const normalizedMaterial = normalizeKey(material);
         const matchedKey = availableMap[normalizedMaterial];
-
-        if (matchedKey) {
-            const totalRequired = amountRequired * multiplier * quantity;
-            availableMaterials[matchedKey] -= totalRequired;
+        if (!matchedKey) return;
+        const totalRequired = amountRequired * multiplier * quantity;
+        availableMaterials[matchedKey] -= totalRequired;
+        const isBasic = (materialToSeason[matchedKey] ?? materialToSeason[normalizedMaterial] ?? 0) === 0;
+        if (isBasic && matchedKey !== fluxKey && fluxUsed && fluxKey && availableMap[normalizeKey(fluxKey)]) {
+            const fluxMatchedKey = availableMap[normalizeKey(fluxKey)];
+            if (availableMaterials[matchedKey] < 0 && availableMaterials[fluxMatchedKey] > 0) {
+                const useFromFlux = Math.min(availableMaterials[fluxMatchedKey], -availableMaterials[matchedKey]);
+                availableMaterials[fluxMatchedKey] -= useFromFlux;
+                availableMaterials[matchedKey] += useFromFlux;
+                fluxUsed[matchedKey] = (fluxUsed[matchedKey] || 0) + useFromFlux;
+            }
         }
     });
 }
@@ -2859,8 +3702,10 @@ function updateAvailableMaterials(availableMaterials, selectedProduct, multiplie
 
 
 
-function getUserPreferences(availableMaterials) {
+function getUserPreferences(availableMaterials, fluxKey = null) {
+    const fluxNorm = fluxKey ? normalizeKey(fluxKey) : null;
     const sortedMaterials = Object.entries(availableMaterials)
+        .filter(([name]) => !fluxNorm || normalizeKey(name) !== fluxNorm)
         .map(([material, amount]) => [material, Number(amount) || 0])
         .sort((a, b) => b[1] - a[1]);
 
@@ -2894,10 +3739,37 @@ function getUserPreferences(availableMaterials) {
         });
     }
 
+    /** Kun flux on käytössä: suosi materiaaleja joita on ylijäämä (Use all materials → pyrkiä nollaan). */
+    let surplusMaterials = null;
+    let surplusScores = null;
+    if (fluxKey && availableMaterials[fluxKey] != null) {
+        const basicEntries = sortedMaterials.filter(([name]) => {
+            const n = normalizeKey(name);
+            return (materialToSeason[name] ?? materialToSeason[n] ?? 0) === 0 && name !== fluxKey;
+        });
+        if (basicEntries.length > 0) {
+            const amounts = basicEntries.map(([, a]) => a);
+            const median = amounts.slice().sort((a, b) => a - b)[Math.floor(amounts.length / 2)] ?? 0;
+            const surplusSet = new Set(
+                basicEntries.filter(([, a]) => a > median).map(([name]) => normalizeKey(name))
+            );
+            surplusMaterials = surplusSet;
+            surplusScores = {};
+            basicEntries.forEach(([name, amount]) => {
+                const n = normalizeKey(name);
+                if (amount > median) {
+                    surplusScores[n] = Math.min(SURPLUS_AMOUNT_CAP, (amount - median) / 1e6);
+                }
+            });
+        }
+    }
+
     const preferenceDetails = {
         rankByMaterial,
         leastMaterials: normalizedLeastMaterials,
         sortedMaterials,
+        surplusMaterials: surplusMaterials || undefined,
+        surplusScores: surplusScores || undefined,
     };
 
     logMaterialPreferenceDetails(
@@ -2935,18 +3807,20 @@ function logMaterialPreferenceDetails(sortedMaterials, rankByMaterial, leastMate
     };
 
     if (sortedMaterials.length === 0) {
-        console.log('Materiaali tasot päivitetty: ei materiaaleja saatavilla.');
+        if (isDebugMode) console.log('Materiaali tasot päivitetty: ei materiaaleja saatavilla.');
         return;
     }
 
-    console.log('Materiaali tasot päivitetty:');
-    sortedMaterials.forEach(([materialName, rawAmount]) => {
-        const normalized = normalizeKey(materialName);
-        const rank = rankByMaterial ? rankByMaterial[normalized] : undefined;
-        const isLeast = leastMaterials ? leastMaterials.has(normalized) : false;
-        const materialScore = getRankScore(rank, isLeast);
-        console.log(` - ${materialName}: ${formatAmount(rawAmount)} (${formatScoreWithSign(materialScore)})`);
-    });
+    if (isDebugMode) {
+        console.log('Materiaali tasot päivitetty:');
+        sortedMaterials.forEach(([materialName, rawAmount]) => {
+            const normalized = normalizeKey(materialName);
+            const rank = rankByMaterial ? rankByMaterial[normalized] : undefined;
+            const isLeast = leastMaterials ? leastMaterials.has(normalized) : false;
+            const materialScore = getRankScore(rank, isLeast);
+            console.log(` - ${materialName}: ${formatAmount(rawAmount)} (${formatScoreWithSign(materialScore)})`);
+        });
+    }
 }
 
 function getRankScore(rank, isLeastMaterial) {
@@ -2980,7 +3854,8 @@ function selectBestAvailableProduct(
     {
         levelAllowsGear = false,
         seasonZeroPreference = SeasonZeroPreference.NORMAL,
-        materialPenalties = null
+        materialPenalties = null,
+        fluxKey = null
     } = {}
 ) {
     const candidates = levelProducts
@@ -2992,13 +3867,13 @@ function selectBestAvailableProduct(
                 availableMaterials,
                 multiplier,
                 level,
-                { levelAllowsGear, seasonZeroPreference, materialPenalties }
+                { levelAllowsGear, seasonZeroPreference, materialPenalties, fluxKey }
             )
         }))
         .sort((a, b) => b.score - a.score);
 
     for (const { product } of candidates) {
-        if (canProductBeProduced(product, availableMaterials, multiplier)) {
+        if (canProductBeProduced(product, availableMaterials, multiplier, fluxKey)) {
             return product;
         }
     }
@@ -3016,7 +3891,8 @@ function getMaterialScore(
     {
         levelAllowsGear = false,
         seasonZeroPreference = SeasonZeroPreference.NORMAL,
-        materialPenalties = null
+        materialPenalties = null,
+        fluxKey = null
     } = {},
     breakdownCollector = null
 ) {
@@ -3026,6 +3902,8 @@ function getMaterialScore(
 
     const availableMap = getNormalizedKeyMap(availableMaterials);
     const { rankByMaterial, leastMaterials } = preferenceInfo || {};
+    /* Kun flux on käytössä, tuotteet jotka voidaan tehdä fluxilla saavat normaalit pisteet (rank/surplus), eivät -1000. */
+    const canMakeWithFlux = fluxKey && canProductBeProduced(product, availableMaterials, multiplier, fluxKey);
     let totalPoints = 0;
     let totalRequiredUnits = 0;
 
@@ -3041,12 +3919,20 @@ function getMaterialScore(
         const availableAmount = Number(availableMaterials[matchedKey]) || 0;
         const totalRequired = Number(amountRequired) * multiplier;
         if (availableAmount < totalRequired) {
-            return INSUFFICIENT_MATERIAL_PENALTY;
+            const seasonHere = materialToSeason[normalizedMaterial] ?? materialToSeason[normalizedMatchedKey] ?? 0;
+            const isBasicNotFlux = seasonHere === 0 && matchedKey !== fluxKey;
+            if (fluxKey && canMakeWithFlux && isBasicNotFlux) {
+                /* Puute katetaan fluxilla: jatketaan rank-pisteillä, ei surplus-bonusta (ei ylijäämää). */
+            } else {
+                return INSUFFICIENT_MATERIAL_PENALTY;
+            }
         }
 
+        /* Fluxia ei rankata: käytetään kun tarpeen, ei MATERIAL_RANK_POINTS -pisteitä. */
+        const isFlux = fluxKey && normalizedMatchedKey === normalizeKey(fluxKey);
         const rank = rankByMaterial ? rankByMaterial[normalizedMatchedKey] : undefined;
         const isLeastMaterial = leastMaterials ? leastMaterials.has(normalizedMatchedKey) : false;
-        let materialScore = getRankScore(rank, isLeastMaterial);
+        let materialScore = isFlux ? 0 : getRankScore(rank, isLeastMaterial);
 
         const season = materialToSeason[normalizedMaterial] || materialToSeason[normalizedMatchedKey] || 0;
         const isGearMaterial = levelAllowsGear && season !== 0;
@@ -3063,6 +3949,15 @@ function getMaterialScore(
             }
             if (Number.isFinite(penalty)) {
                 materialScore += penalty;
+            }
+        }
+
+        /* Bonus vain materiaaleille joita on ENITEN (ylijäämä). Fluxille ei bonusta; loppuneet materiaalit (flux korvaa) eivät ole surplus-joukossa → ei palkita. */
+        if (season === 0 && preferenceInfo?.surplusMaterials?.has(normalizedMatchedKey)) {
+            materialScore += SURPLUS_MATERIAL_BONUS;
+            const surplusAmount = preferenceInfo?.surplusScores?.[normalizedMatchedKey];
+            if (Number.isFinite(surplusAmount) && surplusAmount > 0) {
+                materialScore += surplusAmount;
             }
         }
 
@@ -3094,6 +3989,12 @@ function getMaterialScore(
     if (product.setName === ctwSetName && CTW_LOW_LEVELS.has(level)) {
         score -= 5;
     }
+    if (product.odds === 'medium') {
+        score -= MEDIUM_ODDS_PENALTY;
+    }
+    if (product.odds === 'low') {
+        score -= LOW_ODDS_PENALTY;
+    }
 
     if (product.season === 0) {
         if (seasonZeroPreference === SeasonZeroPreference.HIGH) {
@@ -3103,52 +4004,101 @@ function getMaterialScore(
         }
     }
 
+    if (LEVEL_SCORE_BOOST_LEVELS.has(level) && (product.odds === 'medium' || product.odds === 'low')) {
+        score *= LEVEL_SCORE_BOOST_MULTIPLIER;
+    }
+
     return score;
 }
 
-function canProductBeProduced(product, availableMaterials, multiplier = 1) {
+function canProductBeProduced(product, availableMaterials, multiplier = 1, fluxKey = null) {
     const availableMap = getNormalizedKeyMap(availableMaterials);
-    return Object.entries(product.materials).every(([material, amountRequired]) => {
+    const fluxMatchedKey = fluxKey ? availableMap[normalizeKey(fluxKey)] : null;
+    const fluxAvailable = fluxMatchedKey ? (Number(availableMaterials[fluxMatchedKey]) || 0) : 0;
+    const nonBasicChecks = [];
+    const basicDeficits = [];
+    Object.entries(product.materials).forEach(([material, amountRequired]) => {
         const normalizedMaterial = normalizeKey(material);
         const matchedKey = availableMap[normalizedMaterial];
-
         if (!matchedKey) {
-            return false;
+            nonBasicChecks.push(false);
+            return;
         }
-
-        return availableMaterials[matchedKey] >= amountRequired * multiplier;
+        const season = materialToSeason[matchedKey] ?? materialToSeason[normalizedMaterial] ?? 0;
+        const totalRequired = amountRequired * multiplier;
+        const available = Number(availableMaterials[matchedKey]) || 0;
+        if (season === 0 && matchedKey !== fluxKey) {
+            if (totalRequired > 0) {
+                basicDeficits.push(Math.max(0, totalRequired - available));
+            }
+        } else {
+            nonBasicChecks.push(available >= totalRequired);
+        }
     });
+    if (nonBasicChecks.some(v => !v)) return false;
+    if (basicDeficits.length === 0) return true;
+    /* Ilman fluxia: jokaisen perusmateriaalin täytyy riittää. Fluxilla: puutteet yhteensä <= flux. */
+    if (fluxAvailable <= 0) {
+        return basicDeficits.every(d => d === 0);
+    }
+    const totalDeficit = basicDeficits.reduce((a, b) => a + b, 0);
+    return totalDeficit <= fluxAvailable;
 }
 
-function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1) {
+function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1, fluxKey = null) {
     if (!product || !product.materials) {
         return 0;
     }
     const availableMap = getNormalizedKeyMap(availableMaterials);
+    const fluxMatchedKey = fluxKey ? availableMap[normalizeKey(fluxKey)] : null;
+    const fluxAvailable = fluxMatchedKey ? (Number(availableMaterials[fluxMatchedKey]) || 0) : 0;
+    let sumBasicRequired = 0;
+    let sumBasicAvailable = 0;
     let maxCraftable = Infinity;
+    const basicLimits = [];
 
     for (const [material, amountRequired] of Object.entries(product.materials)) {
         const normalizedMaterial = normalizeKey(material);
         const matchedKey = availableMap[normalizedMaterial];
-
-        if (!matchedKey) {
-            return 0;
-        }
-
+        if (!matchedKey) return 0;
+        const season = materialToSeason[matchedKey] ?? materialToSeason[normalizedMaterial] ?? 0;
         const totalRequired = amountRequired * multiplier;
-        if (totalRequired <= 0) {
-            continue;
-        }
-
+        if (totalRequired <= 0) continue;
         const available = Number(availableMaterials[matchedKey]) || 0;
-        const craftableWithMaterial = Math.max(0, Math.floor(available / totalRequired));
-        maxCraftable = Math.min(maxCraftable, craftableWithMaterial);
-
-        if (maxCraftable === 0) {
-            return 0;
+        if (season === 0 && matchedKey !== fluxKey) {
+            sumBasicRequired += totalRequired;
+            sumBasicAvailable += available;
+            basicLimits.push({ available, totalRequired });
+        } else {
+            const craftableWithMaterial = Math.max(0, Math.floor(available / totalRequired));
+            maxCraftable = Math.min(maxCraftable, craftableWithMaterial);
         }
     }
 
+    if (basicLimits.length > 0) {
+        let maxFromBasic;
+        if (fluxAvailable <= 0) {
+            /* Ilman fluxia: käytetty ei voi ylittää varastoa — raja per materiaali. */
+            maxFromBasic = Math.min(...basicLimits.map(({ available, totalRequired }) =>
+                Math.max(0, Math.floor(available / totalRequired))));
+        } else {
+            /* Fluxilla: yhteinen pool, mutta varmistetaan että deficit(n) <= flux. */
+            const nPool = Math.floor((sumBasicAvailable + fluxAvailable) / sumBasicRequired);
+            const deficit = (n) => basicLimits.reduce((sum, { available, totalRequired }) =>
+                sum + Math.max(0, n * totalRequired - available), 0);
+            let lo = 0, hi = nPool;
+            while (lo <= hi) {
+                const mid = Math.floor((lo + hi) / 2);
+                if (deficit(mid) <= fluxAvailable) {
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+            maxFromBasic = Math.max(0, hi);
+        }
+        maxCraftable = Math.min(maxCraftable, maxFromBasic);
+    }
     return Number.isFinite(maxCraftable) ? maxCraftable : 0;
 }
 
@@ -3313,7 +4263,8 @@ function inputActive(){
                     div.classList.remove('active');
                 }
             });
-            e.target.closest('.my-material').classList.add('active');
+            const myMat = e.target.closest('.my-material');
+            if (myMat) myMat.classList.add('active');
         }
     });		
 

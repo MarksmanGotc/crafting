@@ -49,6 +49,10 @@ const materials = {
 			"wildfire": {
 				"img": "materials/icon_crafting_wild_fire.webp",
 				"Original-name": "Wildfire"
+			},
+			"basic-flux": {
+				"img": "materials/icon_crafting_flux.webp",
+				"Original-name": "Basic Flux"
 			}
 		}
 	},
