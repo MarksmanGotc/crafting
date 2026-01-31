@@ -224,6 +224,22 @@ h1.calc-header {
 .dual-range-high {
     z-index: 3;
 }
+/* Puhelimella: overlay kaappaa kosketukset ja aktivoi lähimmän kahvan. */
+.dual-range-touch-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+@media (pointer: coarse) {
+    .dual-range-touch-overlay {
+        pointer-events: auto;
+        touch-action: none;
+    }
+}
 .use-all-level-range-label {
     font-size: 13px;
     font-weight: 500;

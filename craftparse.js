@@ -1381,23 +1381,68 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (useAllLevelFrom && useAllLevelTo) {
         const dualRangeEl = useAllLevelFrom.closest('.dual-range');
-        function setDualRangeZIndex(e) {
-            if (!dualRangeEl) return;
+        function getFracAndThumb(clientX) {
+            if (!dualRangeEl || clientX == null) return { frac: 0.5, activeFrom: true };
+            const rect = dualRangeEl.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const frac = rect.width > 0 ? Math.max(0, Math.min(1, x / rect.width)) : 0;
             const fromIdx = parseInt(useAllLevelFrom.value, 10) || 0;
             const toIdx = parseInt(useAllLevelTo.value, 10) ?? LEVEL_RANGE_MAX_IDX;
-            const rect = dualRangeEl.getBoundingClientRect();
-            const x = (e && e.clientX != null) ? e.clientX - rect.left : rect.width / 2;
-            const frac = rect.width > 0 ? x / rect.width : 0;
-            const midFrac = (fromIdx + toIdx) / (2 * LEVEL_RANGE_MAX_IDX);
-            const fromOnTop = frac < midFrac;
-            useAllLevelFrom.style.zIndex = fromOnTop ? '3' : '2';
-            useAllLevelTo.style.zIndex = fromOnTop ? '2' : '3';
+            const fromFrac = fromIdx / LEVEL_RANGE_MAX_IDX;
+            const toFrac = toIdx / LEVEL_RANGE_MAX_IDX;
+            const distFrom = Math.abs(frac - fromFrac);
+            const distTo = Math.abs(frac - toFrac);
+            return { frac, activeFrom: distFrom <= distTo };
+        }
+        function setDualRangeZIndex(e) {
+            if (!dualRangeEl) return;
+            const clientX = (e && (e.clientX != null || e.touches?.[0])) ? (e.clientX ?? e.touches[0].clientX) : null;
+            const { frac, activeFrom } = getFracAndThumb(clientX);
+            useAllLevelFrom.style.zIndex = activeFrom ? '3' : '2';
+            useAllLevelTo.style.zIndex = activeFrom ? '2' : '3';
         }
         if (dualRangeEl) {
             dualRangeEl.addEventListener('mousemove', setDualRangeZIndex);
             dualRangeEl.addEventListener('mouseenter', setDualRangeZIndex);
             dualRangeEl.addEventListener('pointermove', setDualRangeZIndex);
             dualRangeEl.addEventListener('pointerenter', setDualRangeZIndex);
+        }
+        const touchOverlay = document.getElementById('useAllLevelRangeTouchOverlay');
+        if (touchOverlay) {
+            let activeThumbFrom = null;
+            function applyPosition(clientX, isFrom) {
+                if (clientX == null || !dualRangeEl) return;
+                const rect = dualRangeEl.getBoundingClientRect();
+                const x = clientX - rect.left;
+                const frac = rect.width > 0 ? Math.max(0, Math.min(1, x / rect.width)) : 0;
+                let idx = Math.round(frac * LEVEL_RANGE_MAX_IDX);
+                idx = Math.max(0, Math.min(LEVEL_RANGE_MAX_IDX, idx));
+                const fromVal = parseInt(useAllLevelFrom.value, 10) || 0;
+                const toVal = parseInt(useAllLevelTo.value, 10) ?? LEVEL_RANGE_MAX_IDX;
+                if (isFrom) {
+                    useAllLevelFrom.value = Math.min(idx, toVal);
+                } else {
+                    useAllLevelTo.value = Math.max(idx, fromVal);
+                }
+                updateUseAllLevelVisibility();
+            }
+            touchOverlay.addEventListener('pointerdown', (e) => {
+                if (e.pointerType !== 'touch') return;
+                const { frac, activeFrom } = getFracAndThumb(e.clientX);
+                activeThumbFrom = activeFrom;
+                applyPosition(e.clientX, activeThumbFrom);
+                e.preventDefault();
+                e.stopPropagation();
+            }, { passive: false });
+            touchOverlay.addEventListener('pointermove', (e) => {
+                if (e.pointerType !== 'touch' || activeThumbFrom === null) return;
+                applyPosition(e.clientX, activeThumbFrom);
+                e.preventDefault();
+            }, { passive: false });
+            touchOverlay.addEventListener('pointerup', (e) => {
+                if (e.pointerType === 'touch') activeThumbFrom = null;
+            });
+            touchOverlay.addEventListener('pointercancel', () => { activeThumbFrom = null; });
         }
         useAllLevelFrom.addEventListener('input', () => {
             let toIdx = parseInt(useAllLevelTo.value, 10);
