@@ -1733,6 +1733,7 @@ button.multiplier-btn {
 .checkbox-wrapper-30 .checkbox input {
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
   background-color: var(--bg);
