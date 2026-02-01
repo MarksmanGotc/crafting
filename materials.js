@@ -1,6 +1,7 @@
 const materials = {
 	0: {
 		season: 0,
+		//flux: { "name": "Basic Flux", "img": "materials/icon_crafting_flux.webp" },
 		mats: {
 			"black-iron": {
 				"img": "materials/icon_crafting_blackiron.webp",
@@ -58,6 +59,7 @@ const materials = {
 	},
 	1: {
 		season: 1,
+		//flux: { "name": "Season 1 Flux", "img": "materials/season1/season_1_flux.png" },
 		mats: {
 			"abalone": {
 				"img": "materials/season1/abalone.png",
@@ -103,6 +105,7 @@ const materials = {
 	},	
 	2: {
 		season: 2,
+		//flux: { "name": "Season 2 Flux", "img": "materials/season2/season_2_flux.webp" },
 		mats: {
 			"bucket-of-tar": {
 				"img": "materials/season2/bucket-of-tar.png",
@@ -136,6 +139,7 @@ const materials = {
 	},
 	3: {
 		season: 3,
+		//flux: { "name": "Season 3 Flux", "img": "materials/season3/season_3_flux.webp" },
 		mats: {
 			"ancient-leather": {
 				"img": "materials/season3/ancient-leather.png",
@@ -169,6 +173,7 @@ const materials = {
 	},
 	4: {
 		season: 4,
+		//flux: { "name": "Season 4 Flux", "img": "materials/season4/season_4_flux.webp" },
 		mats: {
 			"black-scalemail": {
 				"img": "materials/season4/black-scalemail.png",
@@ -202,6 +207,7 @@ const materials = {
 	},
 	5: {
 		season: 5,
+		//flux: { "name": "Season 5 Flux", "img": "materials/season5/season_5_flux.webp" },
 		mats: {
 			"crimson-taffeta": {
 				"img": "materials/season5/crimson-taffeta.png",
@@ -235,6 +241,7 @@ const materials = {
 	},
 	6: {
 		season: 6,
+		//flux: { "name": "Season 6 Flux", "img": "materials/season6/season_6_flux.webp" },
 		mats: {
 			"alligator-skins": {
 				"img": "materials/season6/alligator-skins.png",
@@ -268,6 +275,7 @@ const materials = {
 	},
 	7: {
 		season: 7,
+		//flux: { "name": "Season 7 Flux", "img": "materials/season7/season_7_flux.webp" },
 		mats: {
 			"boiled-leather": {
 				"img": "materials/season7/boiled-leather.png",
@@ -301,6 +309,7 @@ const materials = {
 	},
 	8: {
 		season: 8,
+		//flux: { "name": "Season 8 Flux", "img": "materials/season8/season_8_flux.webp" },
 		mats: {
 			"dark-steel-plate": {
 				"img": "materials/season8/dark-steel-plate.png",
@@ -334,6 +343,7 @@ const materials = {
 	},
 	9: {
 		season: 9,
+		//flux: { "name": "Season 9 Flux", "img": "materials/season9/season_9_flux.webp" },
 		mats: {
 			"bronze-discs": {
 				"img": "materials/season9/bronze-discs.png",
@@ -367,6 +377,7 @@ const materials = {
 	},
 	10: {
 		season: 10,
+		//flux: { "name": "Season 10 Flux", "img": "materials/season10/season_10_flux.webp" },
 		mats: {
 			"fishmongers-fishing-net": {
 				"img": "materials/season10/fishmongers-fishing-net.png",
@@ -400,6 +411,7 @@ const materials = {
 	},
 	11: {
 		season: 11,
+		//flux: { "name": "Season 11 Flux", "img": "materials/season11/season_11_flux.webp" },
 		mats: {
 			"ash-cloaked-clow": {
 				"img": "materials/season11/ash-cloaked-clow.png",
@@ -433,6 +445,7 @@ const materials = {
 	},
 	12: {
 		season: 12,
+		//flux: { "name": "Season 12 Flux", "img": "materials/season12/season_12_flux.webp" },
 		mats: {
 			"burning-stag-hide": {
 				"img": "materials/season12/burning-stag-hide.png",
@@ -466,13 +479,17 @@ const materials = {
 	},
 	13: {
 		season: 13,
+		//flux: { "name": "Season 13 Flux", "img": "materials/season13/season_13_flux.webp" },
 		mats: {
 			"silver-ore": {
 				"img": "materials/season13/silver-ore.png",
 				"Original-name": "Silver Ore"
-			}
+			},
+			/*"stroms-end-fabric": {
+				"img": "materials/season13/stroms-end-fabric.webp",
+				"Original-name": "Strom's End Fabric"
+			}*/
 		}
 	}
-	
 }
 

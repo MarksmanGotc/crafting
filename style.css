@@ -991,7 +991,7 @@ div#results h3 ~ #closeResults {
 }
 
 
-.results-actions button#saveInfoBtn {
+.results-actions button#resultsActionsInfoBtn {
     position: absolute;
     right: 0;
     height: 20px;
@@ -999,18 +999,7 @@ div#results h3 ~ #closeResults {
     margin: 0 6px 0 0;
 }
 
-.results-actions button#saveInfoBtn svg:hover {
-	transform: none;
-}
-
-.results-actions button#continueInfoBtn {
-    position: absolute;
-    right: 0;
-    height: 20px;
-    width: 20px;
-    margin: 0 6px 0 0;
-}
-.results-actions button#continueInfoBtn svg:hover {
+.results-actions button#resultsActionsInfoBtn svg:hover {
 	transform: none;
 }
 
@@ -1311,6 +1300,21 @@ button.multiplier-btn {
 	align-items: center;
 	width: 100%;
 	font-size: 16px;
+}
+
+#advMaterials .season-flux-block {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 6px;
+}
+#advMaterials .season-flux-block label {
+	font-size: 13px;
+	font-weight: 500;
+}
+#advMaterials .season-flux-block select {
+	min-width: 160px;
 }
 
 .adv-toggle {
