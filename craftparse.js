@@ -115,7 +115,7 @@ const LEAST_MATERIAL_PENALTY = -25;
 const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
 /** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER (suositaan näitä tasoja). Medium / Low odds itemeissä*/
 const LEVEL_SCORE_BOOST_LEVELS = new Set([15, 30, 35]);
-const LEVEL_SCORE_BOOST_MULTIPLIER = 1.5;
+const LEVEL_SCORE_BOOST_MULTIPLIER = 10.5;
 /** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
 const MEDIUM_ODDS_PENALTY = 40;
 const LOW_ODDS_PENALTY = 120;
@@ -283,7 +283,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-01-31';
+    const storageKey = 'noox-update-log-2026-02-02';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
