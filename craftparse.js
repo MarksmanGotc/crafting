@@ -113,9 +113,9 @@ const MATERIAL_NEUTRAL_RANKS = new Set();
 const INSUFFICIENT_MATERIAL_PENALTY = -1000;
 const LEAST_MATERIAL_PENALTY = -25;
 const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
-/** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER (suositaan näitä tasoja). Medium / Low odds itemeissä*/
+/** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER. Medium / Low odds itemeissä NEGATIIVINEN BONUS*/
 const LEVEL_SCORE_BOOST_LEVELS = new Set([15, 30, 35]);
-const LEVEL_SCORE_BOOST_MULTIPLIER = 10.5;
+const LEVEL_SCORE_BOOST_MULTIPLIER = 1.5;
 /** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
 const MEDIUM_ODDS_PENALTY = 40;
 const LOW_ODDS_PENALTY = 120;
@@ -132,7 +132,7 @@ const FLUX_MISSING_MATERIAL_PENALTY = 40;
 const FROM_MATERIALS_MAX_CHUNK_PER_LEVEL = 50;
 /** Tasolla 15 ilman gear/CTW: varataan weirwood L15:lle, joten muilla tasoilla (1,5,10) weirwood saa penaliteetin ettei sitä kuluteta. */
 const WEIRWOOD_PRIORITY_PENALTY = -20;
-/** Season 0 painotus: pelkkä suosinta (surplus +50 tulee sekä season 0 että muille, ei korjata erikseen). */
+/** Season 0 painotus: pelkkä suosinta. */
 const SEASON_ZERO_LOW_BONUS = -10;
 const SEASON_ZERO_NORMAL_BONUS = 10;
 const SEASON_ZERO_HIGH_BONUS = 30;
