@@ -1070,6 +1070,11 @@ div#results h3 ~ #closeResults {
     flex-direction: column;
     align-items: center;
 }
+.material-row-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .material img, .item img {
     width: 50px;
