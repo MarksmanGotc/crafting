@@ -113,9 +113,9 @@ const MATERIAL_NEUTRAL_RANKS = new Set();
 const INSUFFICIENT_MATERIAL_PENALTY = -1000;
 const LEAST_MATERIAL_PENALTY = -25;
 const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
-/** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER (suositaan näitä tasoja). Medium / Low odds itemeissä*/
+/** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER. Medium / Low odds itemeissä. NEGATIIVINEN BONUS*/
 const LEVEL_SCORE_BOOST_LEVELS = new Set([15, 30, 35]);
-const LEVEL_SCORE_BOOST_MULTIPLIER = 10.5;
+const LEVEL_SCORE_BOOST_MULTIPLIER = 1.5;
 /** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
 const MEDIUM_ODDS_PENALTY = 40;
 const LOW_ODDS_PENALTY = 120;
