@@ -119,9 +119,9 @@ const LEVEL_SCORE_BOOST_MULTIPLIER = 10.5;
 /** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
 const MEDIUM_ODDS_PENALTY = 40;
 const LOW_ODDS_PENALTY = 120;
-const GEAR_MATERIAL_SCORE = 22;
+const GEAR_MATERIAL_SCORE = 15;
 /** Kun gear-materiaali tehdään season fluxilla (puute katetaan fluxilla), tämä yliajaa GEAR_MATERIAL_SCORE → neutraali (22 + (-22) = 0). */
-const GEAR_MATERIAL_FLUX_SCORE = -22;
+const GEAR_MATERIAL_FLUX_SCORE = -15;
 /** Bonus for using a basic material we have in surplus (Use all materials → pyrkiä nollaan). Tuote joka käyttää ylijäämämateriaalia saa enemmän pisteitä → valitaan. */
 const SURPLUS_MATERIAL_BONUS = 50;
 /** Max extra score per unit for surplus amount (iso ylijäämä = paljon bonusia, jotta se palaa ensin). */
@@ -132,8 +132,10 @@ const FLUX_MISSING_MATERIAL_PENALTY = 40;
 const FROM_MATERIALS_MAX_CHUNK_PER_LEVEL = 50;
 /** Tasolla 15 ilman gear/CTW: varataan weirwood L15:lle, joten muilla tasoilla (1,5,10) weirwood saa penaliteetin ettei sitä kuluteta. */
 const WEIRWOOD_PRIORITY_PENALTY = -20;
+/** Season 0 painotus: pelkkä suosinta (surplus +50 tulee sekä season 0 että muille, ei korjata erikseen). */
 const SEASON_ZERO_LOW_BONUS = -10;
-const SEASON_ZERO_HIGH_BONUS = 15;
+const SEASON_ZERO_NORMAL_BONUS = 10;
+const SEASON_ZERO_HIGH_BONUS = 30;
 const DEFAULT_RANK_PENALTY = -30;
 const CTW_SET_NAME_FALLBACK = 'Ceremonial Targaryen Warlord';
 const ctwSetName =
@@ -2291,127 +2293,158 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
     const initialMaterialMap = getNormalizedKeyMap(initialMaterials);
 
     /* Näytetään vain materiaalit joiden määrä kerrottiin (alkumäärä > 0). Fluxit (basic + season) näytetään omissa lohkoissaan. */
-    const materialsToShow = Object.entries(initialMaterials)
-        .filter(([key, amount]) => !isFluxKey(key) && Number(amount) > 0)
-        .sort(([aName], [bName]) => {
-            const seasonA = materialToSeason[aName] || 0;
-            const seasonB = materialToSeason[bName] || 0;
-            if (seasonA !== seasonB) {
-                return seasonA - seasonB;
-            }
-            return (aName || '').localeCompare(bName || '');
-        });
+    const allMaterialsWithAmount = Object.entries(initialMaterials)
+        .filter(([key, amount]) => !isFluxKey(key) && Number(amount) > 0);
 
-    materialsToShow.forEach(([materialName, originalAmount]) => {
+    const basicMaterialsToShow = allMaterialsWithAmount
+        .filter(([name]) => (materialToSeason[name] || 0) === 0)
+        .sort(([a], [b]) => (a || '').localeCompare(b || ''));
+
+    const gearFromStock = allMaterialsWithAmount
+        .filter(([name]) => (materialToSeason[name] || 0) !== 0);
+
+    const gearFromFluxOnly = (fluxUsedByGear && typeof fluxUsedByGear === 'object')
+        ? Object.entries(fluxUsedByGear).filter(
+            ([gearKey, fluxReceived]) => fluxReceived > 0 && !gearFromStock.some(([name]) => name === gearKey)
+        )
+        : [];
+
+    const combinedGear = [
+        ...gearFromStock.map(([materialName, originalAmount]) => ({ type: 'stock', materialName, originalAmount })),
+        ...gearFromFluxOnly.map(([gearKey, fluxReceived]) => ({ type: 'fluxOnly', materialName: gearKey, fluxReceived }))
+    ].sort((a, b) => {
+        const seasonA = materialToSeason[a.materialName] || 0;
+        const seasonB = materialToSeason[b.materialName] || 0;
+        if (seasonA !== seasonB) return seasonA - seasonB;
+        return (a.materialName || '').localeCompare(b.materialName || '');
+    });
+
+    function renderOneMaterialRow(materialName, originalAmount, materialContainer, row1, row2) {
         const data = materialCounts[materialName];
         const usedAmount = data ? data.amount : 0;
-        const materialContainer = document.createElement('div');
         const img = document.createElement('img');
         img.src = (data && data.img) ? data.img : (allMaterials[materialName] && allMaterials[materialName].img ? allMaterials[materialName].img : '');
         img.alt = materialName;
-        materialContainer.appendChild(img);
-
-        const pMatName = document.createElement('p');
-        const pMatAmount = document.createElement('p');
-        const pRemaining = document.createElement('p');
-        const pAvailableMaterials = document.createElement('p');
+        row1.appendChild(img);
         const pSeason = document.createElement('p');
-        pMatName.className = 'material-name';
-        pMatAmount.className = 'amount';
-        pRemaining.className = 'remaining-to-use';
-        pAvailableMaterials.className = 'available-materials';
         pSeason.className = 'season-id';
+        const pMatName = document.createElement('p');
+        pMatName.className = 'material-name';
+        const pMatAmount = document.createElement('p');
+        pMatAmount.className = 'amount';
+        const pRemaining = document.createElement('p');
+        pRemaining.className = 'remaining-to-use';
+        const pAvailableMaterials = document.createElement('p');
+        pAvailableMaterials.className = 'available-materials';
 
-        /* Varastosta käytetty ei voi ylittää alkumäärää; loput = flux. Jäljelle jäävä = alkumäärä - käytetty. */
         const usedFromStock = Math.min(originalAmount, usedAmount);
         const fluxAdded = usedAmount - usedFromStock;
         const remainingAmount = Math.max(0, originalAmount - usedFromStock);
-        /* Kun fluxia ei käytetty: älä näytä käytettyä enempää kuin alkumäärä (suojaa virheiltä). */
         const displayUsed = fluxAdded > 0 ? usedAmount : Math.min(usedAmount, originalAmount);
 
-        let matText = allMaterials[materialName] ? allMaterials[materialName]["Original-name"] || materialName : materialName;
+        const matText = allMaterials[materialName] ? allMaterials[materialName]["Original-name"] || materialName : materialName;
         const matSeason = materialToSeason[materialName] || 0;
         if (matSeason !== 0) {
             pSeason.textContent = `Season ${matSeason}`;
+            row1.appendChild(pSeason);
         }
         pMatName.textContent = matText;
-        /* Punainen miinus = kokonaan käytetty määrä (varasto + flux), tai enintään alkumäärä jos ei fluxia. */
+        row1.appendChild(pMatName);
+        materialContainer.appendChild(row1);
+
         pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(displayUsed)}`;
         pRemaining.textContent = pMatAmount.textContent;
         remainingUse[materialName] = usedAmount;
         if (originalAmount > 0 || remainingAmount > 0) {
             pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingAmount)}`;
         }
-
-        materialContainer.dataset.material = materialName;
-        if (matSeason !== 0) {
-            materialContainer.appendChild(pSeason);
-        }
-        materialContainer.appendChild(pMatName);
-        materialContainer.appendChild(pMatAmount);
-        /* Perusmateriaaleille (season 0) vihreä + flux vain jos fluxia siirrettiin (ei näytetä +0). Gear-materiaaleille vihreä + kun season fluxia siirrettiin. */
+        row2.appendChild(pMatAmount);
         const fluxAddedGear = (fluxUsedByGear && matSeason !== 0 && (fluxUsedByGear[materialName] || 0) > 0)
             ? (fluxUsedByGear[materialName] || 0) : fluxAdded;
         if (fluxAdded > 0 && matSeason === 0) {
             const pFluxAdded = document.createElement('p');
             pFluxAdded.className = 'flux-added';
             pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxAdded)}`;
-            materialContainer.appendChild(pFluxAdded);
+            row2.appendChild(pFluxAdded);
         }
         if (fluxAddedGear > 0 && matSeason !== 0) {
             const pFluxAdded = document.createElement('p');
             pFluxAdded.className = 'flux-added';
             pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxAddedGear)}`;
-            materialContainer.appendChild(pFluxAdded);
+            row2.appendChild(pFluxAdded);
         }
-        materialContainer.appendChild(pRemaining);
+        row2.appendChild(pRemaining);
+        materialContainer.appendChild(row2);
         materialContainer.appendChild(pAvailableMaterials);
-
+        materialContainer.dataset.material = materialName;
         materialsDiv.appendChild(materialContainer);
+    }
+
+    basicMaterialsToShow.forEach(([materialName, originalAmount]) => {
+        const materialContainer = document.createElement('div');
+        const row1 = document.createElement('div');
+        row1.className = 'material-row-header';
+        const row2 = document.createElement('div');
+        row2.className = 'material-row-amounts';
+        renderOneMaterialRow(materialName, originalAmount, materialContainer, row1, row2);
     });
 
-    /* Gear-materiaalit joille siirrettiin fluxia mutta joita ei ollut listassa (alkumäärä 0): näytetään rivi vihreä +, punainen -, sininen jäännös. */
-    const shownMaterialNames = new Set(materialsToShow.map(([name]) => name));
-    if (fluxUsedByGear && typeof fluxUsedByGear === 'object') {
-        Object.entries(fluxUsedByGear).forEach(([gearKey, fluxReceived]) => {
-            if (!(fluxReceived > 0) || shownMaterialNames.has(gearKey)) return;
-            const usedAmount = (materialCounts[gearKey] && materialCounts[gearKey].amount) ? materialCounts[gearKey].amount : fluxReceived;
+    combinedGear.forEach((entry) => {
+        const materialName = entry.materialName;
+        if (entry.type === 'stock') {
             const materialContainer = document.createElement('div');
-            const img = document.createElement('img');
-            img.src = (allMaterials[gearKey] && allMaterials[gearKey].img) ? allMaterials[gearKey].img : '';
-            img.alt = gearKey;
-            materialContainer.appendChild(img);
-            const pMatName = document.createElement('p');
-            const pMatAmount = document.createElement('p');
-            const pFluxAdded = document.createElement('p');
-            const pRemaining = document.createElement('p');
-            const pAvailableMaterials = document.createElement('p');
-            const pSeason = document.createElement('p');
-            pMatName.className = 'material-name';
-            pMatAmount.className = 'amount';
-            pFluxAdded.className = 'flux-added';
-            pRemaining.className = 'remaining-to-use';
-            pAvailableMaterials.className = 'available-materials';
-            pSeason.className = 'season-id';
-            const matSeason = materialToSeason[gearKey] || 0;
-            if (matSeason !== 0) pSeason.textContent = `Season ${matSeason}`;
-            pMatName.textContent = (allMaterials[gearKey] && allMaterials[gearKey]['Original-name']) ? allMaterials[gearKey]['Original-name'] : gearKey;
-            pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(usedAmount)}`;
-            pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxReceived)}`;
-            pRemaining.textContent = pMatAmount.textContent;
-            pAvailableMaterials.textContent = '0';
-            remainingUse[gearKey] = usedAmount;
-            materialContainer.dataset.material = gearKey;
-            if (matSeason !== 0) materialContainer.appendChild(pSeason);
-            materialContainer.appendChild(pMatName);
-            materialContainer.appendChild(pMatAmount);
-            materialContainer.appendChild(pFluxAdded);
-            materialContainer.appendChild(pRemaining);
-            materialContainer.appendChild(pAvailableMaterials);
-            materialsDiv.appendChild(materialContainer);
-            shownMaterialNames.add(gearKey);
-        });
-    }
+            const row1 = document.createElement('div');
+            row1.className = 'material-row-header';
+            const row2 = document.createElement('div');
+            row2.className = 'material-row-amounts';
+            renderOneMaterialRow(materialName, entry.originalAmount, materialContainer, row1, row2);
+            return;
+        }
+        const fluxReceived = entry.fluxReceived;
+        const usedAmount = (materialCounts[materialName] && materialCounts[materialName].amount) ? materialCounts[materialName].amount : fluxReceived;
+        const materialContainer = document.createElement('div');
+        const row1 = document.createElement('div');
+        row1.className = 'material-row-header';
+        const img = document.createElement('img');
+        img.src = (allMaterials[materialName] && allMaterials[materialName].img) ? allMaterials[materialName].img : '';
+        img.alt = materialName;
+        row1.appendChild(img);
+        const pSeason = document.createElement('p');
+        pSeason.className = 'season-id';
+        const pMatName = document.createElement('p');
+        pMatName.className = 'material-name';
+        const matSeason = materialToSeason[materialName] || 0;
+        if (matSeason !== 0) {
+            pSeason.textContent = `Season ${matSeason}`;
+            row1.appendChild(pSeason);
+        }
+        pMatName.textContent = (allMaterials[materialName] && allMaterials[materialName]['Original-name']) ? allMaterials[materialName]['Original-name'] : materialName;
+        row1.appendChild(pMatName);
+        materialContainer.appendChild(row1);
+
+        const row2 = document.createElement('div');
+        row2.className = 'material-row-amounts';
+        const pMatAmount = document.createElement('p');
+        pMatAmount.className = 'amount';
+        const pFluxAdded = document.createElement('p');
+        pFluxAdded.className = 'flux-added';
+        const pRemaining = document.createElement('p');
+        pRemaining.className = 'remaining-to-use';
+        const pAvailableMaterials = document.createElement('p');
+        pAvailableMaterials.className = 'available-materials';
+        pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(usedAmount)}`;
+        pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxReceived)}`;
+        pRemaining.textContent = pMatAmount.textContent;
+        pAvailableMaterials.textContent = '0';
+        remainingUse[materialName] = usedAmount;
+        row2.appendChild(pMatAmount);
+        row2.appendChild(pFluxAdded);
+        row2.appendChild(pRemaining);
+        materialContainer.appendChild(row2);
+        materialContainer.appendChild(pAvailableMaterials);
+        materialContainer.dataset.material = materialName;
+        materialsDiv.appendChild(materialContainer);
+    });
 
     /* Basic Flux -rivi: näytetään vain jos käyttäjä merkitsi fluxia > 0. Käytetty = vain basic-flux, ei season fluxeja. */
     const originalFlux = initialMaterials[BASIC_FLUX_KEY] ?? 0;
@@ -4241,6 +4274,8 @@ function getMaterialScore(
     if (product.season === 0) {
         if (seasonZeroPreference === SeasonZeroPreference.HIGH) {
             score += SEASON_ZERO_HIGH_BONUS;
+        } else if (seasonZeroPreference === SeasonZeroPreference.NORMAL) {
+            score += SEASON_ZERO_NORMAL_BONUS;
         } else if (seasonZeroPreference === SeasonZeroPreference.LOW) {
             score += SEASON_ZERO_LOW_BONUS;
         }
