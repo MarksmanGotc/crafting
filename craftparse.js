@@ -2362,13 +2362,19 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         row2.appendChild(pMatAmount);
         const fluxAddedGear = (fluxUsedByGear && matSeason !== 0 && (fluxUsedByGear[materialName] || 0) > 0)
             ? (fluxUsedByGear[materialName] || 0) : fluxAdded;
-        if (fluxAdded > 0 && matSeason === 0) {
+        /*if (fluxAdded > 0 && matSeason === 0) {
             const pFluxAdded = document.createElement('p');
             pFluxAdded.className = 'flux-added';
             pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxAdded)}`;
             row2.appendChild(pFluxAdded);
         }
         if (fluxAddedGear > 0 && matSeason !== 0) {
+            const pFluxAdded = document.createElement('p');
+            pFluxAdded.className = 'flux-added';
+            pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxAddedGear)}`;
+            row2.appendChild(pFluxAdded);
+        }*/
+		if (fluxAddedGear > 0) {
             const pFluxAdded = document.createElement('p');
             pFluxAdded.className = 'flux-added';
             pFluxAdded.textContent = `+${new Intl.NumberFormat('en-US').format(fluxAddedGear)}`;
