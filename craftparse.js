@@ -34,6 +34,8 @@ Object.values(materials).forEach(season => {
         materialToSeason[fluxNorm] = season.season;
     }
 });
+/** Suurin season-numero materials-datasta (1, 2, … 13, 14, …). Uusi kausi tulee automaattisesti kun lisäät sen materials.js:ään. */
+const MAX_SEASON = Math.max(0, ...Object.keys(materials).filter(k => /^\d+$/.test(k)).map(Number));
 const WEIRWOOD_NORMALIZED_KEY = normalizeKey('weirwood');
 const BASIC_FLUX_KEY = 'basic-flux';
 const normalizedKeyCache = new WeakMap();
@@ -130,9 +132,9 @@ const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
 /** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
 const MEDIUM_ODDS_PENALTY = 40;
 const LOW_ODDS_PENALTY = 120;
-const GEAR_MATERIAL_SCORE = 15;
+const GEAR_MATERIAL_SCORE = 20;
 /** Kun gear-materiaali tehdään season fluxilla (puute katetaan fluxilla), tämä yliajaa GEAR_MATERIAL_SCORE → neutraali (22 + (-22) = 0). */
-const GEAR_MATERIAL_FLUX_SCORE = -15;
+const GEAR_MATERIAL_FLUX_SCORE = -20;
 /** Bonus for using a basic material we have in surplus (Use all materials → pyrkiä nollaan). Tuote joka käyttää ylijäämämateriaalia saa enemmän pisteitä → valitaan. */
 const SURPLUS_MATERIAL_BONUS = 50;
 /** Max extra score per unit for surplus amount (iso ylijäämä = paljon bonusia, jotta se palaa ensin). */
@@ -143,9 +145,9 @@ const FLUX_MISSING_MATERIAL_PENALTY = 40;
 const FROM_MATERIALS_MAX_CHUNK_PER_LEVEL = 50;
 /** Tasolla 15 ilman gear/CTW: varataan weirwood L15:lle, joten muilla tasoilla (1,5,10) weirwood saa penaliteetin ettei sitä kuluteta. */
 const WEIRWOOD_PRIORITY_PENALTY = -20;
-/** Season 0 painotus sliderille. */
+/** Season 0 painotus sliderille. Low = selkeä miinus jotta gear/seson-tuotteet voivat voittaa (normal 0, low -50). */
 const SEASON_ZERO_LOW_BONUS = -10;
-const SEASON_ZERO_NORMAL_BONUS = 10;
+const SEASON_ZERO_NORMAL_BONUS = 5;
 const SEASON_ZERO_HIGH_BONUS = 30;
 
 const DEFAULT_RANK_PENALTY = -30;
@@ -1060,7 +1062,8 @@ function initializeQualitySelects() {
 }
 
 function getSeasonZeroPreference() {
-    return currentSeasonZeroPreference;
+    const v = currentSeasonZeroPreference;
+    return Number.isInteger(v) ? v : SeasonZeroPreference.NORMAL;
 }
 
 function updateSeasonZeroSliderLabel(value) {
@@ -1097,7 +1100,7 @@ function initializeSeasonZeroSlider() {
 function applySeasonZeroPreference(products, preference) {
     if (!Array.isArray(products)) return [];
     if (preference === SeasonZeroPreference.OFF) {
-        return products.filter(product => product.season !== 0);
+        return products.filter(product => (product.season ?? 0) !== 0);
     }
     return products;
 }
@@ -2454,7 +2457,7 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
     }
 
     /* Season Flux -rivit: punainen miinus = käytetty, sininen = jäljellä (sama logiikka kuin Basic Flux). */
-    for (let s = 1; s <= 13; s++) {
+    for (let s = 1; s <= MAX_SEASON; s++) {
         const fluxKey = 'season-' + s + '-flux';
         const originalSeasonFlux = Number(initialMaterials[fluxKey] ?? 0);
         const seasonFluxUsed = getFluxUsedForMaterial(fluxUsed, fluxKey);
@@ -2968,14 +2971,7 @@ async function runUseAllMaterialsCalculation() {
 
         let legendaryLevels = selectedLevels.filter(l => l <= 10).sort((a, b) => a - b);
         let higherLevels = selectedLevels.filter(l => l > 10).sort((a, b) => a - b);
-        // Jos vain ylemmät tasot valittu (esim. vain 20): aja ketju 1→10→15→20, näytä vain valitut tasot.
-        // "Voin tehdä 420" = L20 yrityksiä (ketjun mukaan), niistä 40 % onnistuu = 168.
-        const onlyHigherSelected = legendaryLevels.length === 0 && higherLevels.length > 0;
-        if (onlyHigherSelected) {
-            legendaryLevels = [1, 5, 10];
-            const maxSelected = Math.max(...higherLevels);
-            higherLevels = LEVELS.filter(l => l > 10 && l <= maxSelected).sort((a, b) => a - b);
-        }
+        /* Ei lisätä L1,5,10 ketjuun jos käyttäjä valitsi vain ylemmät (esim. 35–40): ketju on silloin vain 35→40, jotta kaikki materiaali käytetään valituille tasoille. */
 
         // Ylempi taso tehdään MAKSIMISSAAN alempien onnistuneiden määrä. achievableSet = vain tasot joilla voidaan tuottaa → muut tasot req=0, kaikki materiaali menee saavutettaviin tasoihin.
         function buildRequestedForN(N, achievableSet = null) {
@@ -2995,21 +2991,15 @@ async function runUseAllMaterialsCalculation() {
         }
 
         /* Trial: mitkä tasot saadaan tuotettua – ei max-tuotantoa, vain “onko tasolla tuotteita”. N riittävän suuri jotta L15..L45 saavat requested > 0 (0.4^8·N ≥ 1 → N ≥ 1526). Pieni N välttää stack overflow ja pitää trial-ajan lyhyenä. */
+        const levelsOrdered = [...legendaryLevels, ...higherLevels];
+        const achievableLevelsForChain = new Set(levelsOrdered);
         const TRIAL_N = 2000;
-        const trialRequested = buildRequestedForN(TRIAL_N);
+        const trialRequested = buildRequestedForN(TRIAL_N, achievableLevelsForChain);
         const trialMaterials = JSON.parse(JSON.stringify(availableMaterials));
         const trialResult = await calculateProductionPlan(trialMaterials, trialRequested, async () => {}, planOptions);
-        const levelsOrdered = [...legendaryLevels, ...higherLevels];
-        const achievableLevelsForChain = new Set();
-        for (const l of levelsOrdered) {
-            if (sumPlanLevel(trialResult.plan, l) > 0) {
-                achievableLevelsForChain.add(l);
-            } else {
-                break;
-            }
-        }
+        const trialProducedAny = levelsOrdered.some(l => sumPlanLevel(trialResult.plan, l) > 0);
 
-        if (achievableLevelsForChain.size === 0) {
+        if (!trialProducedAny) {
             deactivateSpinner(true);
             setUseAllCalculationWarning('Trial produced no items. Ensure Basic Flux and material amounts are set, then try again.', true);
             displayUserMessage('Trial produced no items. Check materials and Basic Flux, then try again.');
@@ -3303,20 +3293,22 @@ function gatherMaterialsFromInputs() {
         materialsInput[canonicalName] = !isNaN(amount) ? (amount * scale) : 0;
     });
 
-    /* Season flux -avaimet aina mukana (0 jos tyhjä), jotta getResolvedFluxKey löytää ne ja flux toimii jokerina. */
-    for (let s = 1; s <= 13; s++) {
+    /* Season flux -avaimet aina mukana (0 jos tyhjä), jotta getResolvedFluxKey löytää ne ja pisteet eivät mene -1000. */
+    for (let s = 1; s <= MAX_SEASON; s++) {
         const fluxKey = 'season-' + s + '-flux';
-        if (materials[s] && materials[s].flux && materialKeyMap[normalizeKey(fluxKey)]) {
-            if (materialsInput[fluxKey] !== undefined) continue;
+        if (materialsInput[fluxKey] !== undefined) continue;
+        if (materials[s] && materials[s].flux) {
             const input = document.getElementById('my-' + fluxKey);
             const raw = input && input.type === 'text' ? (input.value || '').replace(/,/g, '').trim() : '';
             const amount = parseFloat(raw);
             materialsInput[fluxKey] = !isNaN(amount) ? (amount * scale) : 0;
+        } else {
+            materialsInput[fluxKey] = 0;
         }
     }
 
     /* Kun seasonilla on fluxia, sen kaikki gear-materiaalit pitää olla mukana (0 jos tyhjä), jotta flux voi toimia jokerina: puute lasketaan ja katetaan fluxilla. */
-    for (let s = 1; s <= 13; s++) {
+    for (let s = 1; s <= MAX_SEASON; s++) {
         const fluxKey = 'season-' + s + '-flux';
         const hasFlux = (Number(materialsInput[fluxKey]) || 0) > 0;
         if (!hasFlux || !materials[s] || !materials[s].mats) continue;
@@ -3537,7 +3529,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
     const applyLevelFilters = (level, levelProducts, multiplier, { requireCtwOnly = false } = {}) => {
         let filtered = levelProducts;
         if (!allowedGearLevels.includes(level)) {
-            filtered = filtered.filter(p => p.season == 0 || p.setName === ctwSetName);
+            filtered = filtered.filter(p => (p.season ?? 0) === 0 || p.setName === ctwSetName);
         }
         const isLegendary = multiplier >= 1024;
         filtered = filtered.filter(p => {
@@ -3612,19 +3604,40 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                     break;
                 }
                 const levelAllowsGear = allowedGearLevels.includes(level);
-                const selected = selectBestAvailableProduct(
-                    level,
-                    levelProducts,
-                    prefs,
-                    availableMaterials,
-                    multiplier,
-                    {
-                        levelAllowsGear,
-                        seasonZeroPreference,
-                        materialPenalties: getMaterialPenaltiesForLevel(level),
-                        fromMaterials: runOptions.fromMaterials
+                let selected = null;
+                if (Number(seasonZeroPreference) === SeasonZeroPreference.LOW && levelAllowsGear) {
+                    const gearOnly = levelProducts.filter(p => (p.season ?? 0) !== 0);
+                    if (gearOnly.length > 0) {
+                        selected = selectBestAvailableProduct(
+                            level,
+                            gearOnly,
+                            prefs,
+                            availableMaterials,
+                            multiplier,
+                            {
+                                levelAllowsGear,
+                                seasonZeroPreference,
+                                materialPenalties: getMaterialPenaltiesForLevel(level),
+                                fromMaterials: runOptions.fromMaterials
+                            }
+                        );
                     }
-                );
+                }
+                if (!selected) {
+                    selected = selectBestAvailableProduct(
+                        level,
+                        levelProducts,
+                        prefs,
+                        availableMaterials,
+                        multiplier,
+                        {
+                            levelAllowsGear,
+                            seasonZeroPreference,
+                            materialPenalties: getMaterialPenaltiesForLevel(level),
+                            fromMaterials: runOptions.fromMaterials
+                        }
+                    );
+                }
 
                 const { fluxKey: productFluxKey, fluxSeason: productFluxSeason } = selected ? getFluxForProduct(selected, availableMaterials) : { fluxKey: null, fluxSeason: 0 };
 
@@ -3738,7 +3751,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
 
         for (const level of LEVELS) {
             if (remaining[level] <= 0) continue;
-            /* Päivitä preferenssit jokaisen valinnan jälkeen: ylijäämä (Goldenheart jne.) päivittyy → oikea tuote valitaan. */
+            /* Pisteet aina jäljellä olevan määrän mukaan: rank = eniten jäljellä oleva, ylijäämä jne. */
             const preferenceInfo = getUserPreferences(availableMaterials, null);
             const requireCtwOnly = level === 20 && level20OnlyWarlords;
             let levelProducts = getLevelProducts(level, { requireCtwOnly });
@@ -3794,6 +3807,7 @@ async function calculateProductionPlan(availableMaterials, templatesByLevel, pro
                 continue;
             }
 
+            /* Valitse koko listan paras valmistettavissa oleva (pisteet + canProductBeProduced). */
             const selectedProduct = selectBestAvailableProduct(
                 level,
                 levelProducts,
@@ -4270,12 +4284,15 @@ function getMaterialScore(
         score -= LOW_ODDS_PENALTY;
     }
 
-    if (product.season === 0) {
-        if (seasonZeroPreference === SeasonZeroPreference.HIGH) {
+    /* Season 0 = perusmateriaalituotteet. undefined käsitellään season 0 -tapauksena. Vertailu numerolla (slider voi antaa string). */
+    const productSeason = product.season ?? 0;
+    const pref = Number(seasonZeroPreference);
+    if (productSeason === 0) {
+        if (pref === SeasonZeroPreference.HIGH) {
             score += SEASON_ZERO_HIGH_BONUS;
-        } else if (seasonZeroPreference === SeasonZeroPreference.NORMAL) {
+        } else if (pref === SeasonZeroPreference.NORMAL) {
             score += SEASON_ZERO_NORMAL_BONUS;
-        } else if (seasonZeroPreference === SeasonZeroPreference.LOW) {
+        } else if (pref === SeasonZeroPreference.LOW) {
             score += SEASON_ZERO_LOW_BONUS;
         }
     }
