@@ -113,9 +113,6 @@ const MATERIAL_NEUTRAL_RANKS = new Set();
 const INSUFFICIENT_MATERIAL_PENALTY = -1000;
 const LEAST_MATERIAL_PENALTY = -25;
 const CTW_LOW_LEVELS = new Set([1, 5, 10, 15]);
-/** Tasot 15, 30, 35: pisteet × LEVEL_SCORE_BOOST_MULTIPLIER. Medium / Low odds itemeissä NEGATIIVINEN BONUS*/
-const LEVEL_SCORE_BOOST_LEVELS = new Set([15, 30, 35]);
-const LEVEL_SCORE_BOOST_MULTIPLIER = 1.5;
 /** Miinuspisteet medium/low odds -tuotteille, jotta normal odds valitaan. */
 const MEDIUM_ODDS_PENALTY = 40;
 const LOW_ODDS_PENALTY = 120;
@@ -3937,6 +3934,9 @@ function displayUserMessage(message) {
 
 function updateAvailableMaterials(availableMaterials, selectedProduct, multiplier = 1, quantity = 1, fluxUsed = null, fluxUsedByGear = null, fluxKey = null, fluxSeason = 0) {
     const availableMap = getNormalizedKeyMap(availableMaterials);
+    const basicFluxMatchedKey = availableMap[normalizeKey(BASIC_FLUX_KEY)];
+    const productFluxMatchedKey = fluxKey ? availableMap[normalizeKey(fluxKey)] : null;
+
     Object.entries(selectedProduct.materials).forEach(([material, amountRequired]) => {
         const normalizedMaterial = normalizeKey(material);
         const matchedKey = availableMap[normalizedMaterial];
@@ -3946,17 +3946,27 @@ function updateAvailableMaterials(availableMaterials, selectedProduct, multiplie
         const season = materialToSeason[matchedKey] ?? materialToSeason[normalizedMaterial] ?? 0;
         const isBasic = season === 0;
         const isGearCoveredByFlux = fluxSeason !== 0 && season === fluxSeason;
-        const useFluxForThis = (isBasic && matchedKey !== fluxKey) || isGearCoveredByFlux;
-        if (useFluxForThis && fluxUsed && fluxKey && availableMap[normalizeKey(fluxKey)]) {
-            const fluxMatchedKey = availableMap[normalizeKey(fluxKey)];
-            if (availableMaterials[matchedKey] < 0 && availableMaterials[fluxMatchedKey] > 0) {
-                const useFromFlux = Math.min(availableMaterials[fluxMatchedKey], -availableMaterials[matchedKey]);
-                availableMaterials[fluxMatchedKey] -= useFromFlux;
-                availableMaterials[matchedKey] += useFromFlux;
-                fluxUsed[fluxKey] = (fluxUsed[fluxKey] || 0) + useFromFlux;
-                if (fluxUsedByGear && isGearCoveredByFlux) {
-                    fluxUsedByGear[matchedKey] = (fluxUsedByGear[matchedKey] || 0) + useFromFlux;
-                }
+
+        if (availableMaterials[matchedKey] >= 0 || !fluxUsed) return;
+
+        /* Perusmateriaalipuute: kata aina Basic Fluxilla (ei tuotteen season-fluxilla). */
+        let fluxMatchedKey = null;
+        let fluxKeyForRecord = null;
+        if (isBasic && matchedKey !== basicFluxMatchedKey && basicFluxMatchedKey && availableMaterials[basicFluxMatchedKey] > 0) {
+            fluxMatchedKey = basicFluxMatchedKey;
+            fluxKeyForRecord = BASIC_FLUX_KEY;
+        } else if (isGearCoveredByFlux && productFluxMatchedKey && availableMaterials[productFluxMatchedKey] > 0) {
+            fluxMatchedKey = productFluxMatchedKey;
+            fluxKeyForRecord = fluxKey;
+        }
+
+        if (fluxMatchedKey && fluxKeyForRecord) {
+            const useFromFlux = Math.min(availableMaterials[fluxMatchedKey], -availableMaterials[matchedKey]);
+            availableMaterials[fluxMatchedKey] -= useFromFlux;
+            availableMaterials[matchedKey] += useFromFlux;
+            fluxUsed[fluxKeyForRecord] = (fluxUsed[fluxKeyForRecord] || 0) + useFromFlux;
+            if (fluxUsedByGear && isGearCoveredByFlux) {
+                fluxUsedByGear[matchedKey] = (fluxUsedByGear[matchedKey] || 0) + useFromFlux;
             }
         }
     });
@@ -4288,10 +4298,6 @@ function getMaterialScore(
         }
     }
 
-    if (LEVEL_SCORE_BOOST_LEVELS.has(level) && (product.odds === 'medium' || product.odds === 'low')) {
-        score *= LEVEL_SCORE_BOOST_MULTIPLIER;
-    }
-
     return score;
 }
 
@@ -4299,6 +4305,8 @@ function canProductBeProduced(product, availableMaterials, multiplier = 1, fluxK
     const availableMap = getNormalizedKeyMap(availableMaterials);
     const fluxMatchedKey = fluxKey ? availableMap[normalizeKey(fluxKey)] : null;
     const fluxAvailable = fluxMatchedKey ? (Number(availableMaterials[fluxMatchedKey]) || 0) : 0;
+    const basicFluxMatchedKey = availableMap[normalizeKey(BASIC_FLUX_KEY)];
+    const basicFluxAvailable = basicFluxMatchedKey ? (Number(availableMaterials[basicFluxMatchedKey]) || 0) : 0;
     const nonBasicChecks = [];
     const basicDeficits = [];
     const gearDeficits = []; /* same-season gear puutteet (fluxSeason === material season). */
@@ -4312,7 +4320,7 @@ function canProductBeProduced(product, availableMaterials, multiplier = 1, fluxK
         const season = materialToSeason[matchedKey] ?? materialToSeason[normalizedMaterial] ?? 0;
         const totalRequired = amountRequired * multiplier;
         const available = Number(availableMaterials[matchedKey]) || 0;
-        if (season === 0 && matchedKey !== fluxKey) {
+        if (season === 0 && matchedKey !== fluxKey && matchedKey !== basicFluxMatchedKey) {
             if (totalRequired > 0) {
                 basicDeficits.push(Math.max(0, totalRequired - available));
             }
@@ -4328,12 +4336,14 @@ function canProductBeProduced(product, availableMaterials, multiplier = 1, fluxK
     const totalBasicDeficit = basicDeficits.reduce((a, b) => a + b, 0);
     const totalGearDeficit = gearDeficits.reduce((a, b) => a + b, 0);
     if (totalBasicDeficit === 0 && totalGearDeficit === 0) return true;
-    if (fluxAvailable <= 0) {
-        return totalBasicDeficit === 0 && totalGearDeficit === 0;
+    /* Peruspuute: kata Basic Fluxilla. Gear-puute: tuotteen season-fluxilla. */
+    if (fluxSeason === 0) {
+        if (fluxAvailable <= 0) return totalBasicDeficit === 0;
+        return totalBasicDeficit <= fluxAvailable;
     }
-    /* Basic flux (fluxSeason 0): vain peruspuutteet. Season flux: vain saman seasonin gear-puutteet. */
-    const coverableDeficit = fluxSeason === 0 ? totalBasicDeficit : totalGearDeficit;
-    return coverableDeficit <= fluxAvailable;
+    const basicOk = totalBasicDeficit <= basicFluxAvailable;
+    const gearOk = fluxAvailable <= 0 ? totalGearDeficit === 0 : totalGearDeficit <= fluxAvailable;
+    return basicOk && gearOk;
 }
 
 function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1, fluxKey = null, fluxSeason = 0) {
@@ -4343,6 +4353,8 @@ function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1, fl
     const availableMap = getNormalizedKeyMap(availableMaterials);
     const fluxMatchedKey = fluxKey ? availableMap[normalizeKey(fluxKey)] : null;
     const fluxAvailable = fluxMatchedKey ? (Number(availableMaterials[fluxMatchedKey]) || 0) : 0;
+    const basicFluxMatchedKey = availableMap[normalizeKey(BASIC_FLUX_KEY)];
+    const basicFluxAvailable = basicFluxMatchedKey ? (Number(availableMaterials[basicFluxMatchedKey]) || 0) : 0;
     let sumBasicRequired = 0;
     let sumBasicAvailable = 0;
     let maxCraftable = Infinity;
@@ -4359,7 +4371,7 @@ function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1, fl
         const totalRequired = amountRequired * multiplier;
         if (totalRequired <= 0) continue;
         const available = Number(availableMaterials[matchedKey]) || 0;
-        if (season === 0 && matchedKey !== fluxKey) {
+        if (season === 0 && matchedKey !== fluxKey && matchedKey !== basicFluxMatchedKey) {
             sumBasicRequired += totalRequired;
             sumBasicAvailable += available;
             basicLimits.push({ available, totalRequired });
@@ -4373,19 +4385,21 @@ function getMaxCraftableQuantity(product, availableMaterials, multiplier = 1, fl
         }
     }
 
+    /* Perusmateriaalit: season 0 -tuote käyttää product fluxia, gear-tuote Basic Fluxia. */
     if (basicLimits.length > 0) {
         let maxFromBasic;
-        if (fluxAvailable <= 0 || fluxSeason !== 0) {
+        const basicPool = fluxSeason === 0 ? fluxAvailable : basicFluxAvailable;
+        if (basicPool <= 0 || (fluxSeason !== 0 && basicFluxAvailable <= 0)) {
             maxFromBasic = Math.min(...basicLimits.map(({ available, totalRequired }) =>
                 Math.max(0, Math.floor(available / totalRequired))));
         } else {
-            const nPool = Math.floor((sumBasicAvailable + fluxAvailable) / sumBasicRequired);
+            const nPool = Math.floor((sumBasicAvailable + basicPool) / sumBasicRequired);
             const deficit = (n) => basicLimits.reduce((sum, { available, totalRequired }) =>
                 sum + Math.max(0, n * totalRequired - available), 0);
             let lo = 0, hi = nPool;
             while (lo <= hi) {
                 const mid = Math.floor((lo + hi) / 2);
-                if (deficit(mid) <= fluxAvailable) {
+                if (deficit(mid) <= basicPool) {
                     lo = mid + 1;
                 } else {
                     hi = mid - 1;
