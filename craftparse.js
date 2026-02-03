@@ -132,10 +132,11 @@ const FLUX_MISSING_MATERIAL_PENALTY = 40;
 const FROM_MATERIALS_MAX_CHUNK_PER_LEVEL = 50;
 /** Tasolla 15 ilman gear/CTW: varataan weirwood L15:lle, joten muilla tasoilla (1,5,10) weirwood saa penaliteetin ettei sitä kuluteta. */
 const WEIRWOOD_PRIORITY_PENALTY = -20;
-/** Season 0 painotus: pelkkä suosinta. */
+/** Season 0 painotus sliderille. */
 const SEASON_ZERO_LOW_BONUS = -10;
 const SEASON_ZERO_NORMAL_BONUS = 10;
 const SEASON_ZERO_HIGH_BONUS = 30;
+
 const DEFAULT_RANK_PENALTY = -30;
 const CTW_SET_NAME_FALLBACK = 'Ceremonial Targaryen Warlord';
 const ctwSetName =
