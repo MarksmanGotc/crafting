@@ -67,6 +67,20 @@ function isFluxKey(name) {
     return n === normalizeKey(BASIC_FLUX_KEY) || /^season-\d+-flux$/.test(n);
 }
 
+/** From materials -progress: kaikki perusmateriaalit + basic flux yhteensä (käytettävissä oleva). */
+function getTotalConsumable(materials) {
+    if (!materials || typeof materials !== 'object') return 0;
+    let sum = 0;
+    for (const [key, amount] of Object.entries(materials)) {
+        const n = normalizeKey(key);
+        const season = materialToSeason[key] ?? materialToSeason[n] ?? 0;
+        if (season === 0) {
+            sum += Number(amount) || 0;
+        }
+    }
+    return Math.max(0, sum);
+}
+
 const CALCULATION_STORAGE_KEY = 'noox-calculation-v1';
 const CALCULATION_STORAGE_VERSION = 1;
 const QUALITY_STORAGE_KEY_PREFIX = 'craftparse_quality_level_';
@@ -436,7 +450,6 @@ function saveCalculationToStorage(payload) {
 function loadQualityDefaultsFromStorage() {
     if (!isLocalStorageAvailable()) return;
     LEVELS.forEach(level => {
-        if (level === 1) return; /* Level 1 on aina legendary, ei ladata storagesta */
         const select = document.getElementById(`temp${level}`);
         if (!select) return;
         try {
@@ -722,11 +735,14 @@ function renderCalculationProgress() {
     const processed = Math.max(0, Math.min(calculationProgressState.processed, total));
     const actualRatio = active && total > 0 ? processed / total : 0;
     const percentRaw = Math.round(actualRatio * 100);
-    const widthPercent = actualRatio * 100;
+    const widthPercent = Math.min(100, actualRatio * 100);
     const labelPercent = calculationProgressState.isComplete
         ? percentRaw
         : Math.min(99, percentRaw);
 
+    if (bar) {
+        bar.classList.toggle('progress-bar-no-transition', total > 1000);
+    }
     bar.style.width = `${widthPercent}%`;
     bar.style.removeProperty('transform');
     track.setAttribute('aria-valuenow', active ? labelPercent : 0);
@@ -1306,7 +1322,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         if (isUseAll) {
-            /* Esitäytä prosentit oletuksilla taso × laatu; level 1 aina 100 % ja legendary, lukittu. */
+            /* Esitäytä prosentit oletuksilla taso × laatu. */
             LEVELS.forEach(level => {
                 const input = document.getElementById(`templateAmount${level}`);
                 const sel = document.getElementById(`temp${level}`);
@@ -1314,37 +1330,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 const quality = (sel.value || '').trim() || 'legendary';
                 const pct = getDefaultPercentForLevelQuality(level, quality);
                 if (pct != null) input.value = pct;
-                if (level === 1) {
-                    input.value = '100';
-                    input.readOnly = true;
-                    sel.value = 'legendary';
-                    sel.disabled = true;
-                    const wrapper = sel.closest('.quality-select');
-                    if (wrapper) {
-                        const trigger = wrapper.querySelector('.quality-select__display');
-                        const opts = wrapper.querySelector('.quality-select__options');
-                        updateQualitySelectUI(sel, trigger, opts);
-                    }
-                    const wrap = document.querySelector(`.leveltmp1`);
-                    if (wrap) wrap.classList.add('use-all-level1-locked');
-                }
                 const amountWrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
                 if (amountWrap && input.value) amountWrap.classList.add('active');
             });
             updateUseAllLevelVisibility();
         } else {
             setUseAllCalculationWarning('', false);
-            /* By count: tyhjennä templatemäärät (prosentit). Level 1 laatu pysyy lukittuna legendary. */
+            /* By count: tyhjennä templatemäärät (prosentit), vapauta kaikki laat valinnat. */
             LEVELS.forEach(level => {
                 const input = document.getElementById(`templateAmount${level}`);
                 if (input) {
                     input.value = '';
                     input.readOnly = false;
                 }
+                const sel = document.getElementById(`temp${level}`);
+                if (sel) sel.disabled = false;
+                const wrap = document.querySelector(`.leveltmp${level}`);
+                if (wrap) wrap.classList.remove('use-all-level1-locked');
                 const amountWrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
                 if (amountWrap) amountWrap.classList.remove('active');
             });
-            /* Level 1 on aina legendary, älä vapauta materiaalivalintaa */
         }
         if (isUseAll) {
             updateUseAllLevelVisibility();
@@ -1359,9 +1364,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    /* Use all materials: kun vaihdat tasolla (5–45) materiaalilaatua, prosenttikenttä päivittyy oletuksella. */
+    /* Use all materials: kun vaihdat tasolla materiaalilaatua, prosenttikenttä päivittyy oletuksella. */
     LEVELS.forEach(level => {
-        if (level === 1) return;
         const sel = document.getElementById(`temp${level}`);
         if (sel) {
             sel.addEventListener('change', () => {
@@ -1394,25 +1398,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     templateModeByCount?.addEventListener('change', () => setTemplateMode(false));
     templateModeUseAll?.addEventListener('change', () => setTemplateMode(true));
-
-    /* Level 1 on aina legendary, materiaalivalintaa ei voi avata. */
-    function lockLevel1Quality() {
-        const sel1 = document.getElementById('temp1');
-        if (!sel1) return;
-        sel1.value = 'legendary';
-        sel1.disabled = true;
-        const wrapper = sel1.closest('.quality-select');
-        if (wrapper) {
-            const trigger = wrapper.querySelector('.quality-select__display');
-            const opts = wrapper.querySelector('.quality-select__options');
-            if (trigger && opts && typeof updateQualitySelectUI === 'function') {
-                updateQualitySelectUI(sel1, trigger, opts);
-            }
-        }
-        const wrap = document.querySelector('.leveltmp1');
-        if (wrap) wrap.classList.add('use-all-level1-locked');
-    }
-    lockLevel1Quality();
 
     if (useAllLevelFrom && useAllLevelTo) {
         const dualRangeEl = useAllLevelFrom.closest('.dual-range');
@@ -1951,7 +1936,7 @@ function handleContinueWithRemaining() {
         }
     });
 
-    // From materials -tilassa: palauta oletusprosentit (ja lukitse level 1), jotta kentät eivät jää tyhjiksi
+    // From materials -tilassa: palauta oletusprosentit, jotta kentät eivät jää tyhjiksi
     const useAllChecked = document.getElementById('templateModeUseAll')?.checked === true;
     if (useAllChecked) {
         LEVELS.forEach(level => {
@@ -1961,20 +1946,6 @@ function handleContinueWithRemaining() {
             const quality = (sel.value || '').trim() || 'legendary';
             const pct = getDefaultPercentForLevelQuality(level, quality);
             if (pct != null) input.value = pct;
-            if (level === 1) {
-                input.value = '100';
-                input.readOnly = true;
-                sel.value = 'legendary';
-                sel.disabled = true;
-                const wrapper = sel.closest('.quality-select');
-                if (wrapper) {
-                    const trigger = wrapper.querySelector('.quality-select__display');
-                    const opts = wrapper.querySelector('.quality-select__options');
-                    if (typeof updateQualitySelectUI === 'function') updateQualitySelectUI(sel, trigger, opts);
-                }
-                const wrap = document.querySelector('.leveltmp1');
-                if (wrap) wrap.classList.add('use-all-level1-locked');
-            }
             const amountWrap = document.querySelector(`.leveltmp${level} .templateAmountWrap`);
             if (amountWrap && input.value) amountWrap.classList.add('active');
         });
@@ -2941,6 +2912,9 @@ async function runUseAllMaterialsCalculation() {
 
     setUseAllCalculationWarning('', false);
 
+    /* Lataus näkyviin heti (spinner jo active calculateWithPreferencesissa), anna selaimen piirtää. */
+    await waitForNextFrame();
+
     const levelRangeMaxIdx = LEVELS.length - 1;
     const fromSlider = document.getElementById('useAllLevelFrom');
     const toSlider = document.getElementById('useAllLevelTo');
@@ -2953,6 +2927,7 @@ async function runUseAllMaterialsCalculation() {
     const lastLevel = LEVELS[toIdx];
     const levelsInRange = LEVELS.filter(l => l >= firstLevel && l <= lastLevel);
     if (levelsInRange.length === 0) {
+        deactivateSpinner(true);
         displayUserMessage('Select at least one level in the level range.');
         return;
     }
@@ -2972,10 +2947,6 @@ async function runUseAllMaterialsCalculation() {
         if (successRates[l] === 0) break;
     }
     let selectedLevels = effectiveLevels;
-
-    const spinnerWrapEl = document.querySelector('.spinner-wrap');
-    if (spinnerWrapEl) spinnerWrapEl.classList.add('active');
-    await waitForNextFrame();
 
     try {
         let availableMaterials = gatherMaterialsFromInputs();
@@ -3045,8 +3016,11 @@ async function runUseAllMaterialsCalculation() {
             return;
         }
 
-        const maxIter = 25;
-        const progressTracker = createProgressTracker(maxIter);
+        const totalConsumable = getTotalConsumable(availableMaterials);
+        const PROGRESS_MARGIN = 0.01;
+        const effectiveTotal = Math.max(1, totalConsumable * (1 + PROGRESS_MARGIN));
+        resetCalculationProgress(effectiveTotal);
+        let maxProcessedSoFar = 0;
         const noopTick = async () => {};
 
         /* Rajataan yläraja välttääksemme liian suuria laskentoja (stack overflow kun N on miljoonia). */
@@ -3057,6 +3031,7 @@ async function runUseAllMaterialsCalculation() {
         let bestResult = null;
         let bestRemaining = null;
         let iter = 0;
+        const maxIter = 25;
 
         while (low <= high && iter < maxIter) {
             iter++;
@@ -3064,7 +3039,11 @@ async function runUseAllMaterialsCalculation() {
             const requested = buildRequestedForN(mid, achievableLevelsForChain);
             const materialsCopy = JSON.parse(JSON.stringify(availableMaterials));
             const result = await calculateProductionPlan(materialsCopy, requested, noopTick, planOptions);
-            await progressTracker.tick(1);
+            const remaining = getTotalConsumable(materialsCopy);
+            const consumed = Math.max(0, totalConsumable - remaining);
+            const processed = Math.min(consumed, totalConsumable);
+            maxProcessedSoFar = Math.max(maxProcessedSoFar, processed);
+            updateCalculationProgress(maxProcessedSoFar, effectiveTotal);
             let feasible = true;
             achievableLevelsForChain.forEach(l => {
                 const produced = sumPlanLevel(result.plan, l);
@@ -3088,7 +3067,7 @@ async function runUseAllMaterialsCalculation() {
             return;
         }
 
-        progressTracker.complete();
+        completeCalculationProgress();
 
         const requestedForBest = buildRequestedForN(bestN, achievableLevelsForChain);
         /* Jos jokin taso ei toteudu (tuotettu < pyydetty), sen jälkeisiä tasoja ei näytetä eikä lasketa. */
@@ -3143,6 +3122,12 @@ async function calculateWithPreferences() {
     isViewingSavedCalculation = false;
     latestCalculationPayload = null;
 
+    /* Näytä lataus ja progressbar 0 % heti, jotta käyttäjä näkee että klikkaus toimi. */
+    const spinnerWrapForCalc = document.querySelector('.spinner-wrap');
+    if (spinnerWrapForCalc) spinnerWrapForCalc.classList.add('active');
+    resetCalculationProgress(1); /* 0 % täytetty palkki näkyviin heti */
+    await waitForNextFrame();
+
     const useAllBtn = document.getElementById('templateModeUseAll');
     const isUseAllMode = useAllBtn?.checked === true;
     if (isUseAllMode) {
@@ -3180,12 +3165,9 @@ async function calculateWithPreferences() {
 		});
         }
         if (!isValid) {
+                deactivateSpinner(true);
                 return; // Estä laskennan suoritus
         }
-
-        const spinnerWrapForCalc = document.querySelector('.spinner-wrap');
-        if (spinnerWrapForCalc) spinnerWrapForCalc.classList.add('active');
-        await waitForNextFrame();
 
         try {
                 let availableMaterials = gatherMaterialsFromInputs();

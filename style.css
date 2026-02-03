@@ -1622,6 +1622,9 @@ button.multiplier-btn {
     transition: width 0.1s;
     border-radius: 10px;
 }
+.spinner-progress__bar.progress-bar-no-transition {
+    transition: none;
+}
 .spinner-progress__label {
     display: block;
     margin-top: 8px;

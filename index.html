@@ -207,7 +207,7 @@
                         <div class="section-title"><div class="checkbox-header"><span id="templateSectionTitle">Templates</span><button id="templatesInfoBtn" class="info-btn" aria-label="Template info">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
                                 </button></div></div>
-                        <div id="templatesInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p><strong>Set amount</strong>: Enter how many templates you want at each level (1, 5, 10, …). Use the dropdown on each row to choose the material quality for that level.</p><p><strong>From materials</strong>: The calculator uses your material amounts to make as many templates as possible in the level range you choose.</p><p>On each row you enter a <strong>success rate (%)</strong> for that level: what share of your attempts at that level succeed. Level 1 is always 100%. For level 15, 20, 25, etc., you can set e.g. 40% if you expect about 40% of your crafts at that level to succeed. The successful crafts at one level become the number of attempts you can make at the next level. Use the level range slider to include only the levels you care about.</p></div></div>
+                        <div id="templatesInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p><strong>Set amount</strong>: Enter how many templates you want at each level (1, 5, 10, …). Use the dropdown on each row to choose the material quality for that level.</p><p><strong>From materials</strong>: The calculator uses your material amounts to make as many templates as possible in the level range you choose.</p><p>On each row you enter a <strong>success rate (%)</strong> for that level: what share of your attempts at that level succeed. Level 1 defaults to 100% and legendary; you can change the material quality for level 1 as well. For level 15, 20, 25, etc., you can set e.g. 40% if you expect about 40% of your crafts at that level to succeed. The successful crafts at one level become the number of attempts you can make at the next level. Use the level range slider to include only the levels you care about.</p></div></div>
                         <div class="template-mode-radio-group" role="radiogroup" aria-label="Template mode: Set counts or Use all">
                             <label class="template-mode-radio-option">
                                 <span class="radio">
@@ -241,6 +241,11 @@
 					<input type="number" id="templateAmount1" placeholder="120" min="0">
 				</div>
 				<select name="temp1" id="temp1" class="temps">
+					<option value="poor">Poor</option>
+					<option value="common">Common</option>
+					<option value="fine">Fine</option>
+					<option value="exquisite">Exquisite</option>
+					<option value="epic">Epic</option>
 					<option value="legendary" selected>Legendary</option>
 				</select>
 			</div>
