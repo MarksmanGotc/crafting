@@ -1105,7 +1105,50 @@ function applySeasonZeroPreference(products, preference) {
     return products;
 }
 
+const THEME_STORAGE_KEY = 'craftparse-theme-dark';
+
+function prefersDarkMode() {
+    return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+function applyTheme(isDark, checkbox) {
+    const root = document.documentElement;
+    if (isDark) {
+        root.classList.add('theme-dark');
+        if (checkbox) checkbox.checked = true;
+    } else {
+        root.classList.remove('theme-dark');
+        if (checkbox) checkbox.checked = false;
+    }
+}
+
+function initializeTheme() {
+    const root = document.documentElement;
+    const checkbox = document.getElementById('themeCheckbox');
+    if (!checkbox) return;
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    let isDark;
+    if (saved === 'true' || saved === 'false') {
+        isDark = saved === 'true';
+    } else {
+        isDark = prefersDarkMode();
+    }
+    applyTheme(isDark, checkbox);
+    checkbox.addEventListener('change', () => {
+        const dark = checkbox.checked;
+        localStorage.setItem(THEME_STORAGE_KEY, dark ? 'true' : 'false');
+        applyTheme(dark, checkbox);
+    });
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (localStorage.getItem(THEME_STORAGE_KEY) !== null) return;
+            applyTheme(e.matches, checkbox);
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    initializeTheme();
     initializeUpdateLog();
     createLevelStructure();
     addCalculateButton();

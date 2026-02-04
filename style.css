@@ -1,4 +1,7 @@
 :root {
+    color-scheme: light;
+    background-color: var(--light-bg);
+    color: var(--text-color);
     --primary-color: #08425a;
     --secondary-color: #e5dfbc;
     --light-bg: #f3f3f9;
@@ -9,6 +12,30 @@
     --button-bg-hover: #07566c;
     --input-bg: #e5e5e5;
     --header-color: #07748A;
+}
+
+/* Dark mode (luonnos toiselta sivustolta tykättyjen värien mukaan) */
+:root.theme-dark {
+    color-scheme: dark;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    --color1: #1560BD;
+    --color-wb: #111827;
+    --color-bw: #fff;
+    --color-mw: #fff;
+    --hover-bg: #222c41;
+    --color-border: #222c41;
+    --primary-color: var(--color1);
+    --secondary-color: #2d3748;
+    --light-bg: var(--color-wb);
+    --text-color: var(--color-bw);
+    --shadow-color: #0d1117;
+    --button-bg: var(--color1);
+    --button-text-color: #fff;
+    --button-bg-hover: #1d4ed8;
+    --input-bg: #1f2937;
+    --header-color: #60a5fa;
+    --color2: #171e2f;
 }
 
 body {
@@ -49,7 +76,6 @@ h1.calc-header {
     color: var(--primary-color);
     text-align: center;
     font-size: 30px;
-    padding-top: 50px;
 }
 
 .leveltmp1 {
@@ -686,12 +712,321 @@ button.info-btn:hover {
     position: relative;
 }
 
+:root.theme-dark .wrapper {
+    box-shadow: 0px 4px 8px 0px var(--shadow-color);
+    background: var(--color2);
+}
+
+:root.theme-dark .template-mode-radio-option:hover {
+    background: var(--hover-bg);
+}
+
+:root.theme-dark input[type="text"],
+:root.theme-dark input[type="number"],
+:root.theme-dark select,
+:root.theme-dark .numeric-input {
+    background: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--color-border);
+}
+
+:root.theme-dark .info-content,
+:root.theme-dark .changelog-content {
+    background: var(--color-wb);
+    border-color: var(--color-border);
+}
+
+:root.theme-dark .info-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Dark mode: SUPPORT / donate-nappi ja lahja-popup */
+:root.theme-dark .donate-header button#openGiftFromHeader {
+    background: var(--hover-bg);
+    color: var(--header-color);
+    border: 1px solid var(--color-border);
+}
+:root.theme-dark .donate-header button#openGiftFromHeader:hover {
+    background: var(--input-bg);
+}
+:root.theme-dark .donate-header button#openGiftFromHeader svg {
+    fill: var(--header-color);
+}
+
+:root.theme-dark .gift {
+    background: var(--color-wb);
+    border: 1px solid var(--color-border);
+}
+:root.theme-dark .gift button.close {
+    background: var(--hover-bg);
+    border: 1px solid var(--color-border);
+}
+:root.theme-dark .gift button.close svg {
+    fill: var(--header-color);
+}
+:root.theme-dark .gift p,
+:root.theme-dark .gift p span {
+    color: var(--text-color);
+}
+:root.theme-dark .gift a {
+    color: var(--header-color);
+}
+
+/* Dark mode: laatu-valinnat ja dropdownit */
+:root.theme-dark .temps,
+:root.theme-dark .temps:focus,
+:root.theme-dark .temps:focus-visible {
+    background: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--color-border);
+}
+:root.theme-dark .quality-select__display {
+    background: var(--input-bg);
+    border-color: var(--color-border);
+}
+:root.theme-dark .quality-select__options {
+    background: var(--input-bg);
+    border-color: var(--color-border);
+}
+:root.theme-dark .quality-select__swatch--empty {
+    border-color: var(--color-border);
+}
+:root.theme-dark .quality-select__chevron {
+    border-top-color: var(--header-color);
+}
+
+/* Dark mode: scale-dropdown ja muut selectit */
+:root.theme-dark #scaleSelect {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--color-border);
+}
+
+/* Dark mode: osio-otsikot ja viiva */
+:root.theme-dark .section-title {
+    color: var(--header-color);
+}
+:root.theme-dark .section-title:before {
+    background: var(--color-border);
+}
+:root.theme-dark .checkbox-header {
+    background: var(--color2);
+}
+:root.theme-dark .info-btn {
+    fill: var(--text-color);
+}
+:root.theme-dark .items-header button#itemsInfoBtn svg {
+    fill: var(--header-color);
+}
+
+/* Dark mode: tulosten alue ja materiaalivaroitus */
+:root.theme-dark #results h2,
+:root.theme-dark #results h3 {
+    color: var(--header-color);
+}
+:root.theme-dark .materials-warning {
+    background: rgba(30, 58, 138, 0.2);
+    border-color: var(--color1);
+}
+:root.theme-dark .materials-list .my-material > div span {
+    background: var(--input-bg) !important;
+    color: var(--text-color);
+}
+
+/* Dark mode: footer */
+:root.theme-dark footer {
+    background: var(--color2);
+    box-shadow: 0 0 3px var(
+    --shadow-color);
+}
+:root.theme-dark footer p,
+:root.theme-dark footer a,
+:root.theme-dark footer svg {
+    color: var(--color-mw);
+    fill: var(--color-mw);
+}
+
+/* Dark mode: changelog-tekstit ja entry-taustat */
+:root.theme-dark .changelog-overlay .info-content p {
+    color: var(--text-color);
+}
+:root.theme-dark .changelog-footer {
+    color: var(--text-color);
+    opacity: 0.9;
+}
+:root.theme-dark .changelog-entry {
+    background: var(--input-bg);
+    border-color: var(--color-border);
+}
+
+/* Dark mode: spinner / loading */
+:root.theme-dark .spinner-wrap {
+    background: rgba(17, 24, 39, 0.85);
+}
+:root.theme-dark .spinner-wrap .loading {
+    background: var(--color-wb);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+}
+:root.theme-dark .spinner-wrap .loading-message {
+    color: var(--header-color);
+}
+:root.theme-dark .spinner-progress__label {
+    color: var(--header-color);
+}
+
+/* Dark mode: From materials -varoitus */
+:root.theme-dark .use-all-warning {
+    background: rgba(180, 83, 9, 0.2);
+    border-color: var(--color-border);
+    color: #fbbf24;
+}
+
+/* Dark mode: materiaalilistan placeholder ja label */
+:root.theme-dark .materials-list .my-material > div input::placeholder {
+    color: var(--color-border);
+}
+:root.theme-dark .templateAmountWrap label {
+    color: var(--text-color);
+    background: var(--input-bg);
+}
+
+/* Dark mode: season zero -slider label */
+:root.theme-dark .season-zero-slider__labels {
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+/* Dark mode: tulosten miinus/plus -tekstit (säilytä luettavuus) */
+:root.theme-dark .materials p.amount {
+    color: #f87171;
+}
+:root.theme-dark .materials p.flux-added {
+    color: #4ade80;
+}
+
+/* Dark mode: update-log -napin piste ring */
+:root.theme-dark .update-log-trigger button[data-has-update="true"]::after {
+    box-shadow: 0 0 0 2px var(--color-wb);
+}
+
+/* Dark mode: custom checkbox */
+:root.theme-dark .checkbox-wrapper-30 .checkbox {
+    --bg: var(--input-bg);
+    --brdr: var(--color-border);
+    --brdr-hovr: var(--hover-bg);
+}
+
+:root.theme-dark .section-title span{color: var(--text-color);}
+
+.theme-dark #advMaterials h4, .theme-dark .adv-toggle {
+    color: var(--text-color);
+}
+
+.theme-dark button#calculateWithPreferences{background: var(--color1);color: var(--button-text-color);}
+
+.theme-dark .level-dropdown div {
+    background: var(--light-bg);
+    border-color: var(--light-bg);
+}
+
+.theme-dark .level-dropdown div:hover {
+    background: var(--secondary-color);
+}
+
+.theme-dark .level-dropdown div.selected {
+    background: var(--secondary-color);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.theme-toggle-wrap {
+    display: none; /* Piilotettu: vaaleaan vaihto johtaa selaimen oletustummaan – nappi pois käytöstä kunnes korjattu. */
+    align-items: center;
+}
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.theme-toggle-label {
+    font-size: 14px;
+}
+
+.theme-toggle .theme-checkbox {
+    width: 3rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    padding: 0;
+    border: none;
+    background: rgba(15, 23, 42, 0.18);
+    cursor: pointer;
+    appearance: none;
+    position: relative;
+    transition: background 200ms;
+}
+
+:root.theme-dark .theme-toggle .theme-checkbox {
+    background: var(--color-border);
+}
+
+.theme-toggle .theme-checkbox:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0.25rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(0, -50%);
+    transition: transform 200ms, background 200ms;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+}
+
+.theme-toggle .theme-checkbox:checked:after {
+    transform: translate(1.4rem, -50%);
+}
+
+.theme-toggle .theme-checkbox:checked {
+    background: var(--primary-color);
+}
+
+.theme-dark .level-dropdown div:hover {
+    background: var(--light-bg);
+}
+
+.theme-dark h3, .theme-dark h4 {
+    color: var(--text-color);
+}
+
+.theme-dark .results-actions__button {
+    background-color: var(--color1);
+    color: var(--text-color);
+}
+
+.theme-dark .results-actions__clear {
+    background-color: #471717;
+}
+
+.theme-dark .materials:before {
+    color: var(--color3);
+}
+
 .update-log-trigger {
-    /* position: absolute; */
-    /* top: 24px; */
-    /* left: 16px; */
-    /* z-index: 2; */
-    float: left;
+    float: none;
 }
 
 .update-log-trigger button {
@@ -1531,6 +1866,9 @@ button.multiplier-btn {
     margin-top: 5px;
 }
 
+.theme-dark .materials p.available-materials {
+    color: var(--header-color);
+}
 .materials p {
     font-size: 15px;
 }
@@ -1633,10 +1971,8 @@ button.multiplier-btn {
     color: #08425a;
 }
 .donate-header {
-    /* width: 70%; */
-    /* display: flex; */
-    /* justify-content: center; */
-    float: right;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .donate-header button#openGiftFromHeader {
@@ -1649,6 +1985,7 @@ button.multiplier-btn {
     justify-content: flex-end;
     flex-direction: row;
     align-items: flex-end;
+    width: max-content;
 }
 .donate-header button#openGiftFromHeader:hover span {
     text-decoration: underline;
