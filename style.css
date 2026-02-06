@@ -754,12 +754,10 @@ button.info-btn:hover {
 }
 
 :root.theme-dark .gift {
-    background: var(--color-wb);
-    border: 1px solid var(--color-border);
+    background: var(--color-2);
 }
 :root.theme-dark .gift button.close {
-    background: var(--hover-bg);
-    border: 1px solid var(--color-border);
+    background: initial;
 }
 :root.theme-dark .gift button.close svg {
     fill: var(--header-color);
@@ -947,7 +945,6 @@ button.info-btn:hover {
 }
 
 .theme-toggle-wrap {
-    display: none; /* Piilotettu: vaaleaan vaihto johtaa selaimen oletustummaan – nappi pois käytöstä kunnes korjattu. */
     align-items: center;
 }
 

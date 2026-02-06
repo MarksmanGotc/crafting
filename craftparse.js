@@ -3035,12 +3035,16 @@ async function runUseAllMaterialsCalculation() {
 
         /* Trial: mitkä tasot saadaan tuotettua – ei max-tuotantoa, vain “onko tasolla tuotteita”. N riittävän suuri jotta L15..L45 saavat requested > 0 (0.4^8·N ≥ 1 → N ≥ 1526). Pieni N välttää stack overflow ja pitää trial-ajan lyhyenä. */
         const levelsOrdered = [...legendaryLevels, ...higherLevels];
-        const achievableLevelsForChain = new Set(levelsOrdered);
         const TRIAL_N = 2000;
-        const trialRequested = buildRequestedForN(TRIAL_N, achievableLevelsForChain);
+        const trialRequestedFull = buildRequestedForN(TRIAL_N, new Set(levelsOrdered));
         const trialMaterials = JSON.parse(JSON.stringify(availableMaterials));
-        const trialResult = await calculateProductionPlan(trialMaterials, trialRequested, async () => {}, planOptions);
-        const trialProducedAny = levelsOrdered.some(l => sumPlanLevel(trialResult.plan, l) > 0);
+        const trialResult = await calculateProductionPlan(trialMaterials, trialRequestedFull, async () => {}, planOptions);
+        const achievableLevelsForChain = new Set();
+        for (const l of levelsOrdered) {
+            if (sumPlanLevel(trialResult.plan, l) <= 0) break;
+            achievableLevelsForChain.add(l);
+        }
+        const trialProducedAny = achievableLevelsForChain.size > 0;
 
         if (!trialProducedAny) {
             deactivateSpinner(true);
