@@ -965,7 +965,7 @@ const season3 = {
 			  "level": 5,
 			  "img": "item/season3/conqueror/head.png",
 			  "materials": {
-				"conqueror-shagreen": 10,
+				"conquerors-shagreen": 10,
 				"copper-bar": 10,
 				"hide": 10
 			  }
@@ -975,7 +975,7 @@ const season3 = {
 			  "level": 5,
 			  "img": "item/season3/conqueror/chest.png",
 			  "materials": {
-				"conqueror-shagreen": 10,
+				"conquerors-shagreen": 10,
 				"goldenheart-wood": 10,
 				"dragonglass": 10
 			  }
@@ -985,7 +985,7 @@ const season3 = {
 			  "level": 5,
 			  "img": "item/season3/conqueror/pants.png",
 			  "materials": {
-				"conqueror-shagreen": 10,
+				"conquerors-shagreen": 10,
 				"kingswood-oak": 10,
 				"silk": 10
 			  }
@@ -995,7 +995,7 @@ const season3 = {
 			  "level": 5,
 			  "img": "item/season3/conqueror/boots.png",
 			  "materials": {
-				"conqueror-shagreen": 10,
+				"conquerors-shagreen": 10,
 				"wildfire": 10,
 				"weirwood": 10
 			  }
@@ -1005,7 +1005,7 @@ const season3 = {
 			  "level": 5,
 			  "img": "item/season3/conqueror/ring.png",
 			  "materials": {
-				"conqueror-shagreen": 10,
+				"conquerors-shagreen": 10,
 				"wildfire": 10,
 				"leather-straps": 10
 			  }
@@ -1015,7 +1015,7 @@ const season3 = {
 			  "level": 5,
 			  "img": "item/season3/conqueror/weapon.png",
 			  "materials": {
-				"conqueror-shagreen": 10,
+				"conquerors-shagreen": 10,
 				"ironwood": 10,
 				"weirwood": 10
 			  }
@@ -1025,7 +1025,7 @@ const season3 = {
 			  "level": 10,
 			  "img": "item/season3/conqueror/head.png",
 			  "materials": {
-				"conqueror-shagreen": 20,
+				"conquerors-shagreen": 20,
 				"copper-bar": 20,
 				"hide": 20
 			  }
@@ -1035,7 +1035,7 @@ const season3 = {
 			  "level": 10,
 			  "img": "item/season3/conqueror/chest.png",
 			  "materials": {
-				"conqueror-shagreen": 20,
+				"conquerors-shagreen": 20,
 				"goldenheart-wood": 20,
 				"dragonglass": 20
 			  }
@@ -1045,7 +1045,7 @@ const season3 = {
 			  "level": 10,
 			  "img": "item/season3/conqueror/pants.png",
 			  "materials": {
-				"conqueror-shagreen": 20,
+				"conquerors-shagreen": 20,
 				"kingswood-oak": 20,
 				"silk": 20
 			  }
@@ -1055,7 +1055,7 @@ const season3 = {
 			  "level": 10,
 			  "img": "item/season3/conqueror/boots.png",
 			  "materials": {
-				"conqueror-shagreen": 20,
+				"conquerors-shagreen": 20,
 				"wildfire": 20,
 				"weirwood": 20
 			  }
@@ -1065,7 +1065,7 @@ const season3 = {
 			  "level": 10,
 			  "img": "item/season3/conqueror/ring.png",
 			  "materials": {
-				"conqueror-shagreen": 20,
+				"conquerors-shagreen": 20,
 				"wildfire": 20,
 				"leather-straps": 20
 			  }
@@ -1075,7 +1075,7 @@ const season3 = {
 			  "level": 10,
 			  "img": "item/season3/conqueror/weapon.png",
 			  "materials": {
-				"conqueror-shagreen": 20,
+				"conquerors-shagreen": 20,
 				"ironwood": 20,
 				"weirwood": 20
 			  }
@@ -1085,7 +1085,7 @@ const season3 = {
 			  "level": 15,
 			  "img": "item/season3/conqueror/head.png",
 			  "materials": {
-				"conqueror-shagreen": 120,
+				"conquerors-shagreen": 120,
 				"copper-bar": 120,
 				"hide": 120
 			  }
@@ -1095,7 +1095,7 @@ const season3 = {
 			  "level": 15,
 			  "img": "item/season3/conqueror/chest.png",
 			  "materials": {
-				"conqueror-shagreen": 120,
+				"conquerors-shagreen": 120,
 				"goldenheart-wood": 120,
 				"dragonglass": 120
 			  }
@@ -1105,7 +1105,7 @@ const season3 = {
 			  "level": 15,
 			  "img": "item/season3/conqueror/pants.png",
 			  "materials": {
-				"conqueror-shagreen": 120,
+				"conquerors-shagreen": 120,
 				"kingswood-oak": 120,
 				"silk": 120
 			  }
@@ -1115,7 +1115,7 @@ const season3 = {
 			  "level": 15,
 			  "img": "item/season3/conqueror/boots.png",
 			  "materials": {
-				"conqueror-shagreen": 120,
+				"conquerors-shagreen": 120,
 				"wildfire": 120,
 				"weirwood": 120
 			  }
@@ -1125,7 +1125,7 @@ const season3 = {
 			  "level": 15,
 			  "img": "item/season3/conqueror/ring.png",
 			  "materials": {
-				"conqueror-shagreen": 120,
+				"conquerors-shagreen": 120,
 				"wildfire": 120,
 				"leather-straps": 120
 			  }
@@ -1135,7 +1135,7 @@ const season3 = {
 			  "level": 15,
 			  "img": "item/season3/conqueror/weapon.png",
 			  "materials": {
-				"conqueror-shagreen": 120,
+				"conquerors-shagreen": 120,
 				"ironwood": 120,
 				"weirwood": 120
 			  }
@@ -1145,7 +1145,7 @@ const season3 = {
 			  "level": 20,
 			  "img": "item/season3/conqueror/head.png",
 			  "materials": {
-				"conqueror-shagreen": 400,
+				"conquerors-shagreen": 400,
 				"copper-bar": 400,
 				"hide": 400,
 				"black-iron": 400
@@ -1156,7 +1156,7 @@ const season3 = {
 			  "level": 20,
 			  "img": "item/season3/conqueror/chest.png",
 			  "materials": {
-				"conqueror-shagreen": 400,
+				"conquerors-shagreen": 400,
 				"goldenheart-wood": 400,
 				"dragonglass": 400,
 				"leather-straps": 400
@@ -1167,7 +1167,7 @@ const season3 = {
 			  "level": 20,
 			  "img": "item/season3/conqueror/pants.png",
 			  "materials": {
-				"conqueror-shagreen": 400,
+				"conquerors-shagreen": 400,
 				"kingswood-oak": 400,
 				"silk": 400,
 				"milk-of-the-poppy": 400
@@ -1178,7 +1178,7 @@ const season3 = {
 			  "level": 20,
 			  "img": "item/season3/conqueror/boots.png",
 			  "materials": {
-				"conqueror-shagreen": 400,
+				"conquerors-shagreen": 400,
 				"wildfire": 400,
 				"weirwood": 400,
 				"ironwood": 400
@@ -1189,7 +1189,7 @@ const season3 = {
 			  "level": 20,
 			  "img": "item/season3/conqueror/ring.png",
 			  "materials": {
-				"conqueror-shagreen": 400,
+				"conquerors-shagreen": 400,
 				"wildfire": 400,
 				"leather-straps": 400,
 				"dragonglass": 400
@@ -1200,7 +1200,7 @@ const season3 = {
 			  "level": 20,
 			  "img": "item/season3/conqueror/weapon.png",
 			  "materials": {
-				"conqueror-shagreen": 400,
+				"conquerors-shagreen": 400,
 				"ironwood": 400,
 				"weirwood": 400,
 				"goldenheart-wood": 400
@@ -1211,7 +1211,7 @@ const season3 = {
 			  "level": 25,
 			  "img": "item/season3/conqueror/head.png",
 			  "materials": {
-				"conqueror-shagreen": 1200,
+				"conquerors-shagreen": 1200,
 				"copper-bar": 1200,
 				"hide": 1200,
 				"black-iron": 1200
@@ -1222,7 +1222,7 @@ const season3 = {
 			  "level": 25,
 			  "img": "item/season3/conqueror/chest.png",
 			  "materials": {
-				"conqueror-shagreen": 1200,
+				"conquerors-shagreen": 1200,
 				"goldenheart-wood": 1200,
 				"dragonglass": 1200,
 				"leather-straps": 1200
@@ -1233,7 +1233,7 @@ const season3 = {
 			  "level": 25,
 			  "img": "item/season3/conqueror/pants.png",
 			  "materials": {
-				"conqueror-shagreen": 1200,
+				"conquerors-shagreen": 1200,
 				"kingswood-oak": 1200,
 				"silk": 1200,
 				"milk-of-the-poppy": 1200
@@ -1244,7 +1244,7 @@ const season3 = {
 			  "level": 25,
 			  "img": "item/season3/conqueror/boots.png",
 			  "materials": {
-				"conqueror-shagreen": 1200,
+				"conquerors-shagreen": 1200,
 				"wildfire": 1200,
 				"weirwood": 1200,
 				"ironwood": 1200
@@ -1255,7 +1255,7 @@ const season3 = {
 			  "level": 25,
 			  "img": "item/season3/conqueror/ring.png",
 			  "materials": {
-				"conqueror-shagreen": 1200,
+				"conquerors-shagreen": 1200,
 				"wildfire": 1200,
 				"leather-straps": 1200,
 				"dragonglass": 1200
@@ -1266,7 +1266,7 @@ const season3 = {
 			  "level": 25,
 			  "img": "item/season3/conqueror/weapon.png",
 			  "materials": {
-				"conqueror-shagreen": 1200,
+				"conquerors-shagreen": 1200,
 				"ironwood": 1200,
 				"weirwood": 1200,
 				"goldenheart-wood": 1200
@@ -2230,3 +2230,4 @@ const season3 = {
 		}
 	]
 };
+
