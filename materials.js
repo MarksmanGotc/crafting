@@ -152,7 +152,7 @@ const materials = {
 				"img": "materials/season3/black-leather.png",
 				"Original-name": "Black Leather"
 			},
-			"conqueror-shagreen": {
+			"conquerors-shagreen": {
 				"img": "materials/season3/conqueror-shagreen.png",
 				"Original-name": "Conqueror's Shagreen"
 			},
