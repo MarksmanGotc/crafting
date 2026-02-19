@@ -356,7 +356,7 @@ const materials = {
 				"img": "materials/season9/kingsguard-leather.png",
 				"Original-name": "Kingsguard Leather"
 			},
-			"liberator-silk": {
+			"liberators-silk": {
 				"img": "materials/season9/liberator-silk.png",
 				"Original-name": "Liberator's Silk"
 			},
