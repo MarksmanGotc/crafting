@@ -972,7 +972,7 @@ const season9 = {
 			  "name": "Crystal Tiara",
 			  "level": 5,
 			  "materials": {
-				"liberator-silk": 10,
+				"liberatosr-silk": 10,
 				"ironwood": 10,
 				"leather-straps": 10
 			  },
@@ -982,7 +982,7 @@ const season9 = {
 			  "name": "Chemise",
 			  "level": 5,
 			  "materials": {
-				"liberator-silk": 10,
+				"liberatosr-silk": 10,
 				"goldenheart-wood": 10,
 				"hide": 10
 			  },
@@ -992,7 +992,7 @@ const season9 = {
 			  "name": "Golden Sash",
 			  "level": 5,
 			  "materials": {
-				"liberator-silk": 10,
+				"liberatosr-silk": 10,
 				"dragonglass": 10,
 				"milk-of-the-poppy": 10
 			  },
@@ -1002,7 +1002,7 @@ const season9 = {
 			  "name": "Wrapped Boots",
 			  "level": 5,
 			  "materials": {
-				"liberator-silk": 10,
+				"liberatosr-silk": 10,
 				"wildfire": 10,
 				"weirwood": 10
 			  },
@@ -1012,7 +1012,7 @@ const season9 = {
 			  "name": "Tourmaline",
 			  "level": 5,
 			  "materials": {
-				"liberator-silk": 10,
+				"liberatosr-silk": 10,
 				"kingswood-oak": 10,
 				"dragonglass": 10
 			  },
@@ -1022,7 +1022,7 @@ const season9 = {
 			  "name": "Dragonfire Torch",
 			  "level": 5,
 			  "materials": {
-				"liberator-silk": 10,
+				"liberatosr-silk": 10,
 				"copper-bar": 10,
 				"ironwood": 10
 			  },
@@ -1033,7 +1033,7 @@ const season9 = {
 			  "name": "Crystal Tiara",
 			  "level": 10,
 			  "materials": {
-				"liberator-silk": 20,
+				"liberatosr-silk": 20,
 				"ironwood": 20,
 				"leather-straps": 20
 			  },
@@ -1043,7 +1043,7 @@ const season9 = {
 			  "name": "Chemise",
 			  "level": 10,
 			  "materials": {
-				"liberator-silk": 20,
+				"liberatosr-silk": 20,
 				"goldenheart-wood": 20,
 				"hide": 20
 			  },
@@ -1053,7 +1053,7 @@ const season9 = {
 			  "name": "Golden Sash",
 			  "level": 10,
 			  "materials": {
-				"liberator-silk": 20,
+				"liberatosr-silk": 20,
 				"dragonglass": 20,
 				"milk-of-the-poppy": 20
 			  },
@@ -1063,7 +1063,7 @@ const season9 = {
 			  "name": "Wrapped Boots",
 			  "level": 10,
 			  "materials": {
-				"liberator-silk": 20,
+				"liberatosr-silk": 20,
 				"wildfire": 20,
 				"weirwood": 20
 			  },
@@ -1073,7 +1073,7 @@ const season9 = {
 			  "name": "Tourmaline",
 			  "level": 10,
 			  "materials": {
-				"liberator-silk": 20,
+				"liberatosr-silk": 20,
 				"kingswood-oak": 20,
 				"dragonglass": 20
 			  },
@@ -1083,7 +1083,7 @@ const season9 = {
 			  "name": "Dragonfire Torch",
 			  "level": 10,
 			  "materials": {
-				"liberator-silk": 20,
+				"liberatosr-silk": 20,
 				"copper-bar": 20,
 				"ironwood": 20
 			  },
@@ -1094,7 +1094,7 @@ const season9 = {
 			  "name": "Crystal Tiara",
 			  "level": 15,
 			  "materials": {
-				"liberator-silk": 120,
+				"liberatosr-silk": 120,
 				"ironwood": 120,
 				"leather-straps": 120
 			  },
@@ -1104,7 +1104,7 @@ const season9 = {
 			  "name": "Chemise",
 			  "level": 15,
 			  "materials": {
-				"liberator-silk": 120,
+				"liberatosr-silk": 120,
 				"goldenheart-wood": 120,
 				"hide": 120
 			  },
@@ -1114,7 +1114,7 @@ const season9 = {
 			  "name": "Golden Sash",
 			  "level": 15,
 			  "materials": {
-				"liberator-silk": 120,
+				"liberatosr-silk": 120,
 				"dragonglass": 120,
 				"milk-of-the-poppy": 120
 			  },
@@ -1124,7 +1124,7 @@ const season9 = {
 			  "name": "Wrapped Boots",
 			  "level": 15,
 			  "materials": {
-				"liberator-silk": 120,
+				"liberatosr-silk": 120,
 				"wildfire": 120,
 				"weirwood": 120
 			  },
@@ -1134,7 +1134,7 @@ const season9 = {
 			  "name": "Tourmaline",
 			  "level": 15,
 			  "materials": {
-				"liberator-silk": 120,
+				"liberatosr-silk": 120,
 				"kingswood-oak": 120,
 				"dragonglass": 120
 			  },
@@ -1144,7 +1144,7 @@ const season9 = {
 			  "name": "Dragonfire Torch",
 			  "level": 15,
 			  "materials": {
-				"liberator-silk": 120,
+				"liberatosr-silk": 120,
 				"copper-bar": 120,
 				"ironwood": 120
 			  },
@@ -1155,7 +1155,7 @@ const season9 = {
 			  "name": "Crystal Tiara",
 			  "level": 20,
 			  "materials": {
-				"liberator-silk": 400,
+				"liberatosr-silk": 400,
 				"ironwood": 400,
 				"leather-straps": 400,
 				"copper-bar": 400
@@ -1166,7 +1166,7 @@ const season9 = {
 			  "name": "Chemise",
 			  "level": 20,
 			  "materials": {
-				"liberator-silk": 400,
+				"liberatosr-silk": 400,
 				"goldenheart-wood": 400,
 				"hide": 400,
 				"black-iron": 400
@@ -1177,7 +1177,7 @@ const season9 = {
 			  "name": "Golden Sash",
 			  "level": 20,
 			  "materials": {
-				"liberator-silk": 400,
+				"liberatosr-silk": 400,
 				"dragonglass": 400,
 				"milk-of-the-poppy": 400,
 				"goldenheart-wood": 400
@@ -1188,7 +1188,7 @@ const season9 = {
 			  "name": "Wrapped Boots",
 			  "level": 20,
 			  "materials": {
-				"liberator-silk": 400,
+				"liberatosr-silk": 400,
 				"wildfire": 400,
 				"weirwood": 400,
 				"silk": 400
@@ -1199,7 +1199,7 @@ const season9 = {
 			  "name": "Tourmaline",
 			  "level": 20,
 			  "materials": {
-				"liberator-silk": 400,
+				"liberatosr-silk": 400,
 				"kingswood-oak": 400,
 				"dragonglass": 400,
 				"leather-straps": 400
@@ -1210,7 +1210,7 @@ const season9 = {
 			  "name": "Dragonfire Torch",
 			  "level": 20,
 			  "materials": {
-				"liberator-silk": 400,
+				"liberatosr-silk": 400,
 				"copper-bar": 400,
 				"ironwood": 400,
 				"black-iron": 400
@@ -1222,7 +1222,7 @@ const season9 = {
 			  "name": "Crystal Tiara",
 			  "level": 25,
 			  "materials": {
-				"liberator-silk": 1200,
+				"liberatosr-silk": 1200,
 				"ironwood": 1200,
 				"leather-straps": 1200,
 				"copper-bar": 1200
@@ -1233,7 +1233,7 @@ const season9 = {
 			  "name": "Chemise",
 			  "level": 25,
 			  "materials": {
-				"liberator-silk": 1200,
+				"liberatosr-silk": 1200,
 				"goldenheart-wood": 1200,
 				"hide": 1200,
 				"black-iron": 1200
@@ -1244,7 +1244,7 @@ const season9 = {
 			  "name": "Golden Sash",
 			  "level": 25,
 			  "materials": {
-				"liberator-silk": 1200,
+				"liberatosr-silk": 1200,
 				"dragonglass": 1200,
 				"milk-of-the-poppy": 1200,
 				"goldenheart-wood": 1200
@@ -1255,7 +1255,7 @@ const season9 = {
 			  "name": "Wrapped Boots",
 			  "level": 25,
 			  "materials": {
-				"liberator-silk": 1200,
+				"liberatosr-silk": 1200,
 				"wildfire": 1200,
 				"weirwood": 1200,
 				"silk": 1200
@@ -1266,7 +1266,7 @@ const season9 = {
 			  "name": "Tourmaline",
 			  "level": 25,
 			  "materials": {
-				"liberator-silk": 1200,
+				"liberatosr-silk": 1200,
 				"kingswood-oak": 1200,
 				"dragonglass": 1200,
 				"leather-straps": 1200
@@ -1277,7 +1277,7 @@ const season9 = {
 			  "name": "Dragonfire Torch",
 			  "level": 25,
 			  "materials": {
-				"liberator-silk": 1200,
+				"liberatosr-silk": 1200,
 				"copper-bar": 1200,
 				"ironwood": 1200,
 				"black-iron": 1200
