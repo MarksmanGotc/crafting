@@ -480,6 +480,10 @@ const materials = {
 		season: 13,
 		//flux: { "name": "Season 13 Flux", "img": "materials/season13/season_13_flux.webp" },
 		mats: {
+			"flea-bottom-linen": {
+				"img": "materials/season13/flea-bottom-linen.png",
+				"Original-name": "Flea Bottom Linen"
+			},
 			"silver-ore": {
 				"img": "materials/season13/silver-ore.png",
 				"Original-name": "Silver Ore"
@@ -487,7 +491,7 @@ const materials = {
 			"stroms-end-fabric": {
 				"img": "materials/season13/stroms-end-fabric.webp",
 				"Original-name": "Strom's End Fabric"
-			}
+			},
 		}
 	}
 }
