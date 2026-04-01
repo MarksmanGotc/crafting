@@ -484,6 +484,10 @@ const materials = {
 				"img": "materials/season13/flea-bottom-linen.png",
 				"Original-name": "Flea Bottom Linen"
 			},
+			"raging-horse-hide": {
+				"img": "materials/season13/raging-horse-hide.png",
+				"Original-name": "Raging Horse Hide"
+			},
 			"silver-ore": {
 				"img": "materials/season13/silver-ore.png",
 				"Original-name": "Silver Ore"
