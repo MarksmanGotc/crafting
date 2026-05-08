@@ -3,6 +3,328 @@ const season9 = {
         extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
         sets: [
 		{
+			"setName": "Harvest Fool",
+			"setMat": "Motley Cloth",
+			"products": [
+				{
+				"name": "Jingling Cowl",
+				"level": 5,
+				"materials": {
+					"motley-cloth": 10,
+					"goldenheart-wood": 10,
+					"black-iron": 10
+				},
+				"img": "item/season9/harvest-fool/head.png"
+				},
+				{
+				"name": "Garish Motley",
+				"level": 5,
+				"materials": {
+					"motley-cloth": 10,
+					"silk": 10,
+					"hide": 10
+				},
+				"img": "item/season9/harvest-fool/chest.png"
+				},
+				{
+				"name": "Bright Breeches",
+				"level": 5,
+				"materials": {
+					"motley-cloth": 10,
+					"kingswood-oak": 10,
+					"leather-straps": 10
+				},
+				"img": "item/season9/harvest-fool/pants.png"
+				},
+				{
+				"name": "Curved Poulaines",
+				"level": 5,
+				"materials": {
+					"motley-cloth": 10,
+					"dragonglass": 10,
+					"copper-bar": 10
+				},
+				"img": "item/season9/harvest-fool/boots.png"
+				},
+				{
+				"name": "Lattice Ring",
+				"level": 5,
+				"materials": {
+					"motley-cloth": 10,
+					"wildfire": 10,
+					"dragonglass": 10
+				},
+				"img": "item/season9/harvest-fool/ring.png"
+				},
+				{
+				"name": "Juggling Knives",
+				"level": 5,
+				"materials": {
+					"motley-cloth": 10,
+					"black-iron": 10,
+					"weirwood": 10
+				},
+				"img": "item/season9/harvest-fool/weapon.png"
+				},
+	
+				{
+				"name": "Jingling Cowl",
+				"level": 10,
+				"materials": {
+					"motley-cloth": 20,
+					"goldenheart-wood": 20,
+					"black-iron": 20
+				},
+				"img": "item/season9/harvest-fool/head.png"
+				},
+				{
+				"name": "Garish Motley",
+				"level": 10,
+				"materials": {
+					"motley-cloth": 20,
+					"silk": 20,
+					"hide": 20
+				},
+				"img": "item/season9/harvest-fool/chest.png"
+				},
+				{
+				"name": "Bright Breeches",
+				"level": 10,
+				"materials": {
+					"motley-cloth": 20,
+					"kingswood-oak": 20,
+					"leather-straps": 20
+				},
+				"img": "item/season9/harvest-fool/pants.png"
+				},
+				{
+				"name": "Curved Poulaines",
+				"level": 10,
+				"materials": {
+					"motley-cloth": 20,
+					"dragonglass": 20,
+					"copper-bar": 20
+				},
+				"img": "item/season9/harvest-fool/boots.png"
+				},
+				{
+				"name": "Lattice Ring",
+				"level": 10,
+				"materials": {
+					"motley-cloth": 20,
+					"wildfire": 20,
+					"dragonglass": 20
+				},
+				"img": "item/season9/harvest-fool/ring.png"
+				},
+				{
+				"name": "Juggling Knives",
+				"level": 10,
+				"materials": {
+					"motley-cloth": 20,
+					"black-iron": 20,
+					"weirwood": 20
+				},
+				"img": "item/season9/harvest-fool/weapon.png"
+				},
+	
+				{
+				"name": "Jingling Cowl",
+				"level": 15,
+				"materials": {
+					"motley-cloth": 120,
+					"goldenheart-wood": 120,
+					"black-iron": 120
+				},
+				"img": "item/season9/harvest-fool/head.png"
+				},
+				{
+				"name": "Garish Motley",
+				"level": 15,
+				"materials": {
+					"motley-cloth": 120,
+					"silk": 120,
+					"hide": 120
+				},
+				"img": "item/season9/harvest-fool/chest.png"
+				},
+				{
+				"name": "Bright Breeches",
+				"level": 15,
+				"materials": {
+					"motley-cloth": 120,
+					"kingswood-oak": 120,
+					"leather-straps": 120
+				},
+				"img": "item/season9/harvest-fool/pants.png"
+				},
+				{
+				"name": "Curved Poulaines",
+				"level": 15,
+				"materials": {
+					"motley-cloth": 120,
+					"dragonglass": 120,
+					"copper-bar": 120
+				},
+				"img": "item/season9/harvest-fool/boots.png"
+				},
+				{
+				"name": "Lattice Ring",
+				"level": 15,
+				"materials": {
+					"motley-cloth": 120,
+					"wildfire": 120,
+					"dragonglass": 120
+				},
+				"img": "item/season9/harvest-fool/ring.png"
+				},
+				{
+				"name": "Juggling Knives",
+				"level": 15,
+				"materials": {
+					"motley-cloth": 120,
+					"black-iron": 120,
+					"weirwood": 120
+				},
+				"img": "item/season9/harvest-fool/weapon.png"
+				},
+	
+				{
+				"name": "Jingling Cowl",
+				"level": 20,
+				"materials": {
+					"motley-cloth": 400,
+					"goldenheart-wood": 400,
+					"black-iron": 400,
+					"weirwood": 400
+				},
+				"img": "item/season9/harvest-fool/head.png"
+				},
+				{
+				"name": "Garish Motley",
+				"level": 20,
+				"materials": {
+					"motley-cloth": 400,
+					"silk": 400,
+					"hide": 400,
+					"wildfire": 400
+				},
+				"img": "item/season9/harvest-fool/chest.png"
+				},
+				{
+				"name": "Bright Breeches",
+				"level": 20,
+				"materials": {
+					"motley-cloth": 400,
+					"kingswood-oak": 400,
+					"leather-straps": 400,
+					"ironwood": 400
+				},
+				"img": "item/season9/harvest-fool/pants.png"
+				},
+				{
+				"name": "Curved Poulaines",
+				"level": 20,
+				"materials": {
+					"motley-cloth": 400,
+					"dragonglass": 400,
+					"copper-bar": 400,
+					"milk-of-the-poppy": 400
+				},
+				"img": "item/season9/harvest-fool/boots.png"
+				},
+				{
+				"name": "Lattice Ring",
+				"level": 20,
+				"materials": {
+					"motley-cloth": 400,
+					"wildfire": 400,
+					"dragonglass": 400,
+					"leather-straps": 400
+				},
+				"img": "item/season9/harvest-fool/ring.png"
+				},
+				{
+				"name": "Juggling Knives",
+				"level": 20,
+				"materials": {
+					"motley-cloth": 400,
+					"black-iron": 400,
+					"weirwood": 400,
+					"hide": 400
+				},
+				"img": "item/season9/harvest-fool/weapon.png"
+				},
+	
+				{
+				"name": "Jingling Cowl",
+				"level": 25,
+				"materials": {
+					"motley-cloth": 1200,
+					"goldenheart-wood": 1200,
+					"black-iron": 1200,
+					"weirwood": 1200
+				},
+				"img": "item/season9/harvest-fool/head.png"
+				},
+				{
+				"name": "Garish Motley",
+				"level": 25,
+				"materials": {
+					"motley-cloth": 1200,
+					"silk": 1200,
+					"hide": 1200,
+					"wildfire": 1200
+				},
+				"img": "item/season9/harvest-fool/chest.png"
+				},
+				{
+				"name": "Bright Breeches",
+				"level": 25,
+				"materials": {
+					"motley-cloth": 1200,
+					"kingswood-oak": 1200,
+					"leather-straps": 1200,
+					"ironwood": 1200
+				},
+				"img": "item/season9/harvest-fool/pants.png"
+				},
+				{
+				"name": "Curved Poulaines",
+				"level": 25,
+				"materials": {
+					"motley-cloth": 1200,
+					"dragonglass": 1200,
+					"copper-bar": 1200,
+					"milk-of-the-poppy": 1200
+				},
+				"img": "item/season9/harvest-fool/boots.png"
+				},
+				{
+				"name": "Lattice Ring",
+				"level": 25,
+				"materials": {
+					"motley-cloth": 1200,
+					"wildfire": 1200,
+					"dragonglass": 1200,
+					"leather-straps": 1200
+				},
+				"img": "item/season9/harvest-fool/ring.png"
+				},
+				{
+				"name": "Juggling Knives",
+				"level": 25,
+				"materials": {
+					"motley-cloth": 1200,
+					"black-iron": 1200,
+					"weirwood": 1200,
+					"hide": 1200
+				},
+				"img": "item/season9/harvest-fool/weapon.png"
+				}
+			]
+		},
+		{
 		  "setName": "Thenn Tribal",
 		  "setMat": "Bronze Discs",
 		  "products": [
@@ -319,6 +641,328 @@ const season9 = {
 			  "img": "item/season9/thenn-tribal/weapon.png"
 			}
 		  ]
+		},
+		{
+			"setName": "Faceless Wolf's",
+			"setMat": "Northern Leathers",
+			"products": [
+			  {
+				"name": "Stolen Face",
+				"level": 5,
+				"materials": {
+				  "northern-leathers": 10,
+				  "silk": 10,
+				  "dragonglass": 10
+				},
+				"img": "item/season9/faceless-wolf/head.png"
+			  },
+			  {
+				"name": "Cloaked Leathers",
+				"level": 5,
+				"materials": {
+				  "northern-leathers": 10,
+				  "black-iron": 10,
+				  "silk": 10
+				},
+				"img": "item/season9/faceless-wolf/chest.png"
+			  },
+			  {
+				"name": "Noble Belt",
+				"level": 5,
+				"materials": {
+				  "northern-leathers": 10,
+				  "goldenheart-wood": 10,
+				  "wildfire": 10
+				},
+				"img": "item/season9/faceless-wolf/pants.png"
+			  },
+			  {
+				"name": "Leather Boots",
+				"level": 5,
+				"materials": {
+				  "northern-leathers": 10,
+				  "kingswood-oak": 10,
+				  "weirwood": 10
+				},
+				"img": "item/season9/faceless-wolf/boots.png"
+			  },
+			  {
+				"name": "Poison Ring",
+				"level": 5,
+				"materials": {
+				  "northern-leathers": 10,
+				  "copper-bar": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season9/faceless-wolf/ring.png"
+			  },
+			  {
+				"name": "Valyrian Steel Dagger",
+				"level": 5,
+				"materials": {
+				  "northern-leathers": 10,
+				  "wildfire": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season9/faceless-wolf/weapon.png"
+			  },
+  
+			  {
+				"name": "Stolen Face",
+				"level": 10,
+				"materials": {
+				  "northern-leathers": 20,
+				  "silk": 20,
+				  "dragonglass": 20
+				},
+				"img": "item/season9/faceless-wolf/head.png"
+			  },
+			  {
+				"name": "Cloaked Leathers",
+				"level": 10,
+				"materials": {
+				  "northern-leathers": 20,
+				  "black-iron": 20,
+				  "silk": 20
+				},
+				"img": "item/season9/faceless-wolf/chest.png"
+			  },
+			  {
+				"name": "Noble Belt",
+				"level": 10,
+				"materials": {
+				  "northern-leathers": 20,
+				  "goldenheart-wood": 20,
+				  "wildfire": 20
+				},
+				"img": "item/season9/faceless-wolf/pants.png"
+			  },
+			  {
+				"name": "Leather Boots",
+				"level": 10,
+				"materials": {
+				  "northern-leathers": 20,
+				  "kingswood-oak": 20,
+				  "weirwood": 20
+				},
+				"img": "item/season9/faceless-wolf/boots.png"
+			  },
+			  {
+				"name": "Poison Ring",
+				"level": 10,
+				"materials": {
+				  "northern-leathers": 20,
+				  "copper-bar": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season9/faceless-wolf/ring.png"
+			  },
+			  {
+				"name": "Valyrian Steel Dagger",
+				"level": 10,
+				"materials": {
+				  "northern-leathers": 20,
+				  "wildfire": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season9/faceless-wolf/weapon.png"
+			  },
+  
+			  {
+				"name": "Stolen Face",
+				"level": 15,
+				"materials": {
+				  "northern-leathers": 120,
+				  "silk": 120,
+				  "dragonglass": 120
+				},
+				"img": "item/season9/faceless-wolf/head.png"
+			  },
+			  {
+				"name": "Cloaked Leathers",
+				"level": 15,
+				"materials": {
+				  "northern-leathers": 120,
+				  "black-iron": 120,
+				  "silk": 120
+				},
+				"img": "item/season9/faceless-wolf/chest.png"
+			  },
+			  {
+				"name": "Noble Belt",
+				"level": 15,
+				"materials": {
+				  "northern-leathers": 120,
+				  "goldenheart-wood": 120,
+				  "wildfire": 120
+				},
+				"img": "item/season9/faceless-wolf/pants.png"
+			  },
+			  {
+				"name": "Leather Boots",
+				"level": 15,
+				"materials": {
+				  "northern-leathers": 120,
+				  "kingswood-oak": 120,
+				  "weirwood": 120
+				},
+				"img": "item/season9/faceless-wolf/boots.png"
+			  },
+			  {
+				"name": "Poison Ring",
+				"level": 15,
+				"materials": {
+				  "northern-leathers": 120,
+				  "copper-bar": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season9/faceless-wolf/ring.png"
+			  },
+			  {
+				"name": "Valyrian Steel Dagger",
+				"level": 15,
+				"materials": {
+				  "northern-leathers": 120,
+				  "wildfire": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season9/faceless-wolf/weapon.png"
+			  },
+  
+			  {
+				"name": "Stolen Face",
+				"level": 20,
+				"materials": {
+				  "northern-leathers": 400,
+				  "silk": 400,
+				  "dragonglass": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season9/faceless-wolf/head.png"
+			  },
+			  {
+				"name": "Cloaked Leathers",
+				"level": 20,
+				"materials": {
+				  "northern-leathers": 400,
+				  "black-iron": 400,
+				  "silk": 400,
+				  "hide": 400
+				},
+				"img": "item/season9/faceless-wolf/chest.png"
+			  },
+			  {
+				"name": "Noble Belt",
+				"level": 20,
+				"materials": {
+				  "northern-leathers": 400,
+				  "goldenheart-wood": 400,
+				  "wildfire": 400,
+				  "weirwood": 400
+				},
+				"img": "item/season9/faceless-wolf/pants.png"
+			  },
+			  {
+				"name": "Leather Boots",
+				"level": 20,
+				"materials": {
+				  "northern-leathers": 400,
+				  "kingswood-oak": 400,
+				  "weirwood": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season9/faceless-wolf/boots.png"
+			  },
+			  {
+				"name": "Poison Ring",
+				"level": 20,
+				"materials": {
+				  "northern-leathers": 400,
+				  "copper-bar": 400,
+				  "milk-of-the-poppy": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season9/faceless-wolf/ring.png"
+			  },
+			  {
+				"name": "Valyrian Steel Dagger",
+				"level": 20,
+				"materials": {
+				  "northern-leathers": 400,
+				  "wildfire": 400,
+				  "ironwood": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season9/faceless-wolf/weapon.png"
+			  },
+  
+			  {
+				"name": "Stolen Face",
+				"level": 25,
+				"materials": {
+				  "northern-leathers": 1200,
+				  "silk": 1200,
+				  "dragonglass": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season9/faceless-wolf/head.png"
+			  },
+			  {
+				"name": "Cloaked Leathers",
+				"level": 25,
+				"materials": {
+				  "northern-leathers": 1200,
+				  "black-iron": 1200,
+				  "silk": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season9/faceless-wolf/chest.png"
+			  },
+			  {
+				"name": "Noble Belt",
+				"level": 25,
+				"materials": {
+				  "northern-leathers": 1200,
+				  "goldenheart-wood": 1200,
+				  "wildfire": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season9/faceless-wolf/pants.png"
+			  },
+			  {
+				"name": "Leather Boots",
+				"level": 25,
+				"materials": {
+				  "northern-leathers": 1200,
+				  "kingswood-oak": 1200,
+				  "weirwood": 1200,
+				  "leather-straps": 1200
+				},
+				"img": "item/season9/faceless-wolf/boots.png"
+			  },
+			  {
+				"name": "Poison Ring",
+				"level": 25,
+				"materials": {
+				  "northern-leathers": 1200,
+				  "copper-bar": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "black-iron": 1200
+				},
+				"img": "item/season9/faceless-wolf/ring.png"
+			  },
+			  {
+				"name": "Valyrian Steel Dagger",
+				"level": 25,
+				"materials": {
+				  "northern-leathers": 1200,
+				  "wildfire": 1200,
+				  "ironwood": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season9/faceless-wolf/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Rhoynish Voyager's",
@@ -643,6 +1287,328 @@ const season9 = {
 		  ]
 		},
 		{
+			"setName": "Chainbreaker's",
+			"setMat": "Liberator's Silk",
+			"products": [
+			  {
+				"name": "Crystal Tiara",
+				"level": 5,
+				"materials": {
+				  "liberators-silk": 10,
+				  "ironwood": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season9/chainbreaker/head.png"
+			  },
+			  {
+				"name": "Chemise",
+				"level": 5,
+				"materials": {
+				  "liberators-silk": 10,
+				  "goldenheart-wood": 10,
+				  "hide": 10
+				},
+				"img": "item/season9/chainbreaker/chest.png"
+			  },
+			  {
+				"name": "Golden Sash",
+				"level": 5,
+				"materials": {
+				  "liberators-silk": 10,
+				  "dragonglass": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season9/chainbreaker/pants.png"
+			  },
+			  {
+				"name": "Wrapped Boots",
+				"level": 5,
+				"materials": {
+				  "liberators-silk": 10,
+				  "wildfire": 10,
+				  "weirwood": 10
+				},
+				"img": "item/season9/chainbreaker/boots.png"
+			  },
+			  {
+				"name": "Tourmaline",
+				"level": 5,
+				"materials": {
+				  "liberators-silk": 10,
+				  "kingswood-oak": 10,
+				  "dragonglass": 10
+				},
+				"img": "item/season9/chainbreaker/ring.png"
+			  },
+			  {
+				"name": "Dragonfire Torch",
+				"level": 5,
+				"materials": {
+				  "liberators-silk": 10,
+				  "copper-bar": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season9/chainbreaker/weapon.png"
+			  },
+  
+			  {
+				"name": "Crystal Tiara",
+				"level": 10,
+				"materials": {
+				  "liberators-silk": 20,
+				  "ironwood": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season9/chainbreaker/head.png"
+			  },
+			  {
+				"name": "Chemise",
+				"level": 10,
+				"materials": {
+				  "liberators-silk": 20,
+				  "goldenheart-wood": 20,
+				  "hide": 20
+				},
+				"img": "item/season9/chainbreaker/chest.png"
+			  },
+			  {
+				"name": "Golden Sash",
+				"level": 10,
+				"materials": {
+				  "liberators-silk": 20,
+				  "dragonglass": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season9/chainbreaker/pants.png"
+			  },
+			  {
+				"name": "Wrapped Boots",
+				"level": 10,
+				"materials": {
+				  "liberators-silk": 20,
+				  "wildfire": 20,
+				  "weirwood": 20
+				},
+				"img": "item/season9/chainbreaker/boots.png"
+			  },
+			  {
+				"name": "Tourmaline",
+				"level": 10,
+				"materials": {
+				  "liberators-silk": 20,
+				  "kingswood-oak": 20,
+				  "dragonglass": 20
+				},
+				"img": "item/season9/chainbreaker/ring.png"
+			  },
+			  {
+				"name": "Dragonfire Torch",
+				"level": 10,
+				"materials": {
+				  "liberators-silk": 20,
+				  "copper-bar": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season9/chainbreaker/weapon.png"
+			  },
+  
+			  {
+				"name": "Crystal Tiara",
+				"level": 15,
+				"materials": {
+				  "liberators-silk": 120,
+				  "ironwood": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season9/chainbreaker/head.png"
+			  },
+			  {
+				"name": "Chemise",
+				"level": 15,
+				"materials": {
+				  "liberators-silk": 120,
+				  "goldenheart-wood": 120,
+				  "hide": 120
+				},
+				"img": "item/season9/chainbreaker/chest.png"
+			  },
+			  {
+				"name": "Golden Sash",
+				"level": 15,
+				"materials": {
+				  "liberators-silk": 120,
+				  "dragonglass": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season9/chainbreaker/pants.png"
+			  },
+			  {
+				"name": "Wrapped Boots",
+				"level": 15,
+				"materials": {
+				  "liberators-silk": 120,
+				  "wildfire": 120,
+				  "weirwood": 120
+				},
+				"img": "item/season9/chainbreaker/boots.png"
+			  },
+			  {
+				"name": "Tourmaline",
+				"level": 15,
+				"materials": {
+				  "liberators-silk": 120,
+				  "kingswood-oak": 120,
+				  "dragonglass": 120
+				},
+				"img": "item/season9/chainbreaker/ring.png"
+			  },
+			  {
+				"name": "Dragonfire Torch",
+				"level": 15,
+				"materials": {
+				  "liberators-silk": 120,
+				  "copper-bar": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season9/chainbreaker/weapon.png"
+			  },
+  
+			  {
+				"name": "Crystal Tiara",
+				"level": 20,
+				"materials": {
+				  "liberators-silk": 400,
+				  "ironwood": 400,
+				  "leather-straps": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season9/chainbreaker/head.png"
+			  },
+			  {
+				"name": "Chemise",
+				"level": 20,
+				"materials": {
+				  "liberators-silk": 400,
+				  "goldenheart-wood": 400,
+				  "hide": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season9/chainbreaker/chest.png"
+			  },
+			  {
+				"name": "Golden Sash",
+				"level": 20,
+				"materials": {
+				  "liberators-silk": 400,
+				  "dragonglass": 400,
+				  "milk-of-the-poppy": 400,
+				  "goldenheart-wood": 400
+				},
+				"img": "item/season9/chainbreaker/pants.png"
+			  },
+			  {
+				"name": "Wrapped Boots",
+				"level": 20,
+				"materials": {
+				  "liberators-silk": 400,
+				  "wildfire": 400,
+				  "weirwood": 400,
+				  "silk": 400
+				},
+				"img": "item/season9/chainbreaker/boots.png"
+			  },
+			  {
+				"name": "Tourmaline",
+				"level": 20,
+				"materials": {
+				  "liberators-silk": 400,
+				  "kingswood-oak": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season9/chainbreaker/ring.png"
+			  },
+			  {
+				"name": "Dragonfire Torch",
+				"level": 20,
+				"materials": {
+				  "liberators-silk": 400,
+				  "copper-bar": 400,
+				  "ironwood": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season9/chainbreaker/weapon.png"
+			  },
+  
+			  {
+				"name": "Crystal Tiara",
+				"level": 25,
+				"materials": {
+				  "liberators-silk": 1200,
+				  "ironwood": 1200,
+				  "leather-straps": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season9/chainbreaker/head.png"
+			  },
+			  {
+				"name": "Chemise",
+				"level": 25,
+				"materials": {
+				  "liberators-silk": 1200,
+				  "goldenheart-wood": 1200,
+				  "hide": 1200,
+				  "black-iron": 1200
+				},
+				"img": "item/season9/chainbreaker/chest.png"
+			  },
+			  {
+				"name": "Golden Sash",
+				"level": 25,
+				"materials": {
+				  "liberators-silk": 1200,
+				  "dragonglass": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "goldenheart-wood": 1200
+				},
+				"img": "item/season9/chainbreaker/pants.png"
+			  },
+			  {
+				"name": "Wrapped Boots",
+				"level": 25,
+				"materials": {
+				  "liberators-silk": 1200,
+				  "wildfire": 1200,
+				  "weirwood": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season9/chainbreaker/boots.png"
+			  },
+			  {
+				"name": "Tourmaline",
+				"level": 25,
+				"materials": {
+				  "liberators-silk": 1200,
+				  "kingswood-oak": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200
+				},
+				"img": "item/season9/chainbreaker/ring.png"
+			  },
+			  {
+				"name": "Dragonfire Torch",
+				"level": 25,
+				"materials": {
+				  "liberators-silk": 1200,
+				  "copper-bar": 1200,
+				  "ironwood": 1200,
+				  "black-iron": 1200
+				},
+				"img": "item/season9/chainbreaker/weapon.png"
+			  }
+			]
+		},
+		{
 		  "setName": "Targaryen Kingsguard",
 		  "setMat": "Kingsguard Leather",
 		  "products": [
@@ -961,972 +1927,6 @@ const season9 = {
 				"weirwood": 1200
 			  },
 			  "img": "item/season9/targaryen-kingsguard/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Chainbreaker's",
-		  "setMat": "Liberator's Silk",
-		  "products": [
-			{
-			  "name": "Crystal Tiara",
-			  "level": 5,
-			  "materials": {
-				"liberators-silk": 10,
-				"ironwood": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season9/chainbreaker/head.png"
-			},
-			{
-			  "name": "Chemise",
-			  "level": 5,
-			  "materials": {
-				"liberators-silk": 10,
-				"goldenheart-wood": 10,
-				"hide": 10
-			  },
-			  "img": "item/season9/chainbreaker/chest.png"
-			},
-			{
-			  "name": "Golden Sash",
-			  "level": 5,
-			  "materials": {
-				"liberators-silk": 10,
-				"dragonglass": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season9/chainbreaker/pants.png"
-			},
-			{
-			  "name": "Wrapped Boots",
-			  "level": 5,
-			  "materials": {
-				"liberators-silk": 10,
-				"wildfire": 10,
-				"weirwood": 10
-			  },
-			  "img": "item/season9/chainbreaker/boots.png"
-			},
-			{
-			  "name": "Tourmaline",
-			  "level": 5,
-			  "materials": {
-				"liberators-silk": 10,
-				"kingswood-oak": 10,
-				"dragonglass": 10
-			  },
-			  "img": "item/season9/chainbreaker/ring.png"
-			},
-			{
-			  "name": "Dragonfire Torch",
-			  "level": 5,
-			  "materials": {
-				"liberators-silk": 10,
-				"copper-bar": 10,
-				"ironwood": 10
-			  },
-			  "img": "item/season9/chainbreaker/weapon.png"
-			},
-
-			{
-			  "name": "Crystal Tiara",
-			  "level": 10,
-			  "materials": {
-				"liberators-silk": 20,
-				"ironwood": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season9/chainbreaker/head.png"
-			},
-			{
-			  "name": "Chemise",
-			  "level": 10,
-			  "materials": {
-				"liberators-silk": 20,
-				"goldenheart-wood": 20,
-				"hide": 20
-			  },
-			  "img": "item/season9/chainbreaker/chest.png"
-			},
-			{
-			  "name": "Golden Sash",
-			  "level": 10,
-			  "materials": {
-				"liberators-silk": 20,
-				"dragonglass": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season9/chainbreaker/pants.png"
-			},
-			{
-			  "name": "Wrapped Boots",
-			  "level": 10,
-			  "materials": {
-				"liberators-silk": 20,
-				"wildfire": 20,
-				"weirwood": 20
-			  },
-			  "img": "item/season9/chainbreaker/boots.png"
-			},
-			{
-			  "name": "Tourmaline",
-			  "level": 10,
-			  "materials": {
-				"liberators-silk": 20,
-				"kingswood-oak": 20,
-				"dragonglass": 20
-			  },
-			  "img": "item/season9/chainbreaker/ring.png"
-			},
-			{
-			  "name": "Dragonfire Torch",
-			  "level": 10,
-			  "materials": {
-				"liberators-silk": 20,
-				"copper-bar": 20,
-				"ironwood": 20
-			  },
-			  "img": "item/season9/chainbreaker/weapon.png"
-			},
-
-			{
-			  "name": "Crystal Tiara",
-			  "level": 15,
-			  "materials": {
-				"liberators-silk": 120,
-				"ironwood": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season9/chainbreaker/head.png"
-			},
-			{
-			  "name": "Chemise",
-			  "level": 15,
-			  "materials": {
-				"liberators-silk": 120,
-				"goldenheart-wood": 120,
-				"hide": 120
-			  },
-			  "img": "item/season9/chainbreaker/chest.png"
-			},
-			{
-			  "name": "Golden Sash",
-			  "level": 15,
-			  "materials": {
-				"liberators-silk": 120,
-				"dragonglass": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season9/chainbreaker/pants.png"
-			},
-			{
-			  "name": "Wrapped Boots",
-			  "level": 15,
-			  "materials": {
-				"liberators-silk": 120,
-				"wildfire": 120,
-				"weirwood": 120
-			  },
-			  "img": "item/season9/chainbreaker/boots.png"
-			},
-			{
-			  "name": "Tourmaline",
-			  "level": 15,
-			  "materials": {
-				"liberators-silk": 120,
-				"kingswood-oak": 120,
-				"dragonglass": 120
-			  },
-			  "img": "item/season9/chainbreaker/ring.png"
-			},
-			{
-			  "name": "Dragonfire Torch",
-			  "level": 15,
-			  "materials": {
-				"liberators-silk": 120,
-				"copper-bar": 120,
-				"ironwood": 120
-			  },
-			  "img": "item/season9/chainbreaker/weapon.png"
-			},
-
-			{
-			  "name": "Crystal Tiara",
-			  "level": 20,
-			  "materials": {
-				"liberators-silk": 400,
-				"ironwood": 400,
-				"leather-straps": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season9/chainbreaker/head.png"
-			},
-			{
-			  "name": "Chemise",
-			  "level": 20,
-			  "materials": {
-				"liberators-silk": 400,
-				"goldenheart-wood": 400,
-				"hide": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season9/chainbreaker/chest.png"
-			},
-			{
-			  "name": "Golden Sash",
-			  "level": 20,
-			  "materials": {
-				"liberators-silk": 400,
-				"dragonglass": 400,
-				"milk-of-the-poppy": 400,
-				"goldenheart-wood": 400
-			  },
-			  "img": "item/season9/chainbreaker/pants.png"
-			},
-			{
-			  "name": "Wrapped Boots",
-			  "level": 20,
-			  "materials": {
-				"liberators-silk": 400,
-				"wildfire": 400,
-				"weirwood": 400,
-				"silk": 400
-			  },
-			  "img": "item/season9/chainbreaker/boots.png"
-			},
-			{
-			  "name": "Tourmaline",
-			  "level": 20,
-			  "materials": {
-				"liberators-silk": 400,
-				"kingswood-oak": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season9/chainbreaker/ring.png"
-			},
-			{
-			  "name": "Dragonfire Torch",
-			  "level": 20,
-			  "materials": {
-				"liberators-silk": 400,
-				"copper-bar": 400,
-				"ironwood": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season9/chainbreaker/weapon.png"
-			},
-
-			{
-			  "name": "Crystal Tiara",
-			  "level": 25,
-			  "materials": {
-				"liberators-silk": 1200,
-				"ironwood": 1200,
-				"leather-straps": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season9/chainbreaker/head.png"
-			},
-			{
-			  "name": "Chemise",
-			  "level": 25,
-			  "materials": {
-				"liberators-silk": 1200,
-				"goldenheart-wood": 1200,
-				"hide": 1200,
-				"black-iron": 1200
-			  },
-			  "img": "item/season9/chainbreaker/chest.png"
-			},
-			{
-			  "name": "Golden Sash",
-			  "level": 25,
-			  "materials": {
-				"liberators-silk": 1200,
-				"dragonglass": 1200,
-				"milk-of-the-poppy": 1200,
-				"goldenheart-wood": 1200
-			  },
-			  "img": "item/season9/chainbreaker/pants.png"
-			},
-			{
-			  "name": "Wrapped Boots",
-			  "level": 25,
-			  "materials": {
-				"liberators-silk": 1200,
-				"wildfire": 1200,
-				"weirwood": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season9/chainbreaker/boots.png"
-			},
-			{
-			  "name": "Tourmaline",
-			  "level": 25,
-			  "materials": {
-				"liberators-silk": 1200,
-				"kingswood-oak": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200
-			  },
-			  "img": "item/season9/chainbreaker/ring.png"
-			},
-			{
-			  "name": "Dragonfire Torch",
-			  "level": 25,
-			  "materials": {
-				"liberators-silk": 1200,
-				"copper-bar": 1200,
-				"ironwood": 1200,
-				"black-iron": 1200
-			  },
-			  "img": "item/season9/chainbreaker/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Harvest Fool",
-		  "setMat": "Motley Cloth",
-		  "products": [
-			{
-			  "name": "Jingling Cowl",
-			  "level": 5,
-			  "materials": {
-				"motley-cloth": 10,
-				"goldenheart-wood": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season9/harvest-fool/head.png"
-			},
-			{
-			  "name": "Garish Motley",
-			  "level": 5,
-			  "materials": {
-				"motley-cloth": 10,
-				"silk": 10,
-				"hide": 10
-			  },
-			  "img": "item/season9/harvest-fool/chest.png"
-			},
-			{
-			  "name": "Bright Breeches",
-			  "level": 5,
-			  "materials": {
-				"motley-cloth": 10,
-				"kingswood-oak": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season9/harvest-fool/pants.png"
-			},
-			{
-			  "name": "Curved Poulaines",
-			  "level": 5,
-			  "materials": {
-				"motley-cloth": 10,
-				"dragonglass": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season9/harvest-fool/boots.png"
-			},
-			{
-			  "name": "Lattice Ring",
-			  "level": 5,
-			  "materials": {
-				"motley-cloth": 10,
-				"wildfire": 10,
-				"dragonglass": 10
-			  },
-			  "img": "item/season9/harvest-fool/ring.png"
-			},
-			{
-			  "name": "Juggling Knives",
-			  "level": 5,
-			  "materials": {
-				"motley-cloth": 10,
-				"black-iron": 10,
-				"weirwood": 10
-			  },
-			  "img": "item/season9/harvest-fool/weapon.png"
-			},
-
-			{
-			  "name": "Jingling Cowl",
-			  "level": 10,
-			  "materials": {
-				"motley-cloth": 20,
-				"goldenheart-wood": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season9/harvest-fool/head.png"
-			},
-			{
-			  "name": "Garish Motley",
-			  "level": 10,
-			  "materials": {
-				"motley-cloth": 20,
-				"silk": 20,
-				"hide": 20
-			  },
-			  "img": "item/season9/harvest-fool/chest.png"
-			},
-			{
-			  "name": "Bright Breeches",
-			  "level": 10,
-			  "materials": {
-				"motley-cloth": 20,
-				"kingswood-oak": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season9/harvest-fool/pants.png"
-			},
-			{
-			  "name": "Curved Poulaines",
-			  "level": 10,
-			  "materials": {
-				"motley-cloth": 20,
-				"dragonglass": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season9/harvest-fool/boots.png"
-			},
-			{
-			  "name": "Lattice Ring",
-			  "level": 10,
-			  "materials": {
-				"motley-cloth": 20,
-				"wildfire": 20,
-				"dragonglass": 20
-			  },
-			  "img": "item/season9/harvest-fool/ring.png"
-			},
-			{
-			  "name": "Juggling Knives",
-			  "level": 10,
-			  "materials": {
-				"motley-cloth": 20,
-				"black-iron": 20,
-				"weirwood": 20
-			  },
-			  "img": "item/season9/harvest-fool/weapon.png"
-			},
-
-			{
-			  "name": "Jingling Cowl",
-			  "level": 15,
-			  "materials": {
-				"motley-cloth": 120,
-				"goldenheart-wood": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season9/harvest-fool/head.png"
-			},
-			{
-			  "name": "Garish Motley",
-			  "level": 15,
-			  "materials": {
-				"motley-cloth": 120,
-				"silk": 120,
-				"hide": 120
-			  },
-			  "img": "item/season9/harvest-fool/chest.png"
-			},
-			{
-			  "name": "Bright Breeches",
-			  "level": 15,
-			  "materials": {
-				"motley-cloth": 120,
-				"kingswood-oak": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season9/harvest-fool/pants.png"
-			},
-			{
-			  "name": "Curved Poulaines",
-			  "level": 15,
-			  "materials": {
-				"motley-cloth": 120,
-				"dragonglass": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season9/harvest-fool/boots.png"
-			},
-			{
-			  "name": "Lattice Ring",
-			  "level": 15,
-			  "materials": {
-				"motley-cloth": 120,
-				"wildfire": 120,
-				"dragonglass": 120
-			  },
-			  "img": "item/season9/harvest-fool/ring.png"
-			},
-			{
-			  "name": "Juggling Knives",
-			  "level": 15,
-			  "materials": {
-				"motley-cloth": 120,
-				"black-iron": 120,
-				"weirwood": 120
-			  },
-			  "img": "item/season9/harvest-fool/weapon.png"
-			},
-
-			{
-			  "name": "Jingling Cowl",
-			  "level": 20,
-			  "materials": {
-				"motley-cloth": 400,
-				"goldenheart-wood": 400,
-				"black-iron": 400,
-				"weirwood": 400
-			  },
-			  "img": "item/season9/harvest-fool/head.png"
-			},
-			{
-			  "name": "Garish Motley",
-			  "level": 20,
-			  "materials": {
-				"motley-cloth": 400,
-				"silk": 400,
-				"hide": 400,
-				"wildfire": 400
-			  },
-			  "img": "item/season9/harvest-fool/chest.png"
-			},
-			{
-			  "name": "Bright Breeches",
-			  "level": 20,
-			  "materials": {
-				"motley-cloth": 400,
-				"kingswood-oak": 400,
-				"leather-straps": 400,
-				"ironwood": 400
-			  },
-			  "img": "item/season9/harvest-fool/pants.png"
-			},
-			{
-			  "name": "Curved Poulaines",
-			  "level": 20,
-			  "materials": {
-				"motley-cloth": 400,
-				"dragonglass": 400,
-				"copper-bar": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season9/harvest-fool/boots.png"
-			},
-			{
-			  "name": "Lattice Ring",
-			  "level": 20,
-			  "materials": {
-				"motley-cloth": 400,
-				"wildfire": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season9/harvest-fool/ring.png"
-			},
-			{
-			  "name": "Juggling Knives",
-			  "level": 20,
-			  "materials": {
-				"motley-cloth": 400,
-				"black-iron": 400,
-				"weirwood": 400,
-				"hide": 400
-			  },
-			  "img": "item/season9/harvest-fool/weapon.png"
-			},
-
-			{
-			  "name": "Jingling Cowl",
-			  "level": 25,
-			  "materials": {
-				"motley-cloth": 1200,
-				"goldenheart-wood": 1200,
-				"black-iron": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season9/harvest-fool/head.png"
-			},
-			{
-			  "name": "Garish Motley",
-			  "level": 25,
-			  "materials": {
-				"motley-cloth": 1200,
-				"silk": 1200,
-				"hide": 1200,
-				"wildfire": 1200
-			  },
-			  "img": "item/season9/harvest-fool/chest.png"
-			},
-			{
-			  "name": "Bright Breeches",
-			  "level": 25,
-			  "materials": {
-				"motley-cloth": 1200,
-				"kingswood-oak": 1200,
-				"leather-straps": 1200,
-				"ironwood": 1200
-			  },
-			  "img": "item/season9/harvest-fool/pants.png"
-			},
-			{
-			  "name": "Curved Poulaines",
-			  "level": 25,
-			  "materials": {
-				"motley-cloth": 1200,
-				"dragonglass": 1200,
-				"copper-bar": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season9/harvest-fool/boots.png"
-			},
-			{
-			  "name": "Lattice Ring",
-			  "level": 25,
-			  "materials": {
-				"motley-cloth": 1200,
-				"wildfire": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200
-			  },
-			  "img": "item/season9/harvest-fool/ring.png"
-			},
-			{
-			  "name": "Juggling Knives",
-			  "level": 25,
-			  "materials": {
-				"motley-cloth": 1200,
-				"black-iron": 1200,
-				"weirwood": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season9/harvest-fool/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Faceless Wolf's",
-		  "setMat": "Northern Leathers",
-		  "products": [
-			{
-			  "name": "Stolen Face",
-			  "level": 5,
-			  "materials": {
-				"northern-leathers": 10,
-				"silk": 10,
-				"dragonglass": 10
-			  },
-			  "img": "item/season9/faceless-wolf/head.png"
-			},
-			{
-			  "name": "Cloaked Leathers",
-			  "level": 5,
-			  "materials": {
-				"northern-leathers": 10,
-				"black-iron": 10,
-				"silk": 10
-			  },
-			  "img": "item/season9/faceless-wolf/chest.png"
-			},
-			{
-			  "name": "Noble Belt",
-			  "level": 5,
-			  "materials": {
-				"northern-leathers": 10,
-				"goldenheart-wood": 10,
-				"wildfire": 10
-			  },
-			  "img": "item/season9/faceless-wolf/pants.png"
-			},
-			{
-			  "name": "Leather Boots",
-			  "level": 5,
-			  "materials": {
-				"northern-leathers": 10,
-				"kingswood-oak": 10,
-				"weirwood": 10
-			  },
-			  "img": "item/season9/faceless-wolf/boots.png"
-			},
-			{
-			  "name": "Poison Ring",
-			  "level": 5,
-			  "materials": {
-				"northern-leathers": 10,
-				"copper-bar": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season9/faceless-wolf/ring.png"
-			},
-			{
-			  "name": "Valyrian Steel Dagger",
-			  "level": 5,
-			  "materials": {
-				"northern-leathers": 10,
-				"wildfire": 10,
-				"ironwood": 10
-			  },
-			  "img": "item/season9/faceless-wolf/weapon.png"
-			},
-
-			{
-			  "name": "Stolen Face",
-			  "level": 10,
-			  "materials": {
-				"northern-leathers": 20,
-				"silk": 20,
-				"dragonglass": 20
-			  },
-			  "img": "item/season9/faceless-wolf/head.png"
-			},
-			{
-			  "name": "Cloaked Leathers",
-			  "level": 10,
-			  "materials": {
-				"northern-leathers": 20,
-				"black-iron": 20,
-				"silk": 20
-			  },
-			  "img": "item/season9/faceless-wolf/chest.png"
-			},
-			{
-			  "name": "Noble Belt",
-			  "level": 10,
-			  "materials": {
-				"northern-leathers": 20,
-				"goldenheart-wood": 20,
-				"wildfire": 20
-			  },
-			  "img": "item/season9/faceless-wolf/pants.png"
-			},
-			{
-			  "name": "Leather Boots",
-			  "level": 10,
-			  "materials": {
-				"northern-leathers": 20,
-				"kingswood-oak": 20,
-				"weirwood": 20
-			  },
-			  "img": "item/season9/faceless-wolf/boots.png"
-			},
-			{
-			  "name": "Poison Ring",
-			  "level": 10,
-			  "materials": {
-				"northern-leathers": 20,
-				"copper-bar": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season9/faceless-wolf/ring.png"
-			},
-			{
-			  "name": "Valyrian Steel Dagger",
-			  "level": 10,
-			  "materials": {
-				"northern-leathers": 20,
-				"wildfire": 20,
-				"ironwood": 20
-			  },
-			  "img": "item/season9/faceless-wolf/weapon.png"
-			},
-
-			{
-			  "name": "Stolen Face",
-			  "level": 15,
-			  "materials": {
-				"northern-leathers": 120,
-				"silk": 120,
-				"dragonglass": 120
-			  },
-			  "img": "item/season9/faceless-wolf/head.png"
-			},
-			{
-			  "name": "Cloaked Leathers",
-			  "level": 15,
-			  "materials": {
-				"northern-leathers": 120,
-				"black-iron": 120,
-				"silk": 120
-			  },
-			  "img": "item/season9/faceless-wolf/chest.png"
-			},
-			{
-			  "name": "Noble Belt",
-			  "level": 15,
-			  "materials": {
-				"northern-leathers": 120,
-				"goldenheart-wood": 120,
-				"wildfire": 120
-			  },
-			  "img": "item/season9/faceless-wolf/pants.png"
-			},
-			{
-			  "name": "Leather Boots",
-			  "level": 15,
-			  "materials": {
-				"northern-leathers": 120,
-				"kingswood-oak": 120,
-				"weirwood": 120
-			  },
-			  "img": "item/season9/faceless-wolf/boots.png"
-			},
-			{
-			  "name": "Poison Ring",
-			  "level": 15,
-			  "materials": {
-				"northern-leathers": 120,
-				"copper-bar": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season9/faceless-wolf/ring.png"
-			},
-			{
-			  "name": "Valyrian Steel Dagger",
-			  "level": 15,
-			  "materials": {
-				"northern-leathers": 120,
-				"wildfire": 120,
-				"ironwood": 120
-			  },
-			  "img": "item/season9/faceless-wolf/weapon.png"
-			},
-
-			{
-			  "name": "Stolen Face",
-			  "level": 20,
-			  "materials": {
-				"northern-leathers": 400,
-				"silk": 400,
-				"dragonglass": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season9/faceless-wolf/head.png"
-			},
-			{
-			  "name": "Cloaked Leathers",
-			  "level": 20,
-			  "materials": {
-				"northern-leathers": 400,
-				"black-iron": 400,
-				"silk": 400,
-				"hide": 400
-			  },
-			  "img": "item/season9/faceless-wolf/chest.png"
-			},
-			{
-			  "name": "Noble Belt",
-			  "level": 20,
-			  "materials": {
-				"northern-leathers": 400,
-				"goldenheart-wood": 400,
-				"wildfire": 400,
-				"weirwood": 400
-			  },
-			  "img": "item/season9/faceless-wolf/pants.png"
-			},
-			{
-			  "name": "Leather Boots",
-			  "level": 20,
-			  "materials": {
-				"northern-leathers": 400,
-				"kingswood-oak": 400,
-				"weirwood": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season9/faceless-wolf/boots.png"
-			},
-			{
-			  "name": "Poison Ring",
-			  "level": 20,
-			  "materials": {
-				"northern-leathers": 400,
-				"copper-bar": 400,
-				"milk-of-the-poppy": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season9/faceless-wolf/ring.png"
-			},
-			{
-			  "name": "Valyrian Steel Dagger",
-			  "level": 20,
-			  "materials": {
-				"northern-leathers": 400,
-				"wildfire": 400,
-				"ironwood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season9/faceless-wolf/weapon.png"
-			},
-
-			{
-			  "name": "Stolen Face",
-			  "level": 25,
-			  "materials": {
-				"northern-leathers": 1200,
-				"silk": 1200,
-				"dragonglass": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season9/faceless-wolf/head.png"
-			},
-			{
-			  "name": "Cloaked Leathers",
-			  "level": 25,
-			  "materials": {
-				"northern-leathers": 1200,
-				"black-iron": 1200,
-				"silk": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season9/faceless-wolf/chest.png"
-			},
-			{
-			  "name": "Noble Belt",
-			  "level": 25,
-			  "materials": {
-				"northern-leathers": 1200,
-				"goldenheart-wood": 1200,
-				"wildfire": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season9/faceless-wolf/pants.png"
-			},
-			{
-			  "name": "Leather Boots",
-			  "level": 25,
-			  "materials": {
-				"northern-leathers": 1200,
-				"kingswood-oak": 1200,
-				"weirwood": 1200,
-				"leather-straps": 1200
-			  },
-			  "img": "item/season9/faceless-wolf/boots.png"
-			},
-			{
-			  "name": "Poison Ring",
-			  "level": 25,
-			  "materials": {
-				"northern-leathers": 1200,
-				"copper-bar": 1200,
-				"milk-of-the-poppy": 1200,
-				"black-iron": 1200
-			  },
-			  "img": "item/season9/faceless-wolf/ring.png"
-			},
-			{
-			  "name": "Valyrian Steel Dagger",
-			  "level": 25,
-			  "materials": {
-				"northern-leathers": 1200,
-				"wildfire": 1200,
-				"ironwood": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season9/faceless-wolf/weapon.png"
 			}
 		  ]
 		},

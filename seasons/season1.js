@@ -3,640 +3,640 @@ const season1 = {
         extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
         sets: [
 		{
-		  "setName": "Corsair's",
-		  "setMat": "Abalone",
-		  "products": [
-			{
-			  "name": "Kerchief",
-			  "level": 5,
-			  "materials": {
-				"abalone": 10,
-				"wildfire": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season1/corsair/head.png"
-			},
-			{
-			  "name": "Seacoat",
-			  "level": 5,
-			  "materials": {
-				"abalone": 10,
-				"goldenheart-wood": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season1/corsair/chest.png"
-			},
-			{
-			  "name": "Trousers",
-			  "level": 5,
-			  "materials": {
-				"abalone": 10,
-				"ironwood": 10,
-				"silk": 10
-			  },
-			  "img": "item/season1/corsair/pants.png"
-			},
-			{
-			  "name": "Boots",
-			  "level": 5,
-			  "materials": {
-				"abalone": 10,
-				"dragonglass": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season1/corsair/boots.png"
-			},
-			{
-			  "name": "Coral Ring",
-			  "level": 5,
-			  "materials": {
-				"abalone": 10,
-				"hide": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season1/corsair/ring.png"
-			},
-			{
-			  "name": "Goldenwood Bow",
-			  "level": 5,
-			  "materials": {
-				"abalone": 10,
-				"weirwood": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season1/corsair/weapon.png"
-			},
-			{
-			  "name": "Kerchief",
-			  "level": 10,
-			  "materials": {
-				"abalone": 20,
-				"wildfire": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season1/corsair/head.png"
-			},
-			{
-			  "name": "Seacoat",
-			  "level": 10,
-			  "materials": {
-				"abalone": 20,
-				"goldenheart-wood": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season1/corsair/chest.png"
-			},
-			{
-			  "name": "Trousers",
-			  "level": 10,
-			  "materials": {
-				"abalone": 20,
-				"ironwood": 20,
-				"silk": 20
-			  },
-			  "img": "item/season1/corsair/pants.png"
-			},
-			{
-			  "name": "Boots",
-			  "level": 10,
-			  "materials": {
-				"abalone": 20,
-				"dragonglass": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season1/corsair/boots.png"
-			},
-			{
-			  "name": "Coral Ring",
-			  "level": 10,
-			  "materials": {
-				"abalone": 20,
-				"hide": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season1/corsair/ring.png"
-			},
-			{
-			  "name": "Goldenwood Bow",
-			  "level": 10,
-			  "materials": {
-				"abalone": 20,
-				"weirwood": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season1/corsair/weapon.png"
-			},
-			{
-			  "name": "Kerchief",
-			  "level": 15,
-			  "materials": {
-				"abalone": 120,
-				"wildfire": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season1/corsair/head.png"
-			},
-			{
-			  "name": "Seacoat",
-			  "level": 15,
-			  "materials": {
-				"abalone": 120,
-				"goldenheart-wood": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season1/corsair/chest.png"
-			},
-			{
-			  "name": "Trousers",
-			  "level": 15,
-			  "materials": {
-				"abalone": 120,
-				"ironwood": 120,
-				"silk": 120
-			  },
-			  "img": "item/season1/corsair/pants.png"
-			},
-			{
-			  "name": "Boots",
-			  "level": 15,
-			  "materials": {
-				"abalone": 120,
-				"dragonglass": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season1/corsair/boots.png"
-			},
-			{
-			  "name": "Coral Ring",
-			  "level": 15,
-			  "materials": {
-				"abalone": 120,
-				"hide": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season1/corsair/ring.png"
-			},
-			{
-			  "name": "Goldenwood Bow",
-			  "level": 15,
-			  "materials": {
-				"abalone": 120,
-				"weirwood": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season1/corsair/weapon.png"
-			},
-			{
-			  "name": "Kerchief",
-			  "level": 20,
-			  "materials": {
-				"abalone": 400,
-				"wildfire": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season1/corsair/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Seacoat",
-			  "level": 20,
-			  "materials": {
-				"abalone": 400,
-				"goldenheart-wood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season1/corsair/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Trousers",
-			  "level": 20,
-			  "materials": {
-				"abalone": 400,
-				"ironwood": 400,
-				"silk": 400
-			  },
-			  "img": "item/season1/corsair/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Boots",
-			  "level": 20,
-			  "materials": {
-				"abalone": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season1/corsair/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Coral Ring",
-			  "level": 20,
-			  "materials": {
-				"abalone": 400,
-				"hide": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season1/corsair/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Goldenwood Bow",
-			  "level": 20,
-			  "materials": {
-				"abalone": 400,
-				"weirwood": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season1/corsair/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Kerchief",
-			  "level": 25,
-			  "materials": {
-				"abalone": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season1/corsair/head.png"
-			},
-			{
-			  "name": "Seacoat",
-			  "level": 25,
-			  "materials": {
-				"abalone": 1200,
-				"goldenheart-wood": 1200,
-				"kingswood-oak": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season1/corsair/chest.png"
-			},
-			{
-			  "name": "Trousers",
-			  "level": 25,
-			  "materials": {
-				"abalone": 1200,
-				"ironwood": 1200,
-				"silk": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season1/corsair/pants.png"
-			},
-			{
-			  "name": "Boots",
-			  "level": 25,
-			  "materials": {
-				"abalone": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season1/corsair/boots.png"
-			},
-			{
-			  "name": "Coral Ring",
-			  "level": 25,
-			  "materials": {
-				"abalone": 1200,
-				"hide": 1200,
-				"copper-bar": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season1/corsair/ring.png"
-			},
-			{
-			  "name": "Goldenwood Bow",
-			  "level": 25,
-			  "materials": {
-				"abalone": 1200,
-				"weirwood": 1200,
-				"black-iron": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season1/corsair/weapon.png"
-			}
-		  ]
+			"setName": "Blackfyre",
+			"setMat": "Blackfyre Penny",
+			"products": [
+				{
+				"name": "Bitter Steel Helm",
+				"level": 5,
+				"materials": {
+					"blackfyre-penny": 10,
+					"kingswood-oak": 10,
+					"dragonglass": 10
+				},
+				"img": "item/season1/blackfyre/head.png"
+				},
+				{
+				"name": "Bitter Steel Plate",
+				"level": 5,
+				"materials": {
+					"blackfyre-penny": 10,
+					"copper-bar": 10,
+					"black-iron": 10
+				},
+				"img": "item/season1/blackfyre/chest.png"
+				},
+				{
+				"name": "Bitter Steel Fauld",
+				"level": 5,
+				"materials": {
+					"blackfyre-penny": 10,
+					"ironwood": 10,
+					"goldenheart-wood": 10
+				},
+				"img": "item/season1/blackfyre/pants.png"
+				},
+				{
+				"name": "Captain's Boots",
+				"level": 5,
+				"materials": {
+					"blackfyre-penny": 10,
+					"hide": 10,
+					"milk-of-the-poppy": 10
+				},
+				"img": "item/season1/blackfyre/boots.png"
+				},
+				{
+				"name": "Ruby Ring",
+				"level": 5,
+				"materials": {
+					"blackfyre-penny": 10,
+					"black-iron": 10,
+					"silk": 10
+				},
+				"img": "item/season1/blackfyre/ring.png"
+				},
+				{
+				"name": "Bastard Sword",
+				"level": 5,
+				"materials": {
+					"blackfyre-penny": 10,
+					"goldenheart-wood": 10,
+					"ironwood": 10
+				},
+				"img": "item/season1/blackfyre/weapon.png"
+				},
+				{
+				"name": "Bitter Steel Helm",
+				"level": 10,
+				"materials": {
+					"blackfyre-penny": 20,
+					"kingswood-oak": 20,
+					"dragonglass": 20
+				},
+				"img": "item/season1/blackfyre/head.png"
+				},
+				{
+				"name": "Bitter Steel Plate",
+				"level": 10,
+				"materials": {
+					"blackfyre-penny": 20,
+					"copper-bar": 20,
+					"black-iron": 20
+				},
+				"img": "item/season1/blackfyre/chest.png"
+				},
+				{
+				"name": "Bitter Steel Fauld",
+				"level": 10,
+				"materials": {
+					"blackfyre-penny": 20,
+					"ironwood": 20,
+					"goldenheart-wood": 20
+				},
+				"img": "item/season1/blackfyre/pants.png"
+				},
+				{
+				"name": "Captain's Boots",
+				"level": 10,
+				"materials": {
+					"blackfyre-penny": 20,
+					"hide": 20,
+					"milk-of-the-poppy": 20
+				},
+				"img": "item/season1/blackfyre/boots.png"
+				},
+				{
+				"name": "Ruby Ring",
+				"level": 10,
+				"materials": {
+					"blackfyre-penny": 20,
+					"black-iron": 20,
+					"silk": 20
+				},
+				"img": "item/season1/blackfyre/ring.png"
+				},
+				{
+				"name": "Bastard Sword",
+				"level": 10,
+				"materials": {
+					"blackfyre-penny": 20,
+					"goldenheart-wood": 20,
+					"ironwood": 20
+				},
+				"img": "item/season1/blackfyre/weapon.png"
+				},
+				{
+				"name": "Bitter Steel Helm",
+				"level": 15,
+				"materials": {
+					"blackfyre-penny": 120,
+					"kingswood-oak": 120,
+					"dragonglass": 120
+				},
+				"img": "item/season1/blackfyre/head.png"
+				},
+				{
+				"name": "Bitter Steel Plate",
+				"level": 15,
+				"materials": {
+					"blackfyre-penny": 120,
+					"copper-bar": 120,
+					"black-iron": 120
+				},
+				"img": "item/season1/blackfyre/chest.png"
+				},
+				{
+				"name": "Bitter Steel Fauld",
+				"level": 15,
+				"materials": {
+					"blackfyre-penny": 120,
+					"ironwood": 120,
+					"goldenheart-wood": 120
+				},
+				"img": "item/season1/blackfyre/pants.png"
+				},
+				{
+				"name": "Captain's Boots",
+				"level": 15,
+				"materials": {
+					"blackfyre-penny": 120,
+					"hide": 120,
+					"milk-of-the-poppy": 120
+				},
+				"img": "item/season1/blackfyre/boots.png"
+				},
+				{
+				"name": "Ruby Ring",
+				"level": 15,
+				"materials": {
+					"blackfyre-penny": 120,
+					"black-iron": 120,
+					"silk": 120
+				},
+				"img": "item/season1/blackfyre/ring.png"
+				},
+				{
+				"name": "Bastard Sword",
+				"level": 15,
+				"materials": {
+					"blackfyre-penny": 120,
+					"goldenheart-wood": 120,
+					"ironwood": 120
+				},
+				"img": "item/season1/blackfyre/weapon.png"
+				},
+				{
+				"name": "Bitter Steel Helm",
+				"level": 20,
+				"materials": {
+					"blackfyre-penny": 400,
+					"kingswood-oak": 400,
+					"dragonglass": 400
+				},
+				"img": "item/season1/blackfyre/head.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Bitter Steel Plate",
+				"level": 20,
+				"materials": {
+					"blackfyre-penny": 400,
+					"copper-bar": 400,
+					"black-iron": 400
+				},
+				"img": "item/season1/blackfyre/chest.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Bitter Steel Fauld",
+				"level": 20,
+				"materials": {
+					"blackfyre-penny": 400,
+					"ironwood": 400,
+					"goldenheart-wood": 400
+				},
+				"img": "item/season1/blackfyre/pants.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Captain's Boots",
+				"level": 20,
+				"materials": {
+					"blackfyre-penny": 400,
+					"hide": 400,
+					"milk-of-the-poppy": 400
+				},
+				"img": "item/season1/blackfyre/boots.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Ruby Ring",
+				"level": 20,
+				"materials": {
+					"blackfyre-penny": 400,
+					"black-iron": 400,
+					"silk": 400
+				},
+				"img": "item/season1/blackfyre/ring.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Bastard Sword",
+				"level": 20,
+				"materials": {
+					"blackfyre-penny": 400,
+					"goldenheart-wood": 400,
+					"ironwood": 400
+				},
+				"img": "item/season1/blackfyre/weapon.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Bitter Steel Helm",
+				"level": 25,
+				"materials": {
+					"blackfyre-penny": 1200,
+					"kingswood-oak": 1200,
+					"dragonglass": 1200,
+					"hide": 1200
+				},
+				"img": "item/season1/blackfyre/head.png"
+				},
+				{
+				"name": "Bitter Steel Plate",
+				"level": 25,
+				"materials": {
+					"blackfyre-penny": 1200,
+					"copper-bar": 1200,
+					"black-iron": 1200,
+					"wildfire": 1200
+				},
+				"img": "item/season1/blackfyre/chest.png"
+				},
+				{
+				"name": "Bitter Steel Fauld",
+				"level": 25,
+				"materials": {
+					"blackfyre-penny": 1200,
+					"ironwood": 1200,
+					"goldenheart-wood": 1200,
+					"weirwood": 1200
+				},
+				"img": "item/season1/blackfyre/pants.png"
+				},
+				{
+				"name": "Captain's Boots",
+				"level": 25,
+				"materials": {
+					"blackfyre-penny": 1200,
+					"hide": 1200,
+					"milk-of-the-poppy": 1200,
+					"leather-straps": 1200
+				},
+				"img": "item/season1/blackfyre/boots.png"
+				},
+				{
+				"name": "Ruby Ring",
+				"level": 25,
+				"materials": {
+					"blackfyre-penny": 1200,
+					"black-iron": 1200,
+					"silk": 1200,
+					"ironwood": 1200
+				},
+				"img": "item/season1/blackfyre/ring.png"
+				},
+				{
+				"name": "Bastard Sword",
+				"level": 25,
+				"materials": {
+					"blackfyre-penny": 1200,
+					"goldenheart-wood": 1200,
+					"ironwood": 1200,
+					"silk": 1200
+				},
+				"img": "item/season1/blackfyre/weapon.png"
+				}
+			]
 		},
 		{
-		  "setName": "Blackfyre",
-		  "setMat": "Blackfyre Penny",
-		  "products": [
-			{
-			  "name": "Bitter Steel Helm",
-			  "level": 5,
-			  "materials": {
-				"blackfyre-penny": 10,
-				"kingswood-oak": 10,
-				"dragonglass": 10
+			"setName": "Mormont",
+			"setMat": "Pinecone",
+			"products": [
+			  {
+				"name": "Steel Helm",
+				"level": 5,
+				"materials": {
+				  "pinecone": 10,
+				  "wildfire": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season1/mormont/head.png"
 			  },
-			  "img": "item/season1/blackfyre/head.png"
-			},
-			{
-			  "name": "Bitter Steel Plate",
-			  "level": 5,
-			  "materials": {
-				"blackfyre-penny": 10,
-				"copper-bar": 10,
-				"black-iron": 10
+			  {
+				"name": "Bear Cloak Armor",
+				"level": 5,
+				"materials": {
+				  "pinecone": 10,
+				  "goldenheart-wood": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season1/mormont/chest.png"
 			  },
-			  "img": "item/season1/blackfyre/chest.png"
-			},
-			{
-			  "name": "Bitter Steel Fauld",
-			  "level": 5,
-			  "materials": {
-				"blackfyre-penny": 10,
-				"ironwood": 10,
-				"goldenheart-wood": 10
+			  {
+				"name": "Heavy Armor",
+				"level": 5,
+				"materials": {
+				  "pinecone": 10,
+				  "ironwood": 10,
+				  "silk": 10
+				},
+				"img": "item/season1/mormont/pants.png"
 			  },
-			  "img": "item/season1/blackfyre/pants.png"
-			},
-			{
-			  "name": "Captain's Boots",
-			  "level": 5,
-			  "materials": {
-				"blackfyre-penny": 10,
-				"hide": 10,
-				"milk-of-the-poppy": 10
+			  {
+				"name": "Fur-Lined Boots",
+				"level": 5,
+				"materials": {
+				  "pinecone": 10,
+				  "dragonglass": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season1/mormont/boots.png"
 			  },
-			  "img": "item/season1/blackfyre/boots.png"
-			},
-			{
-			  "name": "Ruby Ring",
-			  "level": 5,
-			  "materials": {
-				"blackfyre-penny": 10,
-				"black-iron": 10,
-				"silk": 10
+			  {
+				"name": "Sigil Ring",
+				"level": 5,
+				"materials": {
+				  "pinecone": 10,
+				  "hide": 10,
+				  "copper-bar": 10
+				},
+				"img": "item/season1/mormont/ring.png"
 			  },
-			  "img": "item/season1/blackfyre/ring.png"
-			},
-			{
-			  "name": "Bastard Sword",
-			  "level": 5,
-			  "materials": {
-				"blackfyre-penny": 10,
-				"goldenheart-wood": 10,
-				"ironwood": 10
+			  {
+				"name": "Steel Sword",
+				"level": 5,
+				"materials": {
+				  "pinecone": 10,
+				  "weirwood": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season1/mormont/weapon.png"
 			  },
-			  "img": "item/season1/blackfyre/weapon.png"
-			},
-			{
-			  "name": "Bitter Steel Helm",
-			  "level": 10,
-			  "materials": {
-				"blackfyre-penny": 20,
-				"kingswood-oak": 20,
-				"dragonglass": 20
+			  {
+				"name": "Steel Helm",
+				"level": 10,
+				"materials": {
+				  "pinecone": 20,
+				  "wildfire": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season1/mormont/head.png"
 			  },
-			  "img": "item/season1/blackfyre/head.png"
-			},
-			{
-			  "name": "Bitter Steel Plate",
-			  "level": 10,
-			  "materials": {
-				"blackfyre-penny": 20,
-				"copper-bar": 20,
-				"black-iron": 20
+			  {
+				"name": "Bear Cloak Armor",
+				"level": 10,
+				"materials": {
+				  "pinecone": 20,
+				  "goldenheart-wood": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season1/mormont/chest.png"
 			  },
-			  "img": "item/season1/blackfyre/chest.png"
-			},
-			{
-			  "name": "Bitter Steel Fauld",
-			  "level": 10,
-			  "materials": {
-				"blackfyre-penny": 20,
-				"ironwood": 20,
-				"goldenheart-wood": 20
+			  {
+				"name": "Heavy Armor",
+				"level": 10,
+				"materials": {
+				  "pinecone": 20,
+				  "ironwood": 20,
+				  "silk": 20
+				},
+				"img": "item/season1/mormont/pants.png"
 			  },
-			  "img": "item/season1/blackfyre/pants.png"
-			},
-			{
-			  "name": "Captain's Boots",
-			  "level": 10,
-			  "materials": {
-				"blackfyre-penny": 20,
-				"hide": 20,
-				"milk-of-the-poppy": 20
+			  {
+				"name": "Fur-Lined Boots",
+				"level": 10,
+				"materials": {
+				  "pinecone": 20,
+				  "dragonglass": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season1/mormont/boots.png"
 			  },
-			  "img": "item/season1/blackfyre/boots.png"
-			},
-			{
-			  "name": "Ruby Ring",
-			  "level": 10,
-			  "materials": {
-				"blackfyre-penny": 20,
-				"black-iron": 20,
-				"silk": 20
+			  {
+				"name": "Sigil Ring",
+				"level": 10,
+				"materials": {
+				  "pinecone": 20,
+				  "hide": 20,
+				  "copper-bar": 20
+				},
+				"img": "item/season1/mormont/ring.png"
 			  },
-			  "img": "item/season1/blackfyre/ring.png"
-			},
-			{
-			  "name": "Bastard Sword",
-			  "level": 10,
-			  "materials": {
-				"blackfyre-penny": 20,
-				"goldenheart-wood": 20,
-				"ironwood": 20
+			  {
+				"name": "Steel Sword",
+				"level": 10,
+				"materials": {
+				  "pinecone": 20,
+				  "weirwood": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season1/mormont/weapon.png"
 			  },
-			  "img": "item/season1/blackfyre/weapon.png"
-			},
-			{
-			  "name": "Bitter Steel Helm",
-			  "level": 15,
-			  "materials": {
-				"blackfyre-penny": 120,
-				"kingswood-oak": 120,
-				"dragonglass": 120
+			  {
+				"name": "Steel Helm",
+				"level": 15,
+				"materials": {
+				  "pinecone": 120,
+				  "wildfire": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season1/mormont/head.png"
 			  },
-			  "img": "item/season1/blackfyre/head.png"
-			},
-			{
-			  "name": "Bitter Steel Plate",
-			  "level": 15,
-			  "materials": {
-				"blackfyre-penny": 120,
-				"copper-bar": 120,
-				"black-iron": 120
+			  {
+				"name": "Bear Cloak Armor",
+				"level": 15,
+				"materials": {
+				  "pinecone": 120,
+				  "goldenheart-wood": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season1/mormont/chest.png"
 			  },
-			  "img": "item/season1/blackfyre/chest.png"
-			},
-			{
-			  "name": "Bitter Steel Fauld",
-			  "level": 15,
-			  "materials": {
-				"blackfyre-penny": 120,
-				"ironwood": 120,
-				"goldenheart-wood": 120
+			  {
+				"name": "Heavy Armor",
+				"level": 15,
+				"materials": {
+				  "pinecone": 120,
+				  "ironwood": 120,
+				  "silk": 120
+				},
+				"img": "item/season1/mormont/pants.png"
 			  },
-			  "img": "item/season1/blackfyre/pants.png"
-			},
-			{
-			  "name": "Captain's Boots",
-			  "level": 15,
-			  "materials": {
-				"blackfyre-penny": 120,
-				"hide": 120,
-				"milk-of-the-poppy": 120
+			  {
+				"name": "Fur-Lined Boots",
+				"level": 15,
+				"materials": {
+				  "pinecone": 120,
+				  "dragonglass": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season1/mormont/boots.png"
 			  },
-			  "img": "item/season1/blackfyre/boots.png"
-			},
-			{
-			  "name": "Ruby Ring",
-			  "level": 15,
-			  "materials": {
-				"blackfyre-penny": 120,
-				"black-iron": 120,
-				"silk": 120
+			  {
+				"name": "Sigil Ring",
+				"level": 15,
+				"materials": {
+				  "pinecone": 120,
+				  "hide": 120,
+				  "copper-bar": 120
+				},
+				"img": "item/season1/mormont/ring.png"
 			  },
-			  "img": "item/season1/blackfyre/ring.png"
-			},
-			{
-			  "name": "Bastard Sword",
-			  "level": 15,
-			  "materials": {
-				"blackfyre-penny": 120,
-				"goldenheart-wood": 120,
-				"ironwood": 120
+			  {
+				"name": "Steel Sword",
+				"level": 15,
+				"materials": {
+				  "pinecone": 120,
+				  "weirwood": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season1/mormont/weapon.png"
 			  },
-			  "img": "item/season1/blackfyre/weapon.png"
-			},
-			{
-			  "name": "Bitter Steel Helm",
-			  "level": 20,
-			  "materials": {
-				"blackfyre-penny": 400,
-				"kingswood-oak": 400,
-				"dragonglass": 400
+			  {
+				"name": "Steel Helm",
+				"level": 20,
+				"materials": {
+				  "pinecone": 400,
+				  "wildfire": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season1/mormont/head.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/blackfyre/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Bitter Steel Plate",
-			  "level": 20,
-			  "materials": {
-				"blackfyre-penny": 400,
-				"copper-bar": 400,
-				"black-iron": 400
+			  {
+				"name": "Bear Cloak Armor",
+				"level": 20,
+				"materials": {
+				  "pinecone": 400,
+				  "goldenheart-wood": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season1/mormont/chest.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/blackfyre/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Bitter Steel Fauld",
-			  "level": 20,
-			  "materials": {
-				"blackfyre-penny": 400,
-				"ironwood": 400,
-				"goldenheart-wood": 400
+			  {
+				"name": "Heavy Armor",
+				"level": 20,
+				"materials": {
+				  "pinecone": 400,
+				  "ironwood": 400,
+				  "silk": 400
+				},
+				"img": "item/season1/mormont/pants.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/blackfyre/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Captain's Boots",
-			  "level": 20,
-			  "materials": {
-				"blackfyre-penny": 400,
-				"hide": 400,
-				"milk-of-the-poppy": 400
+			  {
+				"name": "Fur-Lined Boots",
+				"level": 20,
+				"materials": {
+				  "pinecone": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season1/mormont/boots.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/blackfyre/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Ruby Ring",
-			  "level": 20,
-			  "materials": {
-				"blackfyre-penny": 400,
-				"black-iron": 400,
-				"silk": 400
+			  {
+				"name": "Sigil Ring",
+				"level": 20,
+				"materials": {
+				  "pinecone": 400,
+				  "hide": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season1/mormont/ring.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/blackfyre/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Bastard Sword",
-			  "level": 20,
-			  "materials": {
-				"blackfyre-penny": 400,
-				"goldenheart-wood": 400,
-				"ironwood": 400
+			  {
+				"name": "Steel Sword",
+				"level": 20,
+				"materials": {
+				  "pinecone": 400,
+				  "weirwood": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season1/mormont/weapon.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/blackfyre/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Bitter Steel Helm",
-			  "level": 25,
-			  "materials": {
-				"blackfyre-penny": 1200,
-				"kingswood-oak": 1200,
-				"dragonglass": 1200,
-				"hide": 1200
+			  {
+				"name": "Steel Helm",
+				"level": 25,
+				"materials": {
+				  "pinecone": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season1/mormont/head.png"
 			  },
-			  "img": "item/season1/blackfyre/head.png"
-			},
-			{
-			  "name": "Bitter Steel Plate",
-			  "level": 25,
-			  "materials": {
-				"blackfyre-penny": 1200,
-				"copper-bar": 1200,
-				"black-iron": 1200,
-				"wildfire": 1200
+			  {
+				"name": "Bear Cloak Armor",
+				"level": 25,
+				"materials": {
+				  "pinecone": 1200,
+				  "goldenheart-wood": 1200,
+				  "kingswood-oak": 1200,
+				  "wildfire": 1200
+				},
+				"img": "item/season1/mormont/chest.png"
 			  },
-			  "img": "item/season1/blackfyre/chest.png"
-			},
-			{
-			  "name": "Bitter Steel Fauld",
-			  "level": 25,
-			  "materials": {
-				"blackfyre-penny": 1200,
-				"ironwood": 1200,
-				"goldenheart-wood": 1200,
-				"weirwood": 1200
+			  {
+				"name": "Heavy Armor",
+				"level": 25,
+				"materials": {
+				  "pinecone": 1200,
+				  "ironwood": 1200,
+				  "silk": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season1/mormont/pants.png"
 			  },
-			  "img": "item/season1/blackfyre/pants.png"
-			},
-			{
-			  "name": "Captain's Boots",
-			  "level": 25,
-			  "materials": {
-				"blackfyre-penny": 1200,
-				"hide": 1200,
-				"milk-of-the-poppy": 1200,
-				"leather-straps": 1200
+			  {
+				"name": "Fur-Lined Boots",
+				"level": 25,
+				"materials": {
+				  "pinecone": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200,
+				  "wildfire": 1200
+				},
+				"img": "item/season1/mormont/boots.png"
 			  },
-			  "img": "item/season1/blackfyre/boots.png"
-			},
-			{
-			  "name": "Ruby Ring",
-			  "level": 25,
-			  "materials": {
-				"blackfyre-penny": 1200,
-				"black-iron": 1200,
-				"silk": 1200,
-				"ironwood": 1200
+			  {
+				"name": "Sigil Ring",
+				"level": 25,
+				"materials": {
+				  "pinecone": 1200,
+				  "hide": 1200,
+				  "copper-bar": 1200,
+				  "dragonglass": 1200
+				},
+				"img": "item/season1/mormont/ring.png"
 			  },
-			  "img": "item/season1/blackfyre/ring.png"
-			},
-			{
-			  "name": "Bastard Sword",
-			  "level": 25,
-			  "materials": {
-				"blackfyre-penny": 1200,
-				"goldenheart-wood": 1200,
-				"ironwood": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season1/blackfyre/weapon.png"
-			}
-		  ]
+			  {
+				"name": "Steel Sword",
+				"level": 25,
+				"materials": {
+				  "pinecone": 1200,
+				  "weirwood": 1200,
+				  "black-iron": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season1/mormont/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Wildling",
@@ -957,6 +957,324 @@ const season1 = {
 		  ]
 		},
 		{
+			"setName": "Faith Militant",
+			"setMat": "Lock of Hair",
+			"products": [
+			  {
+				"name": "Septa's Wimple",
+				"level": 5,
+				"materials": {
+				  "lock-of-hair": 10,
+				  "wildfire": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season1/sparrow/head.png"
+			  },
+			  {
+				"name": "Sparrow's Robe",
+				"level": 5,
+				"materials": {
+				  "lock-of-hair": 10,
+				  "goldenheart-wood": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season1/sparrow/chest.png"
+			  },
+			  {
+				"name": "Sparrow's Smallclothes",
+				"level": 5,
+				"materials": {
+				  "lock-of-hair": 10,
+				  "ironwood": 10,
+				  "silk": 10
+				},
+				"img": "item/season1/sparrow/pants.png"
+			  },
+			  {
+				"name": "Septa's Sandals",
+				"level": 5,
+				"materials": {
+				  "lock-of-hair": 10,
+				  "dragonglass": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season1/sparrow/boots.png"
+			  },
+			  {
+				"name": "Septa's Devotional Ring",
+				"level": 5,
+				"materials": {
+				  "lock-of-hair": 10,
+				  "hide": 10,
+				  "copper-bar": 10
+				},
+				"img": "item/season1/sparrow/ring.png"
+			  },
+			  {
+				"name": "Sparrow's Cudgel",
+				"level": 5,
+				"materials": {
+				  "lock-of-hair": 10,
+				  "weirwood": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season1/sparrow/weapon.png"
+			  },
+			  {
+				"name": "Septa's Wimple",
+				"level": 10,
+				"materials": {
+				  "lock-of-hair": 20,
+				  "wildfire": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season1/sparrow/head.png"
+			  },
+			  {
+				"name": "Sparrow's Robe",
+				"level": 10,
+				"materials": {
+				  "lock-of-hair": 20,
+				  "goldenheart-wood": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season1/sparrow/chest.png"
+			  },
+			  {
+				"name": "Sparrow's Smallclothes",
+				"level": 10,
+				"materials": {
+				  "lock-of-hair": 20,
+				  "ironwood": 20,
+				  "silk": 20
+				},
+				"img": "item/season1/sparrow/pants.png"
+			  },
+			  {
+				"name": "Septa's Sandals",
+				"level": 10,
+				"materials": {
+				  "lock-of-hair": 20,
+				  "dragonglass": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season1/sparrow/boots.png"
+			  },
+			  {
+				"name": "Septa's Devotional Ring",
+				"level": 10,
+				"materials": {
+				  "lock-of-hair": 20,
+				  "hide": 20,
+				  "copper-bar": 20
+				},
+				"img": "item/season1/sparrow/ring.png"
+			  },
+			  {
+				"name": "Sparrow's Cudgel",
+				"level": 10,
+				"materials": {
+				  "lock-of-hair": 20,
+				  "weirwood": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season1/sparrow/weapon.png"
+			  },
+			  {
+				"name": "Septa's Wimple",
+				"level": 15,
+				"materials": {
+				  "lock-of-hair": 120,
+				  "wildfire": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season1/sparrow/head.png"
+			  },
+			  {
+				"name": "Sparrow's Robe",
+				"level": 15,
+				"materials": {
+				  "lock-of-hair": 120,
+				  "goldenheart-wood": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season1/sparrow/chest.png"
+			  },
+			  {
+				"name": "Sparrow's Smallclothes",
+				"level": 15,
+				"materials": {
+				  "lock-of-hair": 120,
+				  "ironwood": 120,
+				  "silk": 120
+				},
+				"img": "item/season1/sparrow/pants.png"
+			  },
+			  {
+				"name": "Septa's Sandals",
+				"level": 15,
+				"materials": {
+				  "lock-of-hair": 120,
+				  "dragonglass": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season1/sparrow/boots.png"
+			  },
+			  {
+				"name": "Septa's Devotional Ring",
+				"level": 15,
+				"materials": {
+				  "lock-of-hair": 120,
+				  "hide": 120,
+				  "copper-bar": 120
+				},
+				"img": "item/season1/sparrow/ring.png"
+			  },
+			  {
+				"name": "Sparrow's Cudgel",
+				"level": 15,
+				"materials": {
+				  "lock-of-hair": 120,
+				  "weirwood": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season1/sparrow/weapon.png"
+			  },
+			  {
+				"name": "Septa's Wimple",
+				"level": 20,
+				"materials": {
+				  "lock-of-hair": 400,
+				  "wildfire": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season1/sparrow/head.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Sparrow's Robe",
+				"level": 20,
+				"materials": {
+				  "lock-of-hair": 400,
+				  "goldenheart-wood": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season1/sparrow/chest.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Sparrow's Smallclothes",
+				"level": 20,
+				"materials": {
+				  "lock-of-hair": 400,
+				  "ironwood": 400,
+				  "silk": 400
+				},
+				"img": "item/season1/sparrow/pants.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Septa's Sandals",
+				"level": 20,
+				"materials": {
+				  "lock-of-hair": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season1/sparrow/boots.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Septa's Devotional Ring",
+				"level": 20,
+				"materials": {
+				  "lock-of-hair": 400,
+				  "hide": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season1/sparrow/ring.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Sparrow's Cudgel",
+				"level": 20,
+				"materials": {
+				  "lock-of-hair": 400,
+				  "weirwood": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season1/sparrow/weapon.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Septa's Wimple",
+				"level": 25,
+				"materials": {
+				  "lock-of-hair": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season1/sparrow/head.png"
+			  },
+			  {
+				"name": "Sparrow's Robe",
+				"level": 25,
+				"materials": {
+				  "lock-of-hair": 1200,
+				  "goldenheart-wood": 1200,
+				  "kingswood-oak": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season1/sparrow/chest.png"
+			  },
+			  {
+				"name": "Sparrow's Smallclothes",
+				"level": 25,
+				"materials": {
+				  "lock-of-hair": 1200,
+				  "ironwood": 1200,
+				  "silk": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season1/sparrow/pants.png"
+			  },
+			  {
+				"name": "Septa's Sandals",
+				"level": 25,
+				"materials": {
+				  "lock-of-hair": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season1/sparrow/boots.png"
+			  },
+			  {
+				"name": "Septa's Devotional Ring",
+				"level": 25,
+				"materials": {
+				  "lock-of-hair": 1200,
+				  "hide": 1200,
+				  "copper-bar": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season1/sparrow/ring.png"
+			  },
+			  {
+				"name": "Sparrow's Cudgel",
+				"level": 25,
+				"materials": {
+				  "lock-of-hair": 1200,
+				  "weirwood": 1200,
+				  "black-iron": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season1/sparrow/weapon.png"
+			  }
+			]
+		},
+		{
 		  "setName": "Reaver's",
 		  "setMat": "Driftwood",
 		  "products": [
@@ -1275,322 +1593,640 @@ const season1 = {
 		  ]
 		},
 		{
-		  "setName": "Lannister",
-		  "setMat": "Golden Claw",
-		  "products": [
-			{
-			  "name": "Helm",
-			  "level": 5,
-			  "materials": {
-				"golden-claw": 10,
-				"silk": 10,
-				"hide": 10
+			"setName": "Corsair's",
+			"setMat": "Abalone",
+			"products": [
+			  {
+				"name": "Kerchief",
+				"level": 5,
+				"materials": {
+				  "abalone": 10,
+				  "wildfire": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season1/corsair/head.png"
 			  },
-			  "img": "item/season1/lannister/head.png"
-			},
-			{
-			  "name": "Breastplate",
-			  "level": 5,
-			  "materials": {
-				"golden-claw": 10,
-				"black-iron": 10,
-				"ironwood": 10
+			  {
+				"name": "Seacoat",
+				"level": 5,
+				"materials": {
+				  "abalone": 10,
+				  "goldenheart-wood": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season1/corsair/chest.png"
 			  },
-			  "img": "item/season1/lannister/chest.png"
-			},
-			{
-			  "name": "Tasset",
-			  "level": 5,
-			  "materials": {
-				"golden-claw": 10,
-				"copper-bar": 10,
-				"leather-straps": 10
+			  {
+				"name": "Trousers",
+				"level": 5,
+				"materials": {
+				  "abalone": 10,
+				  "ironwood": 10,
+				  "silk": 10
+				},
+				"img": "item/season1/corsair/pants.png"
 			  },
-			  "img": "item/season1/lannister/pants.png"
-			},
-			{
-			  "name": "Plated Boots",
-			  "level": 5,
-			  "materials": {
-				"golden-claw": 10,
-				"weirwood": 10,
-				"milk-of-the-poppy": 10
+			  {
+				"name": "Boots",
+				"level": 5,
+				"materials": {
+				  "abalone": 10,
+				  "dragonglass": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season1/corsair/boots.png"
 			  },
-			  "img": "item/season1/lannister/boots.png"
-			},
-			{
-			  "name": "Band",
-			  "level": 5,
-			  "materials": {
-				"golden-claw": 10,
-				"dragonglass": 10,
-				"wildfire": 10
+			  {
+				"name": "Coral Ring",
+				"level": 5,
+				"materials": {
+				  "abalone": 10,
+				  "hide": 10,
+				  "copper-bar": 10
+				},
+				"img": "item/season1/corsair/ring.png"
 			  },
-			  "img": "item/season1/lannister/ring.png"
-			},
-			{
-			  "name": "Longssword",
-			  "level": 5,
-			  "materials": {
-				"golden-claw": 10,
-				"kingswood-oak": 10,
-				"dragonglass": 10
+			  {
+				"name": "Goldenwood Bow",
+				"level": 5,
+				"materials": {
+				  "abalone": 10,
+				  "weirwood": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season1/corsair/weapon.png"
 			  },
-			  "img": "item/season1/lannister/weapon.png"
-			},
-			{
-			  "name": "Helm",
-			  "level": 10,
-			  "materials": {
-				"golden-claw": 20,
-				"silk": 20,
-				"hide": 20
+			  {
+				"name": "Kerchief",
+				"level": 10,
+				"materials": {
+				  "abalone": 20,
+				  "wildfire": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season1/corsair/head.png"
 			  },
-			  "img": "item/season1/lannister/head.png"
-			},
-			{
-			  "name": "Breastplate",
-			  "level": 10,
-			  "materials": {
-				"golden-claw": 20,
-				"black-iron": 20,
-				"ironwood": 20
+			  {
+				"name": "Seacoat",
+				"level": 10,
+				"materials": {
+				  "abalone": 20,
+				  "goldenheart-wood": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season1/corsair/chest.png"
 			  },
-			  "img": "item/season1/lannister/chest.png"
-			},
-			{
-			  "name": "Tasset",
-			  "level": 10,
-			  "materials": {
-				"golden-claw": 20,
-				"copper-bar": 20,
-				"leather-straps": 20
+			  {
+				"name": "Trousers",
+				"level": 10,
+				"materials": {
+				  "abalone": 20,
+				  "ironwood": 20,
+				  "silk": 20
+				},
+				"img": "item/season1/corsair/pants.png"
 			  },
-			  "img": "item/season1/lannister/pants.png"
-			},
-			{
-			  "name": "Plated Boots",
-			  "level": 10,
-			  "materials": {
-				"golden-claw": 20,
-				"weirwood": 20,
-				"milk-of-the-poppy": 20
+			  {
+				"name": "Boots",
+				"level": 10,
+				"materials": {
+				  "abalone": 20,
+				  "dragonglass": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season1/corsair/boots.png"
 			  },
-			  "img": "item/season1/lannister/boots.png"
-			},
-			{
-			  "name": "Band",
-			  "level": 10,
-			  "materials": {
-				"golden-claw": 20,
-				"dragonglass": 20,
-				"wildfire": 20
+			  {
+				"name": "Coral Ring",
+				"level": 10,
+				"materials": {
+				  "abalone": 20,
+				  "hide": 20,
+				  "copper-bar": 20
+				},
+				"img": "item/season1/corsair/ring.png"
 			  },
-			  "img": "item/season1/lannister/ring.png"
-			},
-			{
-			  "name": "Longssword",
-			  "level": 10,
-			  "materials": {
-				"golden-claw": 20,
-				"kingswood-oak": 20,
-				"dragonglass": 20
+			  {
+				"name": "Goldenwood Bow",
+				"level": 10,
+				"materials": {
+				  "abalone": 20,
+				  "weirwood": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season1/corsair/weapon.png"
 			  },
-			  "img": "item/season1/lannister/weapon.png"
-			},
-			{
-			  "name": "Helm",
-			  "level": 15,
-			  "materials": {
-				"golden-claw": 120,
-				"silk": 120,
-				"hide": 120
+			  {
+				"name": "Kerchief",
+				"level": 15,
+				"materials": {
+				  "abalone": 120,
+				  "wildfire": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season1/corsair/head.png"
 			  },
-			  "img": "item/season1/lannister/head.png"
-			},
-			{
-			  "name": "Breastplate",
-			  "level": 15,
-			  "materials": {
-				"golden-claw": 120,
-				"black-iron": 120,
-				"ironwood": 120
+			  {
+				"name": "Seacoat",
+				"level": 15,
+				"materials": {
+				  "abalone": 120,
+				  "goldenheart-wood": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season1/corsair/chest.png"
 			  },
-			  "img": "item/season1/lannister/chest.png"
-			},
-			{
-			  "name": "Tasset",
-			  "level": 15,
-			  "materials": {
-				"golden-claw": 120,
-				"copper-bar": 120,
-				"leather-straps": 120
+			  {
+				"name": "Trousers",
+				"level": 15,
+				"materials": {
+				  "abalone": 120,
+				  "ironwood": 120,
+				  "silk": 120
+				},
+				"img": "item/season1/corsair/pants.png"
 			  },
-			  "img": "item/season1/lannister/pants.png"
-			},
-			{
-			  "name": "Plated Boots",
-			  "level": 15,
-			  "materials": {
-				"golden-claw": 120,
-				"weirwood": 120,
-				"milk-of-the-poppy": 120
+			  {
+				"name": "Boots",
+				"level": 15,
+				"materials": {
+				  "abalone": 120,
+				  "dragonglass": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season1/corsair/boots.png"
 			  },
-			  "img": "item/season1/lannister/boots.png"
-			},
-			{
-			  "name": "Band",
-			  "level": 15,
-			  "materials": {
-				"golden-claw": 120,
-				"dragonglass": 120,
-				"wildfire": 120
+			  {
+				"name": "Coral Ring",
+				"level": 15,
+				"materials": {
+				  "abalone": 120,
+				  "hide": 120,
+				  "copper-bar": 120
+				},
+				"img": "item/season1/corsair/ring.png"
 			  },
-			  "img": "item/season1/lannister/ring.png"
-			},
-			{
-			  "name": "Longssword",
-			  "level": 15,
-			  "materials": {
-				"golden-claw": 120,
-				"kingswood-oak": 120,
-				"dragonglass": 120
+			  {
+				"name": "Goldenwood Bow",
+				"level": 15,
+				"materials": {
+				  "abalone": 120,
+				  "weirwood": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season1/corsair/weapon.png"
 			  },
-			  "img": "item/season1/lannister/weapon.png"
-			},
-			{
-			  "name": "Helm",
-			  "level": 20,
-			  "materials": {
-				"golden-claw": 400,
-				"silk": 400,
-				"hide": 400
+			  {
+				"name": "Kerchief",
+				"level": 20,
+				"materials": {
+				  "abalone": 400,
+				  "wildfire": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season1/corsair/head.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/lannister/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Breastplate",
-			  "level": 20,
-			  "materials": {
-				"golden-claw": 400,
-				"black-iron": 400,
-				"ironwood": 400
+			  {
+				"name": "Seacoat",
+				"level": 20,
+				"materials": {
+				  "abalone": 400,
+				  "goldenheart-wood": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season1/corsair/chest.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/lannister/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Tasset",
-			  "level": 20,
-			  "materials": {
-				"golden-claw": 400,
-				"copper-bar": 400,
-				"leather-straps": 400
+			  {
+				"name": "Trousers",
+				"level": 20,
+				"materials": {
+				  "abalone": 400,
+				  "ironwood": 400,
+				  "silk": 400
+				},
+				"img": "item/season1/corsair/pants.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/lannister/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Plated Boots",
-			  "level": 20,
-			  "materials": {
-				"golden-claw": 400,
-				"weirwood": 400,
-				"milk-of-the-poppy": 400
+			  {
+				"name": "Boots",
+				"level": 20,
+				"materials": {
+				  "abalone": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season1/corsair/boots.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/lannister/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Band",
-			  "level": 20,
-			  "materials": {
-				"golden-claw": 400,
-				"dragonglass": 400,
-				"wildfire": 400
+			  {
+				"name": "Coral Ring",
+				"level": 20,
+				"materials": {
+				  "abalone": 400,
+				  "hide": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season1/corsair/ring.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/lannister/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Longssword",
-			  "level": 20,
-			  "materials": {
-				"golden-claw": 400,
-				"kingswood-oak": 400,
-				"dragonglass": 400
+			  {
+				"name": "Goldenwood Bow",
+				"level": 20,
+				"materials": {
+				  "abalone": 400,
+				  "weirwood": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season1/corsair/weapon.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season1/lannister/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Helm",
-			  "level": 25,
-			  "materials": {
-				"golden-claw": 1200,
-				"silk": 1200,
-				"hide": 1200,
-				"black-iron": 1200
+			  {
+				"name": "Kerchief",
+				"level": 25,
+				"materials": {
+				  "abalone": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season1/corsair/head.png"
 			  },
-			  "img": "item/season1/lannister/head.png"
-			},
-			{
-			  "name": "Breastplate",
-			  "level": 25,
-			  "materials": {
-				"golden-claw": 1200,
-				"black-iron": 1200,
-				"ironwood": 1200,
-				"dragonglass": 1200
+			  {
+				"name": "Seacoat",
+				"level": 25,
+				"materials": {
+				  "abalone": 1200,
+				  "goldenheart-wood": 1200,
+				  "kingswood-oak": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season1/corsair/chest.png"
 			  },
-			  "img": "item/season1/lannister/chest.png"
-			},
-			{
-			  "name": "Tasset",
-			  "level": 25,
-			  "materials": {
-				"golden-claw": 1200,
-				"copper-bar": 1200,
-				"leather-straps": 1200,
-				"kingswood-oak": 1200
+			  {
+				"name": "Trousers",
+				"level": 25,
+				"materials": {
+				  "abalone": 1200,
+				  "ironwood": 1200,
+				  "silk": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season1/corsair/pants.png"
 			  },
-			  "img": "item/season1/lannister/pants.png"
-			},
-			{
-			  "name": "Plated Boots",
-			  "level": 25,
-			  "materials": {
-				"golden-claw": 1200,
-				"weirwood": 1200,
-				"milk-of-the-poppy": 1200,
-				"silk": 1200
+			  {
+				"name": "Boots",
+				"level": 25,
+				"materials": {
+				  "abalone": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season1/corsair/boots.png"
 			  },
-			  "img": "item/season1/lannister/boots.png"
-			},
-			{
-			  "name": "Band",
-			  "level": 25,
-			  "materials": {
-				"golden-claw": 1200,
-				"dragonglass": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200
+			  {
+				"name": "Coral Ring",
+				"level": 25,
+				"materials": {
+				  "abalone": 1200,
+				  "hide": 1200,
+				  "copper-bar": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season1/corsair/ring.png"
 			  },
-			  "img": "item/season1/lannister/ring.png"
-			},
-			{
-			  "name": "Longssword",
-			  "level": 25,
-			  "materials": {
-				"golden-claw": 1200,
-				"kingswood-oak": 1200,
-				"dragonglass": 1200,
-				"copper-bar": 1200
+			  {
+				"name": "Goldenwood Bow",
+				"level": 25,
+				"materials": {
+				  "abalone": 1200,
+				  "weirwood": 1200,
+				  "black-iron": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season1/corsair/weapon.png"
+			  }
+			]
+		},
+		{
+			"setName": "Qartheen",
+			"setMat": "Qartheen Jeweled Beetle",
+			"products": [
+			  {
+				"name": "Headress",
+				"level": 5,
+				"materials": {
+				  "qartheen-jeweled-beetle": 10,
+				  "wildfire": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season1/qartheen/head.png"
 			  },
-			  "img": "item/season1/lannister/weapon.png"
-			}
-		  ]
+			  {
+				"name": "Tunic",
+				"level": 5,
+				"materials": {
+				  "qartheen-jeweled-beetle": 10,
+				  "goldenheart-wood": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season1/qartheen/chest.png"
+			  },
+			  {
+				"name": "Robe",
+				"level": 5,
+				"materials": {
+				  "qartheen-jeweled-beetle": 10,
+				  "ironwood": 10,
+				  "silk": 10
+				},
+				"img": "item/season1/qartheen/pants.png"
+			  },
+			  {
+				"name": "Sandals",
+				"level": 5,
+				"materials": {
+				  "qartheen-jeweled-beetle": 10,
+				  "dragonglass": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season1/qartheen/boots.png"
+			  },
+			  {
+				"name": "Agate Ring",
+				"level": 5,
+				"materials": {
+				  "qartheen-jeweled-beetle": 10,
+				  "hide": 10,
+				  "copper-bar": 10
+				},
+				"img": "item/season1/qartheen/ring.png"
+			  },
+			  {
+				"name": "Dagger",
+				"level": 5,
+				"materials": {
+				  "qartheen-jeweled-beetle": 10,
+				  "weirwood": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season1/qartheen/weapon.png"
+			  },
+			  {
+				"name": "Headress",
+				"level": 10,
+				"materials": {
+				  "qartheen-jeweled-beetle": 20,
+				  "wildfire": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season1/qartheen/head.png"
+			  },
+			  {
+				"name": "Tunic",
+				"level": 10,
+				"materials": {
+				  "qartheen-jeweled-beetle": 20,
+				  "goldenheart-wood": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season1/qartheen/chest.png"
+			  },
+			  {
+				"name": "Robe",
+				"level": 10,
+				"materials": {
+				  "qartheen-jeweled-beetle": 20,
+				  "ironwood": 20,
+				  "silk": 20
+				},
+				"img": "item/season1/qartheen/pants.png"
+			  },
+			  {
+				"name": "Sandals",
+				"level": 10,
+				"materials": {
+				  "qartheen-jeweled-beetle": 20,
+				  "dragonglass": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season1/qartheen/boots.png"
+			  },
+			  {
+				"name": "Agate Ring",
+				"level": 10,
+				"materials": {
+				  "qartheen-jeweled-beetle": 20,
+				  "hide": 20,
+				  "copper-bar": 20
+				},
+				"img": "item/season1/qartheen/ring.png"
+			  },
+			  {
+				"name": "Dagger",
+				"level": 10,
+				"materials": {
+				  "qartheen-jeweled-beetle": 20,
+				  "weirwood": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season1/qartheen/weapon.png"
+			  },
+			  {
+				"name": "Headress",
+				"level": 15,
+				"materials": {
+				  "qartheen-jeweled-beetle": 120,
+				  "wildfire": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season1/qartheen/head.png"
+			  },
+			  {
+				"name": "Tunic",
+				"level": 15,
+				"materials": {
+				  "qartheen-jeweled-beetle": 120,
+				  "goldenheart-wood": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season1/qartheen/chest.png"
+			  },
+			  {
+				"name": "Robe",
+				"level": 15,
+				"materials": {
+				  "qartheen-jeweled-beetle": 120,
+				  "ironwood": 120,
+				  "silk": 120
+				},
+				"img": "item/season1/qartheen/pants.png"
+			  },
+			  {
+				"name": "Sandals",
+				"level": 15,
+				"materials": {
+				  "qartheen-jeweled-beetle": 120,
+				  "dragonglass": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season1/qartheen/boots.png"
+			  },
+			  {
+				"name": "Agate Ring",
+				"level": 15,
+				"materials": {
+				  "qartheen-jeweled-beetle": 120,
+				  "hide": 120,
+				  "copper-bar": 120
+				},
+				"img": "item/season1/qartheen/ring.png"
+			  },
+			  {
+				"name": "Dagger",
+				"level": 15,
+				"materials": {
+				  "qartheen-jeweled-beetle": 120,
+				  "weirwood": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season1/qartheen/weapon.png"
+			  },
+			  {
+				"name": "Headress",
+				"level": 20,
+				"materials": {
+				  "qartheen-jeweled-beetle": 400,
+				  "wildfire": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season1/qartheen/head.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Tunic",
+				"level": 20,
+				"materials": {
+				  "qartheen-jeweled-beetle": 400,
+				  "goldenheart-wood": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season1/qartheen/chest.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Robe",
+				"level": 20,
+				"materials": {
+				  "qartheen-jeweled-beetle": 400,
+				  "ironwood": 400,
+				  "silk": 400
+				},
+				"img": "item/season1/qartheen/pants.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Sandals",
+				"level": 20,
+				"materials": {
+				  "qartheen-jeweled-beetle": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season1/qartheen/boots.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Agate Ring",
+				"level": 20,
+				"materials": {
+				  "qartheen-jeweled-beetle": 400,
+				  "hide": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season1/qartheen/ring.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Dagger",
+				"level": 20,
+				"materials": {
+				  "qartheen-jeweled-beetle": 400,
+				  "weirwood": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season1/qartheen/weapon.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Headress",
+				"level": 25,
+				"materials": {
+				  "qartheen-jeweled-beetle": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "ironwood": 1200
+				},
+				"img": "item/season1/qartheen/head.png"
+			  },
+			  {
+				"name": "Tunic",
+				"level": 25,
+				"materials": {
+				  "qartheen-jeweled-beetle": 1200,
+				  "goldenheart-wood": 1200,
+				  "kingswood-oak": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season1/qartheen/chest.png"
+			  },
+			  {
+				"name": "Robe",
+				"level": 25,
+				"materials": {
+				  "qartheen-jeweled-beetle": 1200,
+				  "ironwood": 1200,
+				  "silk": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season1/qartheen/pants.png"
+			  },
+			  {
+				"name": "Sandals",
+				"level": 25,
+				"materials": {
+				  "qartheen-jeweled-beetle": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season1/qartheen/boots.png"
+			  },
+			  {
+				"name": "Agate Ring",
+				"level": 25,
+				"materials": {
+				  "qartheen-jeweled-beetle": 1200,
+				  "hide": 1200,
+				  "copper-bar": 1200,
+				  "leather-straps": 1200
+				},
+				"img": "item/season1/qartheen/ring.png"
+			  },
+			  {
+				"name": "Dagger",
+				"level": 25,
+				"materials": {
+				  "qartheen-jeweled-beetle": 1200,
+				  "weirwood": 1200,
+				  "black-iron": 1200,
+				  "ironwood": 1200
+				},
+				"img": "item/season1/qartheen/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Dothraki",
@@ -1911,958 +2547,322 @@ const season1 = {
 		  ]
 		},
 		{
-		  "setName": "Faith Militant",
-		  "setMat": "Lock of Hair",
-		  "products": [
-			{
-			  "name": "Septa's Wimple",
-			  "level": 5,
-			  "materials": {
-				"lock-of-hair": 10,
-				"wildfire": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season1/sparrow/head.png"
-			},
-			{
-			  "name": "Sparrow's Robe",
-			  "level": 5,
-			  "materials": {
-				"lock-of-hair": 10,
-				"goldenheart-wood": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season1/sparrow/chest.png"
-			},
-			{
-			  "name": "Sparrow's Smallclothes",
-			  "level": 5,
-			  "materials": {
-				"lock-of-hair": 10,
-				"ironwood": 10,
-				"silk": 10
-			  },
-			  "img": "item/season1/sparrow/pants.png"
-			},
-			{
-			  "name": "Septa's Sandals",
-			  "level": 5,
-			  "materials": {
-				"lock-of-hair": 10,
-				"dragonglass": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season1/sparrow/boots.png"
-			},
-			{
-			  "name": "Septa's Devotional Ring",
-			  "level": 5,
-			  "materials": {
-				"lock-of-hair": 10,
-				"hide": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season1/sparrow/ring.png"
-			},
-			{
-			  "name": "Sparrow's Cudgel",
-			  "level": 5,
-			  "materials": {
-				"lock-of-hair": 10,
-				"weirwood": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season1/sparrow/weapon.png"
-			},
-			{
-			  "name": "Septa's Wimple",
-			  "level": 10,
-			  "materials": {
-				"lock-of-hair": 20,
-				"wildfire": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season1/sparrow/head.png"
-			},
-			{
-			  "name": "Sparrow's Robe",
-			  "level": 10,
-			  "materials": {
-				"lock-of-hair": 20,
-				"goldenheart-wood": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season1/sparrow/chest.png"
-			},
-			{
-			  "name": "Sparrow's Smallclothes",
-			  "level": 10,
-			  "materials": {
-				"lock-of-hair": 20,
-				"ironwood": 20,
-				"silk": 20
-			  },
-			  "img": "item/season1/sparrow/pants.png"
-			},
-			{
-			  "name": "Septa's Sandals",
-			  "level": 10,
-			  "materials": {
-				"lock-of-hair": 20,
-				"dragonglass": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season1/sparrow/boots.png"
-			},
-			{
-			  "name": "Septa's Devotional Ring",
-			  "level": 10,
-			  "materials": {
-				"lock-of-hair": 20,
-				"hide": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season1/sparrow/ring.png"
-			},
-			{
-			  "name": "Sparrow's Cudgel",
-			  "level": 10,
-			  "materials": {
-				"lock-of-hair": 20,
-				"weirwood": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season1/sparrow/weapon.png"
-			},
-			{
-			  "name": "Septa's Wimple",
-			  "level": 15,
-			  "materials": {
-				"lock-of-hair": 120,
-				"wildfire": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season1/sparrow/head.png"
-			},
-			{
-			  "name": "Sparrow's Robe",
-			  "level": 15,
-			  "materials": {
-				"lock-of-hair": 120,
-				"goldenheart-wood": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season1/sparrow/chest.png"
-			},
-			{
-			  "name": "Sparrow's Smallclothes",
-			  "level": 15,
-			  "materials": {
-				"lock-of-hair": 120,
-				"ironwood": 120,
-				"silk": 120
-			  },
-			  "img": "item/season1/sparrow/pants.png"
-			},
-			{
-			  "name": "Septa's Sandals",
-			  "level": 15,
-			  "materials": {
-				"lock-of-hair": 120,
-				"dragonglass": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season1/sparrow/boots.png"
-			},
-			{
-			  "name": "Septa's Devotional Ring",
-			  "level": 15,
-			  "materials": {
-				"lock-of-hair": 120,
-				"hide": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season1/sparrow/ring.png"
-			},
-			{
-			  "name": "Sparrow's Cudgel",
-			  "level": 15,
-			  "materials": {
-				"lock-of-hair": 120,
-				"weirwood": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season1/sparrow/weapon.png"
-			},
-			{
-			  "name": "Septa's Wimple",
-			  "level": 20,
-			  "materials": {
-				"lock-of-hair": 400,
-				"wildfire": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season1/sparrow/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sparrow's Robe",
-			  "level": 20,
-			  "materials": {
-				"lock-of-hair": 400,
-				"goldenheart-wood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season1/sparrow/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sparrow's Smallclothes",
-			  "level": 20,
-			  "materials": {
-				"lock-of-hair": 400,
-				"ironwood": 400,
-				"silk": 400
-			  },
-			  "img": "item/season1/sparrow/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Septa's Sandals",
-			  "level": 20,
-			  "materials": {
-				"lock-of-hair": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season1/sparrow/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Septa's Devotional Ring",
-			  "level": 20,
-			  "materials": {
-				"lock-of-hair": 400,
-				"hide": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season1/sparrow/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sparrow's Cudgel",
-			  "level": 20,
-			  "materials": {
-				"lock-of-hair": 400,
-				"weirwood": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season1/sparrow/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Septa's Wimple",
-			  "level": 25,
-			  "materials": {
-				"lock-of-hair": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season1/sparrow/head.png"
-			},
-			{
-			  "name": "Sparrow's Robe",
-			  "level": 25,
-			  "materials": {
-				"lock-of-hair": 1200,
-				"goldenheart-wood": 1200,
-				"kingswood-oak": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season1/sparrow/chest.png"
-			},
-			{
-			  "name": "Sparrow's Smallclothes",
-			  "level": 25,
-			  "materials": {
-				"lock-of-hair": 1200,
-				"ironwood": 1200,
-				"silk": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season1/sparrow/pants.png"
-			},
-			{
-			  "name": "Septa's Sandals",
-			  "level": 25,
-			  "materials": {
-				"lock-of-hair": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season1/sparrow/boots.png"
-			},
-			{
-			  "name": "Septa's Devotional Ring",
-			  "level": 25,
-			  "materials": {
-				"lock-of-hair": 1200,
-				"hide": 1200,
-				"copper-bar": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season1/sparrow/ring.png"
-			},
-			{
-			  "name": "Sparrow's Cudgel",
-			  "level": 25,
-			  "materials": {
-				"lock-of-hair": 1200,
-				"weirwood": 1200,
-				"black-iron": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season1/sparrow/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Mormont",
-		  "setMat": "Pinecone",
-		  "products": [
-			{
-			  "name": "Steel Helm",
-			  "level": 5,
-			  "materials": {
-				"pinecone": 10,
-				"wildfire": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season1/mormont/head.png"
-			},
-			{
-			  "name": "Bear Cloak Armor",
-			  "level": 5,
-			  "materials": {
-				"pinecone": 10,
-				"goldenheart-wood": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season1/mormont/chest.png"
-			},
-			{
-			  "name": "Heavy Armor",
-			  "level": 5,
-			  "materials": {
-				"pinecone": 10,
-				"ironwood": 10,
-				"silk": 10
-			  },
-			  "img": "item/season1/mormont/pants.png"
-			},
-			{
-			  "name": "Fur-Lined Boots",
-			  "level": 5,
-			  "materials": {
-				"pinecone": 10,
-				"dragonglass": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season1/mormont/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 5,
-			  "materials": {
-				"pinecone": 10,
-				"hide": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season1/mormont/ring.png"
-			},
-			{
-			  "name": "Steel Sword",
-			  "level": 5,
-			  "materials": {
-				"pinecone": 10,
-				"weirwood": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season1/mormont/weapon.png"
-			},
-			{
-			  "name": "Steel Helm",
-			  "level": 10,
-			  "materials": {
-				"pinecone": 20,
-				"wildfire": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season1/mormont/head.png"
-			},
-			{
-			  "name": "Bear Cloak Armor",
-			  "level": 10,
-			  "materials": {
-				"pinecone": 20,
-				"goldenheart-wood": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season1/mormont/chest.png"
-			},
-			{
-			  "name": "Heavy Armor",
-			  "level": 10,
-			  "materials": {
-				"pinecone": 20,
-				"ironwood": 20,
-				"silk": 20
-			  },
-			  "img": "item/season1/mormont/pants.png"
-			},
-			{
-			  "name": "Fur-Lined Boots",
-			  "level": 10,
-			  "materials": {
-				"pinecone": 20,
-				"dragonglass": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season1/mormont/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 10,
-			  "materials": {
-				"pinecone": 20,
-				"hide": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season1/mormont/ring.png"
-			},
-			{
-			  "name": "Steel Sword",
-			  "level": 10,
-			  "materials": {
-				"pinecone": 20,
-				"weirwood": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season1/mormont/weapon.png"
-			},
-			{
-			  "name": "Steel Helm",
-			  "level": 15,
-			  "materials": {
-				"pinecone": 120,
-				"wildfire": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season1/mormont/head.png"
-			},
-			{
-			  "name": "Bear Cloak Armor",
-			  "level": 15,
-			  "materials": {
-				"pinecone": 120,
-				"goldenheart-wood": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season1/mormont/chest.png"
-			},
-			{
-			  "name": "Heavy Armor",
-			  "level": 15,
-			  "materials": {
-				"pinecone": 120,
-				"ironwood": 120,
-				"silk": 120
-			  },
-			  "img": "item/season1/mormont/pants.png"
-			},
-			{
-			  "name": "Fur-Lined Boots",
-			  "level": 15,
-			  "materials": {
-				"pinecone": 120,
-				"dragonglass": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season1/mormont/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 15,
-			  "materials": {
-				"pinecone": 120,
-				"hide": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season1/mormont/ring.png"
-			},
-			{
-			  "name": "Steel Sword",
-			  "level": 15,
-			  "materials": {
-				"pinecone": 120,
-				"weirwood": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season1/mormont/weapon.png"
-			},
-			{
-			  "name": "Steel Helm",
-			  "level": 20,
-			  "materials": {
-				"pinecone": 400,
-				"wildfire": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season1/mormont/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Bear Cloak Armor",
-			  "level": 20,
-			  "materials": {
-				"pinecone": 400,
-				"goldenheart-wood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season1/mormont/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Heavy Armor",
-			  "level": 20,
-			  "materials": {
-				"pinecone": 400,
-				"ironwood": 400,
-				"silk": 400
-			  },
-			  "img": "item/season1/mormont/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Fur-Lined Boots",
-			  "level": 20,
-			  "materials": {
-				"pinecone": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season1/mormont/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 20,
-			  "materials": {
-				"pinecone": 400,
-				"hide": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season1/mormont/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Steel Sword",
-			  "level": 20,
-			  "materials": {
-				"pinecone": 400,
-				"weirwood": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season1/mormont/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Steel Helm",
-			  "level": 25,
-			  "materials": {
-				"pinecone": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season1/mormont/head.png"
-			},
-			{
-			  "name": "Bear Cloak Armor",
-			  "level": 25,
-			  "materials": {
-				"pinecone": 1200,
-				"goldenheart-wood": 1200,
-				"kingswood-oak": 1200,
-				"wildfire": 1200
-			  },
-			  "img": "item/season1/mormont/chest.png"
-			},
-			{
-			  "name": "Heavy Armor",
-			  "level": 25,
-			  "materials": {
-				"pinecone": 1200,
-				"ironwood": 1200,
-				"silk": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season1/mormont/pants.png"
-			},
-			{
-			  "name": "Fur-Lined Boots",
-			  "level": 25,
-			  "materials": {
-				"pinecone": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200,
-				"wildfire": 1200
-			  },
-			  "img": "item/season1/mormont/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 25,
-			  "materials": {
-				"pinecone": 1200,
-				"hide": 1200,
-				"copper-bar": 1200,
-				"dragonglass": 1200
-			  },
-			  "img": "item/season1/mormont/ring.png"
-			},
-			{
-			  "name": "Steel Sword",
-			  "level": 25,
-			  "materials": {
-				"pinecone": 1200,
-				"weirwood": 1200,
-				"black-iron": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season1/mormont/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Qartheen",
-		  "setMat": "Qartheen Jeweled Beetle",
-		  "products": [
-			{
-			  "name": "Headress",
-			  "level": 5,
-			  "materials": {
-				"qartheen-jeweled-beetle": 10,
-				"wildfire": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season1/qartheen/head.png"
-			},
-			{
-			  "name": "Tunic",
-			  "level": 5,
-			  "materials": {
-				"qartheen-jeweled-beetle": 10,
-				"goldenheart-wood": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season1/qartheen/chest.png"
-			},
-			{
-			  "name": "Robe",
-			  "level": 5,
-			  "materials": {
-				"qartheen-jeweled-beetle": 10,
-				"ironwood": 10,
-				"silk": 10
-			  },
-			  "img": "item/season1/qartheen/pants.png"
-			},
-			{
-			  "name": "Sandals",
-			  "level": 5,
-			  "materials": {
-				"qartheen-jeweled-beetle": 10,
-				"dragonglass": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season1/qartheen/boots.png"
-			},
-			{
-			  "name": "Agate Ring",
-			  "level": 5,
-			  "materials": {
-				"qartheen-jeweled-beetle": 10,
-				"hide": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season1/qartheen/ring.png"
-			},
-			{
-			  "name": "Dagger",
-			  "level": 5,
-			  "materials": {
-				"qartheen-jeweled-beetle": 10,
-				"weirwood": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season1/qartheen/weapon.png"
-			},
-			{
-			  "name": "Headress",
-			  "level": 10,
-			  "materials": {
-				"qartheen-jeweled-beetle": 20,
-				"wildfire": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season1/qartheen/head.png"
-			},
-			{
-			  "name": "Tunic",
-			  "level": 10,
-			  "materials": {
-				"qartheen-jeweled-beetle": 20,
-				"goldenheart-wood": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season1/qartheen/chest.png"
-			},
-			{
-			  "name": "Robe",
-			  "level": 10,
-			  "materials": {
-				"qartheen-jeweled-beetle": 20,
-				"ironwood": 20,
-				"silk": 20
-			  },
-			  "img": "item/season1/qartheen/pants.png"
-			},
-			{
-			  "name": "Sandals",
-			  "level": 10,
-			  "materials": {
-				"qartheen-jeweled-beetle": 20,
-				"dragonglass": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season1/qartheen/boots.png"
-			},
-			{
-			  "name": "Agate Ring",
-			  "level": 10,
-			  "materials": {
-				"qartheen-jeweled-beetle": 20,
-				"hide": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season1/qartheen/ring.png"
-			},
-			{
-			  "name": "Dagger",
-			  "level": 10,
-			  "materials": {
-				"qartheen-jeweled-beetle": 20,
-				"weirwood": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season1/qartheen/weapon.png"
-			},
-			{
-			  "name": "Headress",
-			  "level": 15,
-			  "materials": {
-				"qartheen-jeweled-beetle": 120,
-				"wildfire": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season1/qartheen/head.png"
-			},
-			{
-			  "name": "Tunic",
-			  "level": 15,
-			  "materials": {
-				"qartheen-jeweled-beetle": 120,
-				"goldenheart-wood": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season1/qartheen/chest.png"
-			},
-			{
-			  "name": "Robe",
-			  "level": 15,
-			  "materials": {
-				"qartheen-jeweled-beetle": 120,
-				"ironwood": 120,
-				"silk": 120
-			  },
-			  "img": "item/season1/qartheen/pants.png"
-			},
-			{
-			  "name": "Sandals",
-			  "level": 15,
-			  "materials": {
-				"qartheen-jeweled-beetle": 120,
-				"dragonglass": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season1/qartheen/boots.png"
-			},
-			{
-			  "name": "Agate Ring",
-			  "level": 15,
-			  "materials": {
-				"qartheen-jeweled-beetle": 120,
-				"hide": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season1/qartheen/ring.png"
-			},
-			{
-			  "name": "Dagger",
-			  "level": 15,
-			  "materials": {
-				"qartheen-jeweled-beetle": 120,
-				"weirwood": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season1/qartheen/weapon.png"
-			},
-			{
-			  "name": "Headress",
-			  "level": 20,
-			  "materials": {
-				"qartheen-jeweled-beetle": 400,
-				"wildfire": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season1/qartheen/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Tunic",
-			  "level": 20,
-			  "materials": {
-				"qartheen-jeweled-beetle": 400,
-				"goldenheart-wood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season1/qartheen/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Robe",
-			  "level": 20,
-			  "materials": {
-				"qartheen-jeweled-beetle": 400,
-				"ironwood": 400,
-				"silk": 400
-			  },
-			  "img": "item/season1/qartheen/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sandals",
-			  "level": 20,
-			  "materials": {
-				"qartheen-jeweled-beetle": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season1/qartheen/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Agate Ring",
-			  "level": 20,
-			  "materials": {
-				"qartheen-jeweled-beetle": 400,
-				"hide": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season1/qartheen/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Dagger",
-			  "level": 20,
-			  "materials": {
-				"qartheen-jeweled-beetle": 400,
-				"weirwood": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season1/qartheen/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Headress",
-			  "level": 25,
-			  "materials": {
-				"qartheen-jeweled-beetle": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200,
-				"ironwood": 1200
-			  },
-			  "img": "item/season1/qartheen/head.png"
-			},
-			{
-			  "name": "Tunic",
-			  "level": 25,
-			  "materials": {
-				"qartheen-jeweled-beetle": 1200,
-				"goldenheart-wood": 1200,
-				"kingswood-oak": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season1/qartheen/chest.png"
-			},
-			{
-			  "name": "Robe",
-			  "level": 25,
-			  "materials": {
-				"qartheen-jeweled-beetle": 1200,
-				"ironwood": 1200,
-				"silk": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season1/qartheen/pants.png"
-			},
-			{
-			  "name": "Sandals",
-			  "level": 25,
-			  "materials": {
-				"qartheen-jeweled-beetle": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season1/qartheen/boots.png"
-			},
-			{
-			  "name": "Agate Ring",
-			  "level": 25,
-			  "materials": {
-				"qartheen-jeweled-beetle": 1200,
-				"hide": 1200,
-				"copper-bar": 1200,
-				"leather-straps": 1200
-			  },
-			  "img": "item/season1/qartheen/ring.png"
-			},
-			{
-			  "name": "Dagger",
-			  "level": 25,
-			  "materials": {
-				"qartheen-jeweled-beetle": 1200,
-				"weirwood": 1200,
-				"black-iron": 1200,
-				"ironwood": 1200
-			  },
-			  "img": "item/season1/qartheen/weapon.png"
-			}
-		  ]
+			"setName": "Lannister",
+			"setMat": "Golden Claw",
+			"products": [
+			  {
+				"name": "Helm",
+				"level": 5,
+				"materials": {
+				  "golden-claw": 10,
+				  "silk": 10,
+				  "hide": 10
+				},
+				"img": "item/season1/lannister/head.png"
+			  },
+			  {
+				"name": "Breastplate",
+				"level": 5,
+				"materials": {
+				  "golden-claw": 10,
+				  "black-iron": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season1/lannister/chest.png"
+			  },
+			  {
+				"name": "Tasset",
+				"level": 5,
+				"materials": {
+				  "golden-claw": 10,
+				  "copper-bar": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season1/lannister/pants.png"
+			  },
+			  {
+				"name": "Plated Boots",
+				"level": 5,
+				"materials": {
+				  "golden-claw": 10,
+				  "weirwood": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season1/lannister/boots.png"
+			  },
+			  {
+				"name": "Band",
+				"level": 5,
+				"materials": {
+				  "golden-claw": 10,
+				  "dragonglass": 10,
+				  "wildfire": 10
+				},
+				"img": "item/season1/lannister/ring.png"
+			  },
+			  {
+				"name": "Longssword",
+				"level": 5,
+				"materials": {
+				  "golden-claw": 10,
+				  "kingswood-oak": 10,
+				  "dragonglass": 10
+				},
+				"img": "item/season1/lannister/weapon.png"
+			  },
+			  {
+				"name": "Helm",
+				"level": 10,
+				"materials": {
+				  "golden-claw": 20,
+				  "silk": 20,
+				  "hide": 20
+				},
+				"img": "item/season1/lannister/head.png"
+			  },
+			  {
+				"name": "Breastplate",
+				"level": 10,
+				"materials": {
+				  "golden-claw": 20,
+				  "black-iron": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season1/lannister/chest.png"
+			  },
+			  {
+				"name": "Tasset",
+				"level": 10,
+				"materials": {
+				  "golden-claw": 20,
+				  "copper-bar": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season1/lannister/pants.png"
+			  },
+			  {
+				"name": "Plated Boots",
+				"level": 10,
+				"materials": {
+				  "golden-claw": 20,
+				  "weirwood": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season1/lannister/boots.png"
+			  },
+			  {
+				"name": "Band",
+				"level": 10,
+				"materials": {
+				  "golden-claw": 20,
+				  "dragonglass": 20,
+				  "wildfire": 20
+				},
+				"img": "item/season1/lannister/ring.png"
+			  },
+			  {
+				"name": "Longssword",
+				"level": 10,
+				"materials": {
+				  "golden-claw": 20,
+				  "kingswood-oak": 20,
+				  "dragonglass": 20
+				},
+				"img": "item/season1/lannister/weapon.png"
+			  },
+			  {
+				"name": "Helm",
+				"level": 15,
+				"materials": {
+				  "golden-claw": 120,
+				  "silk": 120,
+				  "hide": 120
+				},
+				"img": "item/season1/lannister/head.png"
+			  },
+			  {
+				"name": "Breastplate",
+				"level": 15,
+				"materials": {
+				  "golden-claw": 120,
+				  "black-iron": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season1/lannister/chest.png"
+			  },
+			  {
+				"name": "Tasset",
+				"level": 15,
+				"materials": {
+				  "golden-claw": 120,
+				  "copper-bar": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season1/lannister/pants.png"
+			  },
+			  {
+				"name": "Plated Boots",
+				"level": 15,
+				"materials": {
+				  "golden-claw": 120,
+				  "weirwood": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season1/lannister/boots.png"
+			  },
+			  {
+				"name": "Band",
+				"level": 15,
+				"materials": {
+				  "golden-claw": 120,
+				  "dragonglass": 120,
+				  "wildfire": 120
+				},
+				"img": "item/season1/lannister/ring.png"
+			  },
+			  {
+				"name": "Longssword",
+				"level": 15,
+				"materials": {
+				  "golden-claw": 120,
+				  "kingswood-oak": 120,
+				  "dragonglass": 120
+				},
+				"img": "item/season1/lannister/weapon.png"
+			  },
+			  {
+				"name": "Helm",
+				"level": 20,
+				"materials": {
+				  "golden-claw": 400,
+				  "silk": 400,
+				  "hide": 400
+				},
+				"img": "item/season1/lannister/head.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Breastplate",
+				"level": 20,
+				"materials": {
+				  "golden-claw": 400,
+				  "black-iron": 400,
+				  "ironwood": 400
+				},
+				"img": "item/season1/lannister/chest.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Tasset",
+				"level": 20,
+				"materials": {
+				  "golden-claw": 400,
+				  "copper-bar": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season1/lannister/pants.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Plated Boots",
+				"level": 20,
+				"materials": {
+				  "golden-claw": 400,
+				  "weirwood": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season1/lannister/boots.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Band",
+				"level": 20,
+				"materials": {
+				  "golden-claw": 400,
+				  "dragonglass": 400,
+				  "wildfire": 400
+				},
+				"img": "item/season1/lannister/ring.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Longssword",
+				"level": 20,
+				"materials": {
+				  "golden-claw": 400,
+				  "kingswood-oak": 400,
+				  "dragonglass": 400
+				},
+				"img": "item/season1/lannister/weapon.png",
+				"odds": "medium"
+			  },
+			  {
+				"name": "Helm",
+				"level": 25,
+				"materials": {
+				  "golden-claw": 1200,
+				  "silk": 1200,
+				  "hide": 1200,
+				  "black-iron": 1200
+				},
+				"img": "item/season1/lannister/head.png"
+			  },
+			  {
+				"name": "Breastplate",
+				"level": 25,
+				"materials": {
+				  "golden-claw": 1200,
+				  "black-iron": 1200,
+				  "ironwood": 1200,
+				  "dragonglass": 1200
+				},
+				"img": "item/season1/lannister/chest.png"
+			  },
+			  {
+				"name": "Tasset",
+				"level": 25,
+				"materials": {
+				  "golden-claw": 1200,
+				  "copper-bar": 1200,
+				  "leather-straps": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season1/lannister/pants.png"
+			  },
+			  {
+				"name": "Plated Boots",
+				"level": 25,
+				"materials": {
+				  "golden-claw": 1200,
+				  "weirwood": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season1/lannister/boots.png"
+			  },
+			  {
+				"name": "Band",
+				"level": 25,
+				"materials": {
+				  "golden-claw": 1200,
+				  "dragonglass": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season1/lannister/ring.png"
+			  },
+			  {
+				"name": "Longssword",
+				"level": 25,
+				"materials": {
+				  "golden-claw": 1200,
+				  "kingswood-oak": 1200,
+				  "dragonglass": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season1/lannister/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Stark",

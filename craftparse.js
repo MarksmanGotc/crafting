@@ -299,7 +299,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-04-01';
+    const storageKey = 'noox-update-log-2026-05-08';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
@@ -2811,6 +2811,21 @@ function getSlotSortIndex(img) {
     return 6;
 }
 
+/** `seasons`-datalle: avain "seasonNum|setName" -> indeksi kyseisen seasonin `sets`-taulukossa. */
+function buildSeasonSetOrderMap() {
+    const m = new Map();
+    if (typeof seasons === 'undefined' || !Array.isArray(seasons)) return m;
+    seasons.forEach(seasonObj => {
+        if (!seasonObj || !Array.isArray(seasonObj.sets)) return;
+        seasonObj.sets.forEach((set, idx) => {
+            if (set && set.setName) {
+                m.set(`${seasonObj.season}|${set.setName}`, idx);
+            }
+        });
+    });
+    return m;
+}
+
 function stackTemplatesInLevel(templates) {
     if (!Array.isArray(templates) || templates.length === 0) return [];
     const byKey = {};
@@ -2831,12 +2846,24 @@ function stackTemplatesInLevel(templates) {
         byKey[key].amount += t.amount;
     });
     const stacked = Object.values(byKey);
-    /* Järjestä: ensin season 0, sitten 1, 2, …; seasonin sisällä slot-järjestyksessä (kypärä, rintapanssari, …). */
+    const setOrderMap = buildSeasonSetOrderMap();
+    const setOrderIdx = (seasonNum, setName) => {
+        if (!setName || seasonNum == null || seasonNum === 0) return 9999;
+        const key = `${seasonNum}|${setName}`;
+        return setOrderMap.has(key) ? setOrderMap.get(key) : 9999;
+    };
+    /* Järjestä: season nouseva; seasonin sisällä slot; saman slotin sisällä sets-järjestys seasonX.js:ssä; viimeisenä nimi. */
     stacked.sort((a, b) => {
         const seasonA = a.season ?? 0;
         const seasonB = b.season ?? 0;
         if (seasonA !== seasonB) return seasonA - seasonB;
-        return getSlotSortIndex(a.img) - getSlotSortIndex(b.img);
+        const slotA = getSlotSortIndex(a.img);
+        const slotB = getSlotSortIndex(b.img);
+        if (slotA !== slotB) return slotA - slotB;
+        const setOrdA = setOrderIdx(seasonA, a.setName);
+        const setOrdB = setOrderIdx(seasonB, b.setName);
+        if (setOrdA !== setOrdB) return setOrdA - setOrdB;
+        return (a.name || '').localeCompare(b.name || '');
     });
     return stacked;
 }
@@ -3015,26 +3042,27 @@ async function runUseAllMaterialsCalculation() {
         let legendaryLevels = selectedLevels.filter(l => l <= 10).sort((a, b) => a - b);
         let higherLevels = selectedLevels.filter(l => l > 10).sort((a, b) => a - b);
         /* Ei lisätä L1,5,10 ketjuun jos käyttäjä valitsi vain ylemmät (esim. 35–40): ketju on silloin vain 35→40, jotta kaikki materiaali käytetään valituille tasoille. */
+        const levelsOrdered = [...legendaryLevels, ...higherLevels];
 
-        // Ylempi taso tehdään MAKSIMISSAAN alempien onnistuneiden määrä. achievableSet = vain tasot joilla voidaan tuottaa → muut tasot req=0, kaikki materiaali menee saavutettaviin tasoihin.
+        // Jokainen taso: pyyntömäärä = edellisen tason onnistuneet (tai N ensimmäisellä); sitten kerrotaan successRates[l]. L1–L10 eivät ole enää erikoistapaus "aina N".
         function buildRequestedForN(N, achievableSet = null) {
             const req = {};
             LEVELS.forEach(l => { req[l] = 0; });
             const inAchievable = (l) => achievableSet == null || achievableSet.has(l);
-            legendaryLevels.forEach(l => {
-                if (inAchievable(l)) req[l] = N;
-            });
             let successfulPrev = N;
-            higherLevels.forEach((l, idx) => {
-                const attempted = idx === 0 ? N : Math.max(0, Math.floor(successfulPrev));
-                if (inAchievable(l)) req[l] = attempted;
-                successfulPrev = Math.floor(successfulPrev * (successRates[l] ?? 0.4));
+            let isFirstAchievable = true;
+            levelsOrdered.forEach((l) => {
+                if (!inAchievable(l)) return;
+                const attempted = isFirstAchievable ? N : Math.max(0, Math.floor(successfulPrev));
+                isFirstAchievable = false;
+                req[l] = attempted;
+                const rate = successRates[l] ?? 0.4;
+                successfulPrev = Math.floor(attempted * rate);
             });
             return req;
         }
 
         /* Trial: mitkä tasot saadaan tuotettua – ei max-tuotantoa, vain “onko tasolla tuotteita”. N riittävän suuri jotta L15..L45 saavat requested > 0 (0.4^8·N ≥ 1 → N ≥ 1526). Pieni N välttää stack overflow ja pitää trial-ajan lyhyenä. */
-        const levelsOrdered = [...legendaryLevels, ...higherLevels];
         const TRIAL_N = 2000;
         const trialRequestedFull = buildRequestedForN(TRIAL_N, new Set(levelsOrdered));
         const trialMaterials = JSON.parse(JSON.stringify(availableMaterials));
@@ -4695,15 +4723,16 @@ function initAdvMaterialSection() {
             header.classList.toggle('open', isHidden);
         });
 
-        season.sets.forEach(set => {
-            const matKey = set.setMat
-                .toLowerCase()
-                .replace(/'/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/[^a-z0-9-]/g, '');
-            const matInfo = materials[season.season] && materials[season.season].mats[matKey];
-            if (!matInfo) return;
+        const setMatToKey = (setMat) => setMat
+            .toLowerCase()
+            .replace(/'/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
 
+        const matsForSeason = materials[season.season] && materials[season.season].mats;
+        const gearMatKeysRendered = new Set();
+
+        function appendGearMaterialRow(set, matKey, matInfo) {
             const matDiv = document.createElement('div');
             matDiv.className = `my-material ${matKey}`;
 
@@ -4727,6 +4756,27 @@ function initAdvMaterialSection() {
             matDiv.appendChild(inner);
 
             seasonDiv.appendChild(matDiv);
+        }
+
+        /* Järjestys: materials.js:n mats-avaimet (insertion order) per season; korkein season ensin säilyy seasonData-sortissa. */
+        if (matsForSeason) {
+            Object.keys(matsForSeason).forEach(matKey => {
+                const matInfo = matsForSeason[matKey];
+                if (!matInfo) return;
+                const set = season.sets.find(s => setMatToKey(s.setMat) === matKey);
+                if (!set) return;
+                appendGearMaterialRow(set, matKey, matInfo);
+                gearMatKeysRendered.add(matKey);
+            });
+        }
+
+        season.sets.forEach(set => {
+            const matKey = setMatToKey(set.setMat);
+            if (gearMatKeysRendered.has(matKey)) return;
+            const matInfo = matsForSeason && matsForSeason[matKey];
+            if (!matInfo) return;
+            appendGearMaterialRow(set, matKey, matInfo);
+            gearMatKeysRendered.add(matKey);
         });
 
         /* Jokaisen seasonin oma flux-rivi lohkon alimmaksi. */

@@ -3,6 +3,324 @@ const season8 = {
         extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
         sets: [
 		{
+			"setName": "Northern Noble's",
+			"setMat": "Northern Fox Pelts",
+			"products": [
+				{
+				"name": "Round Cap",
+				"level": 5,
+				"materials": {
+					"northern-fox-pelts": 10,
+					"weirwood": 10,
+					"ironwood": 10
+				},
+				"img": "item/season8/norther-nobles/head.png"
+				},
+				{
+				"name": "Fox-Fur Gown",
+				"level": 5,
+				"materials": {
+					"northern-fox-pelts": 10,
+					"copper-bar": 10,
+					"hide": 10
+				},
+				"img": "item/season8/norther-nobles/chest.png"
+				},
+				{
+				"name": "Woolens",
+				"level": 5,
+				"materials": {
+					"northern-fox-pelts": 10,
+					"leather-straps": 10,
+					"wildfire": 10
+				},
+				"img": "item/season8/norther-nobles/pants.png"
+				},
+				{
+				"name": "Jackboots",
+				"level": 5,
+				"materials": {
+					"northern-fox-pelts": 10,
+					"milk-of-the-poppy": 10,
+					"silk": 10
+				},
+				"img": "item/season8/norther-nobles/boots.png"
+				},
+				{
+				"name": "Silver Ring",
+				"level": 5,
+				"materials": {
+					"northern-fox-pelts": 10,
+					"goldenheart-wood": 10,
+					"black-iron": 10
+				},
+				"img": "item/season8/norther-nobles/ring.png"
+				},
+				{
+				"name": "Ironwood Crossbow",
+				"level": 5,
+				"materials": {
+					"northern-fox-pelts": 10,
+					"silk": 10,
+					"kingswood-oak": 10
+				},
+				"img": "item/season8/norther-nobles/weapon.png"
+				},
+				{
+				"name": "Round Cap",
+				"level": 10,
+				"materials": {
+					"northern-fox-pelts": 20,
+					"weirwood": 20,
+					"ironwood": 20
+				},
+				"img": "item/season8/norther-nobles/head.png"
+				},
+				{
+				"name": "Fox-Fur Gown",
+				"level": 10,
+				"materials": {
+					"northern-fox-pelts": 20,
+					"copper-bar": 20,
+					"hide": 20
+				},
+				"img": "item/season8/norther-nobles/chest.png"
+				},
+				{
+				"name": "Woolens",
+				"level": 10,
+				"materials": {
+					"northern-fox-pelts": 20,
+					"leather-straps": 20,
+					"wildfire": 20
+				},
+				"img": "item/season8/norther-nobles/pants.png"
+				},
+				{
+				"name": "Jackboots",
+				"level": 10,
+				"materials": {
+					"northern-fox-pelts": 20,
+					"milk-of-the-poppy": 20,
+					"silk": 20
+				},
+				"img": "item/season8/norther-nobles/boots.png"
+				},
+				{
+				"name": "Silver Ring",
+				"level": 10,
+				"materials": {
+					"northern-fox-pelts": 20,
+					"goldenheart-wood": 20,
+					"black-iron": 20
+				},
+				"img": "item/season8/norther-nobles/ring.png"
+				},
+				{
+				"name": "Ironwood Crossbow",
+				"level": 10,
+				"materials": {
+					"northern-fox-pelts": 20,
+					"silk": 20,
+					"kingswood-oak": 20
+				},
+				"img": "item/season8/norther-nobles/weapon.png"
+				},
+				{
+				"name": "Round Cap",
+				"level": 15,
+				"materials": {
+					"northern-fox-pelts": 120,
+					"weirwood": 120,
+					"ironwood": 120
+				},
+				"img": "item/season8/norther-nobles/head.png"
+				},
+				{
+				"name": "Fox-Fur Gown",
+				"level": 15,
+				"materials": {
+					"northern-fox-pelts": 120,
+					"copper-bar": 120,
+					"hide": 120
+				},
+				"img": "item/season8/norther-nobles/chest.png"
+				},
+				{
+				"name": "Woolens",
+				"level": 15,
+				"materials": {
+					"northern-fox-pelts": 120,
+					"leather-straps": 120,
+					"wildfire": 120
+				},
+				"img": "item/season8/norther-nobles/pants.png"
+				},
+				{
+				"name": "Jackboots",
+				"level": 15,
+				"materials": {
+					"northern-fox-pelts": 120,
+					"milk-of-the-poppy": 120,
+					"silk": 120
+				},
+				"img": "item/season8/norther-nobles/boots.png"
+				},
+				{
+				"name": "Silver Ring",
+				"level": 15,
+				"materials": {
+					"northern-fox-pelts": 120,
+					"goldenheart-wood": 120,
+					"black-iron": 120
+				},
+				"img": "item/season8/norther-nobles/ring.png"
+				},
+				{
+				"name": "Ironwood Crossbow",
+				"level": 15,
+				"materials": {
+					"northern-fox-pelts": 120,
+					"silk": 120,
+					"kingswood-oak": 120
+				},
+				"img": "item/season8/norther-nobles/weapon.png"
+				},
+				{
+				"name": "Round Cap",
+				"level": 20,
+				"materials": {
+					"northern-fox-pelts": 400,
+					"weirwood": 400,
+					"ironwood": 400,
+					"dragonglass": 400
+				},
+				"img": "item/season8/norther-nobles/head.png"
+				},
+				{
+				"name": "Fox-Fur Gown",
+				"level": 20,
+				"materials": {
+					"northern-fox-pelts": 400,
+					"copper-bar": 400,
+					"hide": 400,
+					"black-iron": 400
+				},
+				"img": "item/season8/norther-nobles/chest.png"
+				},
+				{
+				"name": "Woolens",
+				"level": 20,
+				"materials": {
+					"northern-fox-pelts": 400,
+					"leather-straps": 400,
+					"wildfire": 400,
+					"copper-bar": 400
+				},
+				"img": "item/season8/norther-nobles/pants.png"
+				},
+				{
+				"name": "Jackboots",
+				"level": 20,
+				"materials": {
+					"northern-fox-pelts": 400,
+					"milk-of-the-poppy": 400,
+					"silk": 400,
+					"kingswood-oak": 400
+				},
+				"img": "item/season8/norther-nobles/boots.png"
+				},
+				{
+				"name": "Silver Ring",
+				"level": 20,
+				"materials": {
+					"northern-fox-pelts": 400,
+					"goldenheart-wood": 400,
+					"black-iron": 400,
+					"hide": 400
+				},
+				"img": "item/season8/norther-nobles/ring.png"
+				},
+				{
+				"name": "Ironwood Crossbow",
+				"level": 20,
+				"materials": {
+					"northern-fox-pelts": 400,
+					"silk": 400,
+					"kingswood-oak": 400,
+					"milk-of-the-poppy": 400
+				},
+				"img": "item/season8/norther-nobles/weapon.png"
+				},
+				{
+				"name": "Round Cap",
+				"level": 25,
+				"materials": {
+					"northern-fox-pelts": 1200,
+					"weirwood": 1200,
+					"ironwood": 1200,
+					"dragonglass": 1200
+				},
+				"img": "item/season8/norther-nobles/head.png"
+				},
+				{
+				"name": "Fox-Fur Gown",
+				"level": 25,
+				"materials": {
+					"northern-fox-pelts": 1200,
+					"copper-bar": 1200,
+					"hide": 1200,
+					"black-iron": 1200
+				},
+				"img": "item/season8/norther-nobles/chest.png"
+				},
+				{
+				"name": "Woolens",
+				"level": 25,
+				"materials": {
+					"northern-fox-pelts": 1200,
+					"leather-straps": 1200,
+					"wildfire": 1200,
+					"copper-bar": 1200
+				},
+				"img": "item/season8/norther-nobles/pants.png"
+				},
+				{
+				"name": "Jackboots",
+				"level": 25,
+				"materials": {
+					"northern-fox-pelts": 1200,
+					"milk-of-the-poppy": 1200,
+					"silk": 1200,
+					"kingswood-oak": 1200
+				},
+				"img": "item/season8/norther-nobles/boots.png"
+				},
+				{
+				"name": "Silver Ring",
+				"level": 25,
+				"materials": {
+					"northern-fox-pelts": 1200,
+					"goldenheart-wood": 1200,
+					"black-iron": 1200,
+					"hide": 1200
+				},
+				"img": "item/season8/norther-nobles/ring.png"
+				},
+				{
+				"name": "Ironwood Crossbow",
+				"level": 25,
+				"materials": {
+					"northern-fox-pelts": 1200,
+					"silk": 1200,
+					"kingswood-oak": 1200,
+					"milk-of-the-poppy": 1200
+				},
+				"img": "item/season8/norther-nobles/weapon.png"
+				}
+			]
+		},
+		{
 		  "setName": "Living Mountain's",
 		  "setMat": "Dark Steel Plate",
 		  "products": [
@@ -321,6 +639,324 @@ const season8 = {
 		  ]
 		},
 		{
+			"setName": "Valyrian Bloodmage's",
+			"setMat": "Ritual Cloths",
+			"products": [
+			  {
+				"name": "Ritual Hood",
+				"level": 5,
+				"materials": {
+				  "ritual-cloths": 10,
+				  "copper-bar": 10,
+				  "dragonglass": 10
+				},
+				"img": "item/season8/valyrian-bloodmage/head.png"
+			  },
+			  {
+				"name": "Ritual Robes",
+				"level": 5,
+				"materials": {
+				  "ritual-cloths": 10,
+				  "black-iron": 10,
+				  "hide": 10
+				},
+				"img": "item/season8/valyrian-bloodmage/chest.png"
+			  },
+			  {
+				"name": "Ritual Skirts",
+				"level": 5,
+				"materials": {
+				  "ritual-cloths": 10,
+				  "milk-of-the-poppy": 10,
+				  "silk": 10
+				},
+				"img": "item/season8/valyrian-bloodmage/pants.png"
+			  },
+			  {
+				"name": "Fine Calopedes",
+				"level": 5,
+				"materials": {
+				  "ritual-cloths": 10,
+				  "kingswood-oak": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season8/valyrian-bloodmage/boots.png"
+			  },
+			  {
+				"name": "Signet Ring",
+				"level": 5,
+				"materials": {
+				  "ritual-cloths": 10,
+				  "hide": 10,
+				  "copper-bar": 10
+				},
+				"img": "item/season8/valyrian-bloodmage/ring.png"
+			  },
+			  {
+				"name": "Ritual Dagger",
+				"level": 5,
+				"materials": {
+				  "ritual-cloths": 10,
+				  "wildfire": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season8/valyrian-bloodmage/weapon.png"
+			  },
+			  {
+				"name": "Ritual Hood",
+				"level": 10,
+				"materials": {
+				  "ritual-cloths": 20,
+				  "copper-bar": 20,
+				  "dragonglass": 20
+				},
+				"img": "item/season8/valyrian-bloodmage/head.png"
+			  },
+			  {
+				"name": "Ritual Robes",
+				"level": 10,
+				"materials": {
+				  "ritual-cloths": 20,
+				  "black-iron": 20,
+				  "hide": 20
+				},
+				"img": "item/season8/valyrian-bloodmage/chest.png"
+			  },
+			  {
+				"name": "Ritual Skirts",
+				"level": 10,
+				"materials": {
+				  "ritual-cloths": 20,
+				  "milk-of-the-poppy": 20,
+				  "silk": 20
+				},
+				"img": "item/season8/valyrian-bloodmage/pants.png"
+			  },
+			  {
+				"name": "Fine Calopedes",
+				"level": 10,
+				"materials": {
+				  "ritual-cloths": 20,
+				  "kingswood-oak": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season8/valyrian-bloodmage/boots.png"
+			  },
+			  {
+				"name": "Signet Ring",
+				"level": 10,
+				"materials": {
+				  "ritual-cloths": 20,
+				  "hide": 20,
+				  "copper-bar": 20
+				},
+				"img": "item/season8/valyrian-bloodmage/ring.png"
+			  },
+			  {
+				"name": "Ritual Dagger",
+				"level": 10,
+				"materials": {
+				  "ritual-cloths": 20,
+				  "wildfire": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season8/valyrian-bloodmage/weapon.png"
+			  },
+			  {
+				"name": "Ritual Hood",
+				"level": 15,
+				"materials": {
+				  "ritual-cloths": 120,
+				  "copper-bar": 120,
+				  "dragonglass": 120
+				},
+				"img": "item/season8/valyrian-bloodmage/head.png"
+			  },
+			  {
+				"name": "Ritual Robes",
+				"level": 15,
+				"materials": {
+				  "ritual-cloths": 120,
+				  "black-iron": 120,
+				  "hide": 120
+				},
+				"img": "item/season8/valyrian-bloodmage/chest.png"
+			  },
+			  {
+				"name": "Ritual Skirts",
+				"level": 15,
+				"materials": {
+				  "ritual-cloths": 120,
+				  "milk-of-the-poppy": 120,
+				  "silk": 120
+				},
+				"img": "item/season8/valyrian-bloodmage/pants.png"
+			  },
+			  {
+				"name": "Fine Calopedes",
+				"level": 15,
+				"materials": {
+				  "ritual-cloths": 120,
+				  "kingswood-oak": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season8/valyrian-bloodmage/boots.png"
+			  },
+			  {
+				"name": "Signet Ring",
+				"level": 15,
+				"materials": {
+				  "ritual-cloths": 120,
+				  "hide": 120,
+				  "copper-bar": 120
+				},
+				"img": "item/season8/valyrian-bloodmage/ring.png"
+			  },
+			  {
+				"name": "Ritual Dagger",
+				"level": 15,
+				"materials": {
+				  "ritual-cloths": 120,
+				  "wildfire": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season8/valyrian-bloodmage/weapon.png"
+			  },
+			  {
+				"name": "Ritual Hood",
+				"level": 20,
+				"materials": {
+				  "ritual-cloths": 400,
+				  "copper-bar": 400,
+				  "dragonglass": 400,
+				  "goldenheart-wood": 400
+				},
+				"img": "item/season8/valyrian-bloodmage/head.png"
+			  },
+			  {
+				"name": "Ritual Robes",
+				"level": 20,
+				"materials": {
+				  "ritual-cloths": 400,
+				  "black-iron": 400,
+				  "hide": 400,
+				  "ironwood": 400
+				},
+				"img": "item/season8/valyrian-bloodmage/chest.png"
+			  },
+			  {
+				"name": "Ritual Skirts",
+				"level": 20,
+				"materials": {
+				  "ritual-cloths": 400,
+				  "milk-of-the-poppy": 400,
+				  "silk": 400,
+				  "wildfire": 400
+				},
+				"img": "item/season8/valyrian-bloodmage/pants.png"
+			  },
+			  {
+				"name": "Fine Calopedes",
+				"level": 20,
+				"materials": {
+				  "ritual-cloths": 400,
+				  "kingswood-oak": 400,
+				  "leather-straps": 400,
+				  "weirwood": 400
+				},
+				"img": "item/season8/valyrian-bloodmage/boots.png"
+			  },
+			  {
+				"name": "Signet Ring",
+				"level": 20,
+				"materials": {
+				  "ritual-cloths": 400,
+				  "hide": 400,
+				  "copper-bar": 400,
+				  "dragonglass": 400
+				},
+				"img": "item/season8/valyrian-bloodmage/ring.png"
+			  },
+			  {
+				"name": "Ritual Dagger",
+				"level": 20,
+				"materials": {
+				  "ritual-cloths": 400,
+				  "wildfire": 400,
+				  "milk-of-the-poppy": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season8/valyrian-bloodmage/weapon.png"
+			  },
+			  {
+				"name": "Ritual Hood",
+				"level": 25,
+				"materials": {
+				  "ritual-cloths": 1200,
+				  "copper-bar": 1200,
+				  "dragonglass": 1200,
+				  "goldenheart-wood": 1200
+				},
+				"img": "item/season8/valyrian-bloodmage/head.png"
+			  },
+			  {
+				"name": "Ritual Robes",
+				"level": 25,
+				"materials": {
+				  "ritual-cloths": 1200,
+				  "black-iron": 1200,
+				  "hide": 1200,
+				  "ironwood": 1200
+				},
+				"img": "item/season8/valyrian-bloodmage/chest.png"
+			  },
+			  {
+				"name": "Ritual Skirts",
+				"level": 25,
+				"materials": {
+				  "ritual-cloths": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "silk": 1200,
+				  "wildfire": 1200
+				},
+				"img": "item/season8/valyrian-bloodmage/pants.png"
+			  },
+			  {
+				"name": "Fine Calopedes",
+				"level": 25,
+				"materials": {
+				  "ritual-cloths": 1200,
+				  "kingswood-oak": 1200,
+				  "leather-straps": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season8/valyrian-bloodmage/boots.png"
+			  },
+			  {
+				"name": "Signet Ring",
+				"level": 25,
+				"materials": {
+				  "ritual-cloths": 1200,
+				  "hide": 1200,
+				  "copper-bar": 1200,
+				  "dragonglass": 1200
+				},
+				"img": "item/season8/valyrian-bloodmage/ring.png"
+			  },
+			  {
+				"name": "Ritual Dagger",
+				"level": 25,
+				"materials": {
+				  "ritual-cloths": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season8/valyrian-bloodmage/weapon.png"
+			  }
+			]
+		  },
+		{
 		  "setName": "Dragon Rider's",
 		  "setMat": "Dragon Tempered Fabrics",
 		  "products": [
@@ -635,968 +1271,6 @@ const season8 = {
 				"leather-straps": 1200
 			  },
 			  "img": "item/season8/dragon-rider/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Valyrian Champion's",
-		  "setMat": "Gilded Mail",
-		  "products": [
-			{
-			  "name": "Dragon Helm",
-			  "level": 5,
-			  "materials": {
-				"gilded-mail": 10,
-				"wildfire": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season8/valyrian-champion/head.png"
-			},
-			{
-			  "name": "Dragon Plate",
-			  "level": 5,
-			  "materials": {
-				"gilded-mail": 10,
-				"ironwood": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season8/valyrian-champion/chest.png"
-			},
-			{
-			  "name": "Scaled Faulds",
-			  "level": 5,
-			  "materials": {
-				"gilded-mail": 10,
-				"dragonglass": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season8/valyrian-champion/pants.png"
-			},
-			{
-			  "name": "Winged Greaves",
-			  "level": 5,
-			  "materials": {
-				"gilded-mail": 10,
-				"copper-bar": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season8/valyrian-champion/boots.png"
-			},
-			{
-			  "name": "Bestial Ring",
-			  "level": 5,
-			  "materials": {
-				"gilded-mail": 10,
-				"kingswood-oak": 10,
-				"wildfire": 10
-			  },
-			  "img": "item/season8/valyrian-champion/ring.png"
-			},
-			{
-			  "name": "Crimson Halberd",
-			  "level": 5,
-			  "materials": {
-				"gilded-mail": 10,
-				"goldenheart-wood": 10,
-				"ironwood": 10
-			  },
-			  "img": "item/season8/valyrian-champion/weapon.png"
-			},
-
-			// Sama toistuu level 10 ja 15, mutta määrät kasvaa:
-			{
-			  "name": "Dragon Helm",
-			  "level": 10,
-			  "materials": {
-				"gilded-mail": 20,
-				"wildfire": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season8/valyrian-champion/head.png"
-			},
-			{
-			  "name": "Dragon Plate",
-			  "level": 10,
-			  "materials": {
-				"gilded-mail": 20,
-				"ironwood": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season8/valyrian-champion/chest.png"
-			},
-			{
-			  "name": "Scaled Faulds",
-			  "level": 10,
-			  "materials": {
-				"gilded-mail": 20,
-				"dragonglass": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season8/valyrian-champion/pants.png"
-			},
-			{
-			  "name": "Winged Greaves",
-			  "level": 10,
-			  "materials": {
-				"gilded-mail": 20,
-				"copper-bar": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season8/valyrian-champion/boots.png"
-			},
-			{
-			  "name": "Bestial Ring",
-			  "level": 10,
-			  "materials": {
-				"gilded-mail": 20,
-				"kingswood-oak": 20,
-				"wildfire": 20
-			  },
-			  "img": "item/season8/valyrian-champion/ring.png"
-			},
-			{
-			  "name": "Crimson Halberd",
-			  "level": 10,
-			  "materials": {
-				"gilded-mail": 20,
-				"goldenheart-wood": 20,
-				"ironwood": 20
-			  },
-			  "img": "item/season8/valyrian-champion/weapon.png"
-			},
-
-			// Level 15
-			{
-			  "name": "Dragon Helm",
-			  "level": 15,
-			  "materials": {
-				"gilded-mail": 120,
-				"wildfire": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season8/valyrian-champion/head.png"
-			},
-			{
-			  "name": "Dragon Plate",
-			  "level": 15,
-			  "materials": {
-				"gilded-mail": 120,
-				"ironwood": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season8/valyrian-champion/chest.png"
-			},
-			{
-			  "name": "Scaled Faulds",
-			  "level": 15,
-			  "materials": {
-				"gilded-mail": 120,
-				"dragonglass": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season8/valyrian-champion/pants.png"
-			},
-			{
-			  "name": "Winged Greaves",
-			  "level": 15,
-			  "materials": {
-				"gilded-mail": 120,
-				"copper-bar": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season8/valyrian-champion/boots.png"
-			},
-			{
-			  "name": "Bestial Ring",
-			  "level": 15,
-			  "materials": {
-				"gilded-mail": 120,
-				"kingswood-oak": 120,
-				"wildfire": 120
-			  },
-			  "img": "item/season8/valyrian-champion/ring.png"
-			},
-			{
-			  "name": "Crimson Halberd",
-			  "level": 15,
-			  "materials": {
-				"gilded-mail": 120,
-				"goldenheart-wood": 120,
-				"ironwood": 120
-			  },
-			  "img": "item/season8/valyrian-champion/weapon.png"
-			},
-
-			// Level 20
-			{
-			  "name": "Dragon Helm",
-			  "level": 20,
-			  "materials": {
-				"gilded-mail": 400,
-				"wildfire": 400,
-				"black-iron": 400,
-				"silk": 400
-			  },
-			  "img": "item/season8/valyrian-champion/head.png"
-			},
-			{
-			  "name": "Dragon Plate",
-			  "level": 20,
-			  "materials": {
-				"gilded-mail": 400,
-				"ironwood": 400,
-				"kingswood-oak": 400,
-				"wildfire": 400
-			  },
-			  "img": "item/season8/valyrian-champion/chest.png"
-			},
-			{
-			  "name": "Scaled Faulds",
-			  "level": 20,
-			  "materials": {
-				"gilded-mail": 400,
-				"dragonglass": 400,
-				"leather-straps": 400,
-				"hide": 400
-			  },
-			  "img": "item/season8/valyrian-champion/pants.png"
-			},
-			{
-			  "name": "Winged Greaves",
-			  "level": 20,
-			  "materials": {
-				"gilded-mail": 400,
-				"copper-bar": 400,
-				"milk-of-the-poppy": 400,
-				"goldenheart-wood": 400
-			  },
-			  "img": "item/season8/valyrian-champion/boots.png"
-			},
-			{
-			  "name": "Bestial Ring",
-			  "level": 20,
-			  "materials": {
-				"gilded-mail": 400,
-				"kingswood-oak": 400,
-				"wildfire": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season8/valyrian-champion/ring.png"
-			},
-			{
-			  "name": "Crimson Halberd",
-			  "level": 20,
-			  "materials": {
-				"gilded-mail": 400,
-				"goldenheart-wood": 400,
-				"ironwood": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season8/valyrian-champion/weapon.png"
-			},
-
-			// Level 25
-			{
-			  "name": "Dragon Helm",
-			  "level": 25,
-			  "materials": {
-				"gilded-mail": 1200,
-				"wildfire": 1200,
-				"black-iron": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season8/valyrian-champion/head.png"
-			},
-			{
-			  "name": "Dragon Plate",
-			  "level": 25,
-			  "materials": {
-				"gilded-mail": 1200,
-				"ironwood": 1200,
-				"kingswood-oak": 1200,
-				"wildfire": 1200
-			  },
-			  "img": "item/season8/valyrian-champion/chest.png"
-			},
-			{
-			  "name": "Scaled Faulds",
-			  "level": 25,
-			  "materials": {
-				"gilded-mail": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season8/valyrian-champion/pants.png"
-			},
-			{
-			  "name": "Winged Greaves",
-			  "level": 25,
-			  "materials": {
-				"gilded-mail": 1200,
-				"copper-bar": 1200,
-				"milk-of-the-poppy": 1200,
-				"goldenheart-wood": 1200
-			  },
-			  "img": "item/season8/valyrian-champion/boots.png"
-			},
-			{
-			  "name": "Bestial Ring",
-			  "level": 25,
-			  "materials": {
-				"gilded-mail": 1200,
-				"kingswood-oak": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season8/valyrian-champion/ring.png"
-			},
-			{
-			  "name": "Crimson Halberd",
-			  "level": 25,
-			  "materials": {
-				"gilded-mail": 1200,
-				"goldenheart-wood": 1200,
-				"ironwood": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season8/valyrian-champion/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Northern Noble's",
-		  "setMat": "Northern Fox Pelts",
-		  "products": [
-			{
-			  "name": "Round Cap",
-			  "level": 5,
-			  "materials": {
-				"northern-fox-pelts": 10,
-				"weirwood": 10,
-				"ironwood": 10
-			  },
-			  "img": "item/season8/norther-nobles/head.png"
-			},
-			{
-			  "name": "Fox-Fur Gown",
-			  "level": 5,
-			  "materials": {
-				"northern-fox-pelts": 10,
-				"copper-bar": 10,
-				"hide": 10
-			  },
-			  "img": "item/season8/norther-nobles/chest.png"
-			},
-			{
-			  "name": "Woolens",
-			  "level": 5,
-			  "materials": {
-				"northern-fox-pelts": 10,
-				"leather-straps": 10,
-				"wildfire": 10
-			  },
-			  "img": "item/season8/norther-nobles/pants.png"
-			},
-			{
-			  "name": "Jackboots",
-			  "level": 5,
-			  "materials": {
-				"northern-fox-pelts": 10,
-				"milk-of-the-poppy": 10,
-				"silk": 10
-			  },
-			  "img": "item/season8/norther-nobles/boots.png"
-			},
-			{
-			  "name": "Silver Ring",
-			  "level": 5,
-			  "materials": {
-				"northern-fox-pelts": 10,
-				"goldenheart-wood": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season8/norther-nobles/ring.png"
-			},
-			{
-			  "name": "Ironwood Crossbow",
-			  "level": 5,
-			  "materials": {
-				"northern-fox-pelts": 10,
-				"silk": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season8/norther-nobles/weapon.png"
-			},
-			{
-			  "name": "Round Cap",
-			  "level": 10,
-			  "materials": {
-				"northern-fox-pelts": 20,
-				"weirwood": 20,
-				"ironwood": 20
-			  },
-			  "img": "item/season8/norther-nobles/head.png"
-			},
-			{
-			  "name": "Fox-Fur Gown",
-			  "level": 10,
-			  "materials": {
-				"northern-fox-pelts": 20,
-				"copper-bar": 20,
-				"hide": 20
-			  },
-			  "img": "item/season8/norther-nobles/chest.png"
-			},
-			{
-			  "name": "Woolens",
-			  "level": 10,
-			  "materials": {
-				"northern-fox-pelts": 20,
-				"leather-straps": 20,
-				"wildfire": 20
-			  },
-			  "img": "item/season8/norther-nobles/pants.png"
-			},
-			{
-			  "name": "Jackboots",
-			  "level": 10,
-			  "materials": {
-				"northern-fox-pelts": 20,
-				"milk-of-the-poppy": 20,
-				"silk": 20
-			  },
-			  "img": "item/season8/norther-nobles/boots.png"
-			},
-			{
-			  "name": "Silver Ring",
-			  "level": 10,
-			  "materials": {
-				"northern-fox-pelts": 20,
-				"goldenheart-wood": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season8/norther-nobles/ring.png"
-			},
-			{
-			  "name": "Ironwood Crossbow",
-			  "level": 10,
-			  "materials": {
-				"northern-fox-pelts": 20,
-				"silk": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season8/norther-nobles/weapon.png"
-			},
-			{
-			  "name": "Round Cap",
-			  "level": 15,
-			  "materials": {
-				"northern-fox-pelts": 120,
-				"weirwood": 120,
-				"ironwood": 120
-			  },
-			  "img": "item/season8/norther-nobles/head.png"
-			},
-			{
-			  "name": "Fox-Fur Gown",
-			  "level": 15,
-			  "materials": {
-				"northern-fox-pelts": 120,
-				"copper-bar": 120,
-				"hide": 120
-			  },
-			  "img": "item/season8/norther-nobles/chest.png"
-			},
-			{
-			  "name": "Woolens",
-			  "level": 15,
-			  "materials": {
-				"northern-fox-pelts": 120,
-				"leather-straps": 120,
-				"wildfire": 120
-			  },
-			  "img": "item/season8/norther-nobles/pants.png"
-			},
-			{
-			  "name": "Jackboots",
-			  "level": 15,
-			  "materials": {
-				"northern-fox-pelts": 120,
-				"milk-of-the-poppy": 120,
-				"silk": 120
-			  },
-			  "img": "item/season8/norther-nobles/boots.png"
-			},
-			{
-			  "name": "Silver Ring",
-			  "level": 15,
-			  "materials": {
-				"northern-fox-pelts": 120,
-				"goldenheart-wood": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season8/norther-nobles/ring.png"
-			},
-			{
-			  "name": "Ironwood Crossbow",
-			  "level": 15,
-			  "materials": {
-				"northern-fox-pelts": 120,
-				"silk": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season8/norther-nobles/weapon.png"
-			},
-			{
-			  "name": "Round Cap",
-			  "level": 20,
-			  "materials": {
-				"northern-fox-pelts": 400,
-				"weirwood": 400,
-				"ironwood": 400,
-				"dragonglass": 400
-			  },
-			  "img": "item/season8/norther-nobles/head.png"
-			},
-			{
-			  "name": "Fox-Fur Gown",
-			  "level": 20,
-			  "materials": {
-				"northern-fox-pelts": 400,
-				"copper-bar": 400,
-				"hide": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season8/norther-nobles/chest.png"
-			},
-			{
-			  "name": "Woolens",
-			  "level": 20,
-			  "materials": {
-				"northern-fox-pelts": 400,
-				"leather-straps": 400,
-				"wildfire": 400,
-				"copper-bar": 400
-			  },
-			  "img": "item/season8/norther-nobles/pants.png"
-			},
-			{
-			  "name": "Jackboots",
-			  "level": 20,
-			  "materials": {
-				"northern-fox-pelts": 400,
-				"milk-of-the-poppy": 400,
-				"silk": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season8/norther-nobles/boots.png"
-			},
-			{
-			  "name": "Silver Ring",
-			  "level": 20,
-			  "materials": {
-				"northern-fox-pelts": 400,
-				"goldenheart-wood": 400,
-				"black-iron": 400,
-				"hide": 400
-			  },
-			  "img": "item/season8/norther-nobles/ring.png"
-			},
-			{
-			  "name": "Ironwood Crossbow",
-			  "level": 20,
-			  "materials": {
-				"northern-fox-pelts": 400,
-				"silk": 400,
-				"kingswood-oak": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season8/norther-nobles/weapon.png"
-			},
-			{
-			  "name": "Round Cap",
-			  "level": 25,
-			  "materials": {
-				"northern-fox-pelts": 1200,
-				"weirwood": 1200,
-				"ironwood": 1200,
-				"dragonglass": 1200
-			  },
-			  "img": "item/season8/norther-nobles/head.png"
-			},
-			{
-			  "name": "Fox-Fur Gown",
-			  "level": 25,
-			  "materials": {
-				"northern-fox-pelts": 1200,
-				"copper-bar": 1200,
-				"hide": 1200,
-				"black-iron": 1200
-			  },
-			  "img": "item/season8/norther-nobles/chest.png"
-			},
-			{
-			  "name": "Woolens",
-			  "level": 25,
-			  "materials": {
-				"northern-fox-pelts": 1200,
-				"leather-straps": 1200,
-				"wildfire": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season8/norther-nobles/pants.png"
-			},
-			{
-			  "name": "Jackboots",
-			  "level": 25,
-			  "materials": {
-				"northern-fox-pelts": 1200,
-				"milk-of-the-poppy": 1200,
-				"silk": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season8/norther-nobles/boots.png"
-			},
-			{
-			  "name": "Silver Ring",
-			  "level": 25,
-			  "materials": {
-				"northern-fox-pelts": 1200,
-				"goldenheart-wood": 1200,
-				"black-iron": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season8/norther-nobles/ring.png"
-			},
-			{
-			  "name": "Ironwood Crossbow",
-			  "level": 25,
-			  "materials": {
-				"northern-fox-pelts": 1200,
-				"silk": 1200,
-				"kingswood-oak": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season8/norther-nobles/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Valyrian Bloodmage's",
-		  "setMat": "Ritual Cloths",
-		  "products": [
-			{
-			  "name": "Ritual Hood",
-			  "level": 5,
-			  "materials": {
-				"ritual-cloths": 10,
-				"copper-bar": 10,
-				"dragonglass": 10
-			  },
-			  "img": "item/season8/valyrian-bloodmage/head.png"
-			},
-			{
-			  "name": "Ritual Robes",
-			  "level": 5,
-			  "materials": {
-				"ritual-cloths": 10,
-				"black-iron": 10,
-				"hide": 10
-			  },
-			  "img": "item/season8/valyrian-bloodmage/chest.png"
-			},
-			{
-			  "name": "Ritual Skirts",
-			  "level": 5,
-			  "materials": {
-				"ritual-cloths": 10,
-				"milk-of-the-poppy": 10,
-				"silk": 10
-			  },
-			  "img": "item/season8/valyrian-bloodmage/pants.png"
-			},
-			{
-			  "name": "Fine Calopedes",
-			  "level": 5,
-			  "materials": {
-				"ritual-cloths": 10,
-				"kingswood-oak": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season8/valyrian-bloodmage/boots.png"
-			},
-			{
-			  "name": "Signet Ring",
-			  "level": 5,
-			  "materials": {
-				"ritual-cloths": 10,
-				"hide": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season8/valyrian-bloodmage/ring.png"
-			},
-			{
-			  "name": "Ritual Dagger",
-			  "level": 5,
-			  "materials": {
-				"ritual-cloths": 10,
-				"wildfire": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season8/valyrian-bloodmage/weapon.png"
-			},
-			{
-			  "name": "Ritual Hood",
-			  "level": 10,
-			  "materials": {
-				"ritual-cloths": 20,
-				"copper-bar": 20,
-				"dragonglass": 20
-			  },
-			  "img": "item/season8/valyrian-bloodmage/head.png"
-			},
-			{
-			  "name": "Ritual Robes",
-			  "level": 10,
-			  "materials": {
-				"ritual-cloths": 20,
-				"black-iron": 20,
-				"hide": 20
-			  },
-			  "img": "item/season8/valyrian-bloodmage/chest.png"
-			},
-			{
-			  "name": "Ritual Skirts",
-			  "level": 10,
-			  "materials": {
-				"ritual-cloths": 20,
-				"milk-of-the-poppy": 20,
-				"silk": 20
-			  },
-			  "img": "item/season8/valyrian-bloodmage/pants.png"
-			},
-			{
-			  "name": "Fine Calopedes",
-			  "level": 10,
-			  "materials": {
-				"ritual-cloths": 20,
-				"kingswood-oak": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season8/valyrian-bloodmage/boots.png"
-			},
-			{
-			  "name": "Signet Ring",
-			  "level": 10,
-			  "materials": {
-				"ritual-cloths": 20,
-				"hide": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season8/valyrian-bloodmage/ring.png"
-			},
-			{
-			  "name": "Ritual Dagger",
-			  "level": 10,
-			  "materials": {
-				"ritual-cloths": 20,
-				"wildfire": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season8/valyrian-bloodmage/weapon.png"
-			},
-			{
-			  "name": "Ritual Hood",
-			  "level": 15,
-			  "materials": {
-				"ritual-cloths": 120,
-				"copper-bar": 120,
-				"dragonglass": 120
-			  },
-			  "img": "item/season8/valyrian-bloodmage/head.png"
-			},
-			{
-			  "name": "Ritual Robes",
-			  "level": 15,
-			  "materials": {
-				"ritual-cloths": 120,
-				"black-iron": 120,
-				"hide": 120
-			  },
-			  "img": "item/season8/valyrian-bloodmage/chest.png"
-			},
-			{
-			  "name": "Ritual Skirts",
-			  "level": 15,
-			  "materials": {
-				"ritual-cloths": 120,
-				"milk-of-the-poppy": 120,
-				"silk": 120
-			  },
-			  "img": "item/season8/valyrian-bloodmage/pants.png"
-			},
-			{
-			  "name": "Fine Calopedes",
-			  "level": 15,
-			  "materials": {
-				"ritual-cloths": 120,
-				"kingswood-oak": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season8/valyrian-bloodmage/boots.png"
-			},
-			{
-			  "name": "Signet Ring",
-			  "level": 15,
-			  "materials": {
-				"ritual-cloths": 120,
-				"hide": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season8/valyrian-bloodmage/ring.png"
-			},
-			{
-			  "name": "Ritual Dagger",
-			  "level": 15,
-			  "materials": {
-				"ritual-cloths": 120,
-				"wildfire": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season8/valyrian-bloodmage/weapon.png"
-			},
-			{
-			  "name": "Ritual Hood",
-			  "level": 20,
-			  "materials": {
-				"ritual-cloths": 400,
-				"copper-bar": 400,
-				"dragonglass": 400,
-				"goldenheart-wood": 400
-			  },
-			  "img": "item/season8/valyrian-bloodmage/head.png"
-			},
-			{
-			  "name": "Ritual Robes",
-			  "level": 20,
-			  "materials": {
-				"ritual-cloths": 400,
-				"black-iron": 400,
-				"hide": 400,
-				"ironwood": 400
-			  },
-			  "img": "item/season8/valyrian-bloodmage/chest.png"
-			},
-			{
-			  "name": "Ritual Skirts",
-			  "level": 20,
-			  "materials": {
-				"ritual-cloths": 400,
-				"milk-of-the-poppy": 400,
-				"silk": 400,
-				"wildfire": 400
-			  },
-			  "img": "item/season8/valyrian-bloodmage/pants.png"
-			},
-			{
-			  "name": "Fine Calopedes",
-			  "level": 20,
-			  "materials": {
-				"ritual-cloths": 400,
-				"kingswood-oak": 400,
-				"leather-straps": 400,
-				"weirwood": 400
-			  },
-			  "img": "item/season8/valyrian-bloodmage/boots.png"
-			},
-			{
-			  "name": "Signet Ring",
-			  "level": 20,
-			  "materials": {
-				"ritual-cloths": 400,
-				"hide": 400,
-				"copper-bar": 400,
-				"dragonglass": 400
-			  },
-			  "img": "item/season8/valyrian-bloodmage/ring.png"
-			},
-			{
-			  "name": "Ritual Dagger",
-			  "level": 20,
-			  "materials": {
-				"ritual-cloths": 400,
-				"wildfire": 400,
-				"milk-of-the-poppy": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season8/valyrian-bloodmage/weapon.png"
-			},
-			{
-			  "name": "Ritual Hood",
-			  "level": 25,
-			  "materials": {
-				"ritual-cloths": 1200,
-				"copper-bar": 1200,
-				"dragonglass": 1200,
-				"goldenheart-wood": 1200
-			  },
-			  "img": "item/season8/valyrian-bloodmage/head.png"
-			},
-			{
-			  "name": "Ritual Robes",
-			  "level": 25,
-			  "materials": {
-				"ritual-cloths": 1200,
-				"black-iron": 1200,
-				"hide": 1200,
-				"ironwood": 1200
-			  },
-			  "img": "item/season8/valyrian-bloodmage/chest.png"
-			},
-			{
-			  "name": "Ritual Skirts",
-			  "level": 25,
-			  "materials": {
-				"ritual-cloths": 1200,
-				"milk-of-the-poppy": 1200,
-				"silk": 1200,
-				"wildfire": 1200
-			  },
-			  "img": "item/season8/valyrian-bloodmage/pants.png"
-			},
-			{
-			  "name": "Fine Calopedes",
-			  "level": 25,
-			  "materials": {
-				"ritual-cloths": 1200,
-				"kingswood-oak": 1200,
-				"leather-straps": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season8/valyrian-bloodmage/boots.png"
-			},
-			{
-			  "name": "Signet Ring",
-			  "level": 25,
-			  "materials": {
-				"ritual-cloths": 1200,
-				"hide": 1200,
-				"copper-bar": 1200,
-				"dragonglass": 1200
-			  },
-			  "img": "item/season8/valyrian-bloodmage/ring.png"
-			},
-			{
-			  "name": "Ritual Dagger",
-			  "level": 25,
-			  "materials": {
-				"ritual-cloths": 1200,
-				"wildfire": 1200,
-				"milk-of-the-poppy": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season8/valyrian-bloodmage/weapon.png"
 			}
 		  ]
 		},
@@ -1917,6 +1591,332 @@ const season8 = {
 			  "img": "item/season8/festival-carouser/weapon.png"
 			}
 		  ]
+		},
+		{
+			"setName": "Valyrian Champion's",
+			"setMat": "Gilded Mail",
+			"products": [
+			  {
+				"name": "Dragon Helm",
+				"level": 5,
+				"materials": {
+				  "gilded-mail": 10,
+				  "wildfire": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season8/valyrian-champion/head.png"
+			  },
+			  {
+				"name": "Dragon Plate",
+				"level": 5,
+				"materials": {
+				  "gilded-mail": 10,
+				  "ironwood": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season8/valyrian-champion/chest.png"
+			  },
+			  {
+				"name": "Scaled Faulds",
+				"level": 5,
+				"materials": {
+				  "gilded-mail": 10,
+				  "dragonglass": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season8/valyrian-champion/pants.png"
+			  },
+			  {
+				"name": "Winged Greaves",
+				"level": 5,
+				"materials": {
+				  "gilded-mail": 10,
+				  "copper-bar": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season8/valyrian-champion/boots.png"
+			  },
+			  {
+				"name": "Bestial Ring",
+				"level": 5,
+				"materials": {
+				  "gilded-mail": 10,
+				  "kingswood-oak": 10,
+				  "wildfire": 10
+				},
+				"img": "item/season8/valyrian-champion/ring.png"
+			  },
+			  {
+				"name": "Crimson Halberd",
+				"level": 5,
+				"materials": {
+				  "gilded-mail": 10,
+				  "goldenheart-wood": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season8/valyrian-champion/weapon.png"
+			  },
+  
+			  // Sama toistuu level 10 ja 15, mutta määrät kasvaa:
+			  {
+				"name": "Dragon Helm",
+				"level": 10,
+				"materials": {
+				  "gilded-mail": 20,
+				  "wildfire": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season8/valyrian-champion/head.png"
+			  },
+			  {
+				"name": "Dragon Plate",
+				"level": 10,
+				"materials": {
+				  "gilded-mail": 20,
+				  "ironwood": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season8/valyrian-champion/chest.png"
+			  },
+			  {
+				"name": "Scaled Faulds",
+				"level": 10,
+				"materials": {
+				  "gilded-mail": 20,
+				  "dragonglass": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season8/valyrian-champion/pants.png"
+			  },
+			  {
+				"name": "Winged Greaves",
+				"level": 10,
+				"materials": {
+				  "gilded-mail": 20,
+				  "copper-bar": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season8/valyrian-champion/boots.png"
+			  },
+			  {
+				"name": "Bestial Ring",
+				"level": 10,
+				"materials": {
+				  "gilded-mail": 20,
+				  "kingswood-oak": 20,
+				  "wildfire": 20
+				},
+				"img": "item/season8/valyrian-champion/ring.png"
+			  },
+			  {
+				"name": "Crimson Halberd",
+				"level": 10,
+				"materials": {
+				  "gilded-mail": 20,
+				  "goldenheart-wood": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season8/valyrian-champion/weapon.png"
+			  },
+  
+			  // Level 15
+			  {
+				"name": "Dragon Helm",
+				"level": 15,
+				"materials": {
+				  "gilded-mail": 120,
+				  "wildfire": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season8/valyrian-champion/head.png"
+			  },
+			  {
+				"name": "Dragon Plate",
+				"level": 15,
+				"materials": {
+				  "gilded-mail": 120,
+				  "ironwood": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season8/valyrian-champion/chest.png"
+			  },
+			  {
+				"name": "Scaled Faulds",
+				"level": 15,
+				"materials": {
+				  "gilded-mail": 120,
+				  "dragonglass": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season8/valyrian-champion/pants.png"
+			  },
+			  {
+				"name": "Winged Greaves",
+				"level": 15,
+				"materials": {
+				  "gilded-mail": 120,
+				  "copper-bar": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season8/valyrian-champion/boots.png"
+			  },
+			  {
+				"name": "Bestial Ring",
+				"level": 15,
+				"materials": {
+				  "gilded-mail": 120,
+				  "kingswood-oak": 120,
+				  "wildfire": 120
+				},
+				"img": "item/season8/valyrian-champion/ring.png"
+			  },
+			  {
+				"name": "Crimson Halberd",
+				"level": 15,
+				"materials": {
+				  "gilded-mail": 120,
+				  "goldenheart-wood": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season8/valyrian-champion/weapon.png"
+			  },
+  
+			  // Level 20
+			  {
+				"name": "Dragon Helm",
+				"level": 20,
+				"materials": {
+				  "gilded-mail": 400,
+				  "wildfire": 400,
+				  "black-iron": 400,
+				  "silk": 400
+				},
+				"img": "item/season8/valyrian-champion/head.png"
+			  },
+			  {
+				"name": "Dragon Plate",
+				"level": 20,
+				"materials": {
+				  "gilded-mail": 400,
+				  "ironwood": 400,
+				  "kingswood-oak": 400,
+				  "wildfire": 400
+				},
+				"img": "item/season8/valyrian-champion/chest.png"
+			  },
+			  {
+				"name": "Scaled Faulds",
+				"level": 20,
+				"materials": {
+				  "gilded-mail": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400,
+				  "hide": 400
+				},
+				"img": "item/season8/valyrian-champion/pants.png"
+			  },
+			  {
+				"name": "Winged Greaves",
+				"level": 20,
+				"materials": {
+				  "gilded-mail": 400,
+				  "copper-bar": 400,
+				  "milk-of-the-poppy": 400,
+				  "goldenheart-wood": 400
+				},
+				"img": "item/season8/valyrian-champion/boots.png"
+			  },
+			  {
+				"name": "Bestial Ring",
+				"level": 20,
+				"materials": {
+				  "gilded-mail": 400,
+				  "kingswood-oak": 400,
+				  "wildfire": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season8/valyrian-champion/ring.png"
+			  },
+			  {
+				"name": "Crimson Halberd",
+				"level": 20,
+				"materials": {
+				  "gilded-mail": 400,
+				  "goldenheart-wood": 400,
+				  "ironwood": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season8/valyrian-champion/weapon.png"
+			  },
+  
+			  // Level 25
+			  {
+				"name": "Dragon Helm",
+				"level": 25,
+				"materials": {
+				  "gilded-mail": 1200,
+				  "wildfire": 1200,
+				  "black-iron": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season8/valyrian-champion/head.png"
+			  },
+			  {
+				"name": "Dragon Plate",
+				"level": 25,
+				"materials": {
+				  "gilded-mail": 1200,
+				  "ironwood": 1200,
+				  "kingswood-oak": 1200,
+				  "wildfire": 1200
+				},
+				"img": "item/season8/valyrian-champion/chest.png"
+			  },
+			  {
+				"name": "Scaled Faulds",
+				"level": 25,
+				"materials": {
+				  "gilded-mail": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season8/valyrian-champion/pants.png"
+			  },
+			  {
+				"name": "Winged Greaves",
+				"level": 25,
+				"materials": {
+				  "gilded-mail": 1200,
+				  "copper-bar": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "goldenheart-wood": 1200
+				},
+				"img": "item/season8/valyrian-champion/boots.png"
+			  },
+			  {
+				"name": "Bestial Ring",
+				"level": 25,
+				"materials": {
+				  "gilded-mail": 1200,
+				  "kingswood-oak": 1200,
+				  "wildfire": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season8/valyrian-champion/ring.png"
+			  },
+			  {
+				"name": "Crimson Halberd",
+				"level": 25,
+				"materials": {
+				  "gilded-mail": 1200,
+				  "goldenheart-wood": 1200,
+				  "ironwood": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season8/valyrian-champion/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Targaryen Royal's",

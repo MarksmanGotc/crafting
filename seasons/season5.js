@@ -1275,328 +1275,6 @@ const season5 = {
 		  ]
 		},
 		{
-		  "setName": "Dornish Royal",
-		  "setMat": "Royal Samite",
-		  "products": [
-			{
-			  "name": "Samite Headscarf",
-			  "level": 5,
-			  "materials": {
-				"royal-samite": 10,
-				"goldenheart-wood": 10,
-				"dragonglass": 10
-			  },
-			  "img": "item/season5/dornish/head.png"
-			},
-			{
-			  "name": "Samite Tunic",
-			  "level": 5,
-			  "materials": {
-				"royal-samite": 10,
-				"copper-bar": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season5/dornish/chest.png"
-			},
-			{
-			  "name": "Polished Belt",
-			  "level": 5,
-			  "materials": {
-				"royal-samite": 10,
-				"milk-of-the-poppy": 10,
-				"ironwood": 10
-			  },
-			  "img": "item/season5/dornish/pants.png"
-			},
-			{
-			  "name": "Riding Boots",
-			  "level": 5,
-			  "materials": {
-				"royal-samite": 10,
-				"milk-of-the-poppy": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season5/dornish/boots.png"
-			},
-			{
-			  "name": "Serpent Ring",
-			  "level": 5,
-			  "materials": {
-				"royal-samite": 10,
-				"hide": 10,
-				"silk": 10
-			  },
-			  "img": "item/season5/dornish/ring.png"
-			},
-			{
-			  "name": "Serpent Rapier",
-			  "level": 5,
-			  "materials": {
-				"royal-samite": 10,
-				"wildfire": 10,
-				"copper-bar": 10
-			  },
-			  "img": "item/season5/dornish/weapon.png"
-			},
-
-			{
-			  "name": "Samite Headscarf",
-			  "level": 10,
-			  "materials": {
-				"royal-samite": 20,
-				"goldenheart-wood": 20,
-				"dragonglass": 20
-			  },
-			  "img": "item/season5/dornish/head.png"
-			},
-			{
-			  "name": "Samite Tunic",
-			  "level": 10,
-			  "materials": {
-				"royal-samite": 20,
-				"copper-bar": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season5/dornish/chest.png"
-			},
-			{
-			  "name": "Polished Belt",
-			  "level": 10,
-			  "materials": {
-				"royal-samite": 20,
-				"milk-of-the-poppy": 20,
-				"ironwood": 20
-			  },
-			  "img": "item/season5/dornish/pants.png"
-			},
-			{
-			  "name": "Riding Boots",
-			  "level": 10,
-			  "materials": {
-				"royal-samite": 20,
-				"milk-of-the-poppy": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season5/dornish/boots.png"
-			},
-			{
-			  "name": "Serpent Ring",
-			  "level": 10,
-			  "materials": {
-				"royal-samite": 20,
-				"hide": 20,
-				"silk": 20
-			  },
-			  "img": "item/season5/dornish/ring.png"
-			},
-			{
-			  "name": "Serpent Rapier",
-			  "level": 10,
-			  "materials": {
-				"royal-samite": 20,
-				"wildfire": 20,
-				"copper-bar": 20
-			  },
-			  "img": "item/season5/dornish/weapon.png"
-			},
-
-			{
-			  "name": "Samite Headscarf",
-			  "level": 15,
-			  "materials": {
-				"royal-samite": 120,
-				"goldenheart-wood": 120,
-				"dragonglass": 120
-			  },
-			  "img": "item/season5/dornish/head.png"
-			},
-			{
-			  "name": "Samite Tunic",
-			  "level": 15,
-			  "materials": {
-				"royal-samite": 120,
-				"copper-bar": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season5/dornish/chest.png"
-			},
-			{
-			  "name": "Polished Belt",
-			  "level": 15,
-			  "materials": {
-				"royal-samite": 120,
-				"milk-of-the-poppy": 120,
-				"ironwood": 120
-			  },
-			  "img": "item/season5/dornish/pants.png"
-			},
-			{
-			  "name": "Riding Boots",
-			  "level": 15,
-			  "materials": {
-				"royal-samite": 120,
-				"milk-of-the-poppy": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season5/dornish/boots.png"
-			},
-			{
-			  "name": "Serpent Ring",
-			  "level": 15,
-			  "materials": {
-				"royal-samite": 120,
-				"hide": 120,
-				"silk": 120
-			  },
-			  "img": "item/season5/dornish/ring.png"
-			},
-			{
-			  "name": "Serpent Rapier",
-			  "level": 15,
-			  "materials": {
-				"royal-samite": 120,
-				"wildfire": 120,
-				"copper-bar": 120
-			  },
-			  "img": "item/season5/dornish/weapon.png"
-			},
-
-			{
-			  "name": "Samite Headscarf",
-			  "level": 20,
-			  "materials": {
-				"royal-samite": 400,
-				"goldenheart-wood": 400,
-				"dragonglass": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season5/dornish/head.png"
-			},
-			{
-			  "name": "Samite Tunic",
-			  "level": 20,
-			  "materials": {
-				"royal-samite": 400,
-				"copper-bar": 400,
-				"black-iron": 400,
-				"hide": 400
-			  },
-			  "img": "item/season5/dornish/chest.png"
-			},
-			{
-			  "name": "Polished Belt",
-			  "level": 20,
-			  "materials": {
-				"royal-samite": 400,
-				"milk-of-the-poppy": 400,
-				"ironwood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season5/dornish/pants.png"
-			},
-			{
-			  "name": "Riding Boots",
-			  "level": 20,
-			  "materials": {
-				"royal-samite": 400,
-				"milk-of-the-poppy": 400,
-				"kingswood-oak": 400,
-				"silk": 400
-			  },
-			  "img": "item/season5/dornish/boots.png"
-			},
-			{
-			  "name": "Serpent Ring",
-			  "level": 20,
-			  "materials": {
-				"royal-samite": 400,
-				"hide": 400,
-				"silk": 400,
-				"weirwood": 400
-			  },
-			  "img": "item/season5/dornish/ring.png"
-			},
-			{
-			  "name": "Serpent Rapier",
-			  "level": 20,
-			  "materials": {
-				"royal-samite": 400,
-				"wildfire": 400,
-				"copper-bar": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season5/dornish/weapon.png"
-			},
-
-			{
-			  "name": "Samite Headscarf",
-			  "level": 25,
-			  "materials": {
-				"royal-samite": 1200,
-				"goldenheart-wood": 1200,
-				"dragonglass": 1200,
-				"leather-straps": 1200
-			  },
-			  "img": "item/season5/dornish/head.png"
-			},
-			{
-			  "name": "Samite Tunic",
-			  "level": 25,
-			  "materials": {
-				"royal-samite": 1200,
-				"copper-bar": 1200,
-				"black-iron": 1200,
-				"hide": 1200
-			  },
-			  "img": "item/season5/dornish/chest.png"
-			},
-			{
-			  "name": "Polished Belt",
-			  "level": 25,
-			  "materials": {
-				"royal-samite": 1200,
-				"milk-of-the-poppy": 1200,
-				"ironwood": 1200,
-				"kingswood-oak": 1200
-			  },
-			  "img": "item/season5/dornish/pants.png"
-			},
-			{
-			  "name": "Riding Boots",
-			  "level": 25,
-			  "materials": {
-				"royal-samite": 1200,
-				"milk-of-the-poppy": 1200,
-				"kingswood-oak": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season5/dornish/boots.png"
-			},
-			{
-			  "name": "Serpent Ring",
-			  "level": 25,
-			  "materials": {
-				"royal-samite": 1200,
-				"hide": 1200,
-				"silk": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season5/dornish/ring.png"
-			},
-			{
-			  "name": "Serpent Rapier",
-			  "level": 25,
-			  "materials": {
-				"royal-samite": 1200,
-				"wildfire": 1200,
-				"copper-bar": 1200,
-				"black-iron": 1200
-			  },
-			  "img": "item/season5/dornish/weapon.png"
-			}
-		  ]
-		},
-		{
 		  "setName": "Crow Slayer's",
 		  "setMat": "Scavenged Bone",
 		  "products": [
@@ -2231,6 +1909,328 @@ const season5 = {
 			  "img": "item/season5/lost-ranger/weapon.png"
 			}
 		  ]
-		}
+		},
+		{
+			"setName": "Dornish Royal",
+			"setMat": "Royal Samite",
+			"products": [
+			  {
+				"name": "Samite Headscarf",
+				"level": 5,
+				"materials": {
+				  "royal-samite": 10,
+				  "goldenheart-wood": 10,
+				  "dragonglass": 10
+				},
+				"img": "item/season5/dornish/head.png"
+			  },
+			  {
+				"name": "Samite Tunic",
+				"level": 5,
+				"materials": {
+				  "royal-samite": 10,
+				  "copper-bar": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season5/dornish/chest.png"
+			  },
+			  {
+				"name": "Polished Belt",
+				"level": 5,
+				"materials": {
+				  "royal-samite": 10,
+				  "milk-of-the-poppy": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season5/dornish/pants.png"
+			  },
+			  {
+				"name": "Riding Boots",
+				"level": 5,
+				"materials": {
+				  "royal-samite": 10,
+				  "milk-of-the-poppy": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season5/dornish/boots.png"
+			  },
+			  {
+				"name": "Serpent Ring",
+				"level": 5,
+				"materials": {
+				  "royal-samite": 10,
+				  "hide": 10,
+				  "silk": 10
+				},
+				"img": "item/season5/dornish/ring.png"
+			  },
+			  {
+				"name": "Serpent Rapier",
+				"level": 5,
+				"materials": {
+				  "royal-samite": 10,
+				  "wildfire": 10,
+				  "copper-bar": 10
+				},
+				"img": "item/season5/dornish/weapon.png"
+			  },
+  
+			  {
+				"name": "Samite Headscarf",
+				"level": 10,
+				"materials": {
+				  "royal-samite": 20,
+				  "goldenheart-wood": 20,
+				  "dragonglass": 20
+				},
+				"img": "item/season5/dornish/head.png"
+			  },
+			  {
+				"name": "Samite Tunic",
+				"level": 10,
+				"materials": {
+				  "royal-samite": 20,
+				  "copper-bar": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season5/dornish/chest.png"
+			  },
+			  {
+				"name": "Polished Belt",
+				"level": 10,
+				"materials": {
+				  "royal-samite": 20,
+				  "milk-of-the-poppy": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season5/dornish/pants.png"
+			  },
+			  {
+				"name": "Riding Boots",
+				"level": 10,
+				"materials": {
+				  "royal-samite": 20,
+				  "milk-of-the-poppy": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season5/dornish/boots.png"
+			  },
+			  {
+				"name": "Serpent Ring",
+				"level": 10,
+				"materials": {
+				  "royal-samite": 20,
+				  "hide": 20,
+				  "silk": 20
+				},
+				"img": "item/season5/dornish/ring.png"
+			  },
+			  {
+				"name": "Serpent Rapier",
+				"level": 10,
+				"materials": {
+				  "royal-samite": 20,
+				  "wildfire": 20,
+				  "copper-bar": 20
+				},
+				"img": "item/season5/dornish/weapon.png"
+			  },
+  
+			  {
+				"name": "Samite Headscarf",
+				"level": 15,
+				"materials": {
+				  "royal-samite": 120,
+				  "goldenheart-wood": 120,
+				  "dragonglass": 120
+				},
+				"img": "item/season5/dornish/head.png"
+			  },
+			  {
+				"name": "Samite Tunic",
+				"level": 15,
+				"materials": {
+				  "royal-samite": 120,
+				  "copper-bar": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season5/dornish/chest.png"
+			  },
+			  {
+				"name": "Polished Belt",
+				"level": 15,
+				"materials": {
+				  "royal-samite": 120,
+				  "milk-of-the-poppy": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season5/dornish/pants.png"
+			  },
+			  {
+				"name": "Riding Boots",
+				"level": 15,
+				"materials": {
+				  "royal-samite": 120,
+				  "milk-of-the-poppy": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season5/dornish/boots.png"
+			  },
+			  {
+				"name": "Serpent Ring",
+				"level": 15,
+				"materials": {
+				  "royal-samite": 120,
+				  "hide": 120,
+				  "silk": 120
+				},
+				"img": "item/season5/dornish/ring.png"
+			  },
+			  {
+				"name": "Serpent Rapier",
+				"level": 15,
+				"materials": {
+				  "royal-samite": 120,
+				  "wildfire": 120,
+				  "copper-bar": 120
+				},
+				"img": "item/season5/dornish/weapon.png"
+			  },
+  
+			  {
+				"name": "Samite Headscarf",
+				"level": 20,
+				"materials": {
+				  "royal-samite": 400,
+				  "goldenheart-wood": 400,
+				  "dragonglass": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season5/dornish/head.png"
+			  },
+			  {
+				"name": "Samite Tunic",
+				"level": 20,
+				"materials": {
+				  "royal-samite": 400,
+				  "copper-bar": 400,
+				  "black-iron": 400,
+				  "hide": 400
+				},
+				"img": "item/season5/dornish/chest.png"
+			  },
+			  {
+				"name": "Polished Belt",
+				"level": 20,
+				"materials": {
+				  "royal-samite": 400,
+				  "milk-of-the-poppy": 400,
+				  "ironwood": 400,
+				  "kingswood-oak": 400
+				},
+				"img": "item/season5/dornish/pants.png"
+			  },
+			  {
+				"name": "Riding Boots",
+				"level": 20,
+				"materials": {
+				  "royal-samite": 400,
+				  "milk-of-the-poppy": 400,
+				  "kingswood-oak": 400,
+				  "silk": 400
+				},
+				"img": "item/season5/dornish/boots.png"
+			  },
+			  {
+				"name": "Serpent Ring",
+				"level": 20,
+				"materials": {
+				  "royal-samite": 400,
+				  "hide": 400,
+				  "silk": 400,
+				  "weirwood": 400
+				},
+				"img": "item/season5/dornish/ring.png"
+			  },
+			  {
+				"name": "Serpent Rapier",
+				"level": 20,
+				"materials": {
+				  "royal-samite": 400,
+				  "wildfire": 400,
+				  "copper-bar": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season5/dornish/weapon.png"
+			  },
+  
+			  {
+				"name": "Samite Headscarf",
+				"level": 25,
+				"materials": {
+				  "royal-samite": 1200,
+				  "goldenheart-wood": 1200,
+				  "dragonglass": 1200,
+				  "leather-straps": 1200
+				},
+				"img": "item/season5/dornish/head.png"
+			  },
+			  {
+				"name": "Samite Tunic",
+				"level": 25,
+				"materials": {
+				  "royal-samite": 1200,
+				  "copper-bar": 1200,
+				  "black-iron": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season5/dornish/chest.png"
+			  },
+			  {
+				"name": "Polished Belt",
+				"level": 25,
+				"materials": {
+				  "royal-samite": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "ironwood": 1200,
+				  "kingswood-oak": 1200
+				},
+				"img": "item/season5/dornish/pants.png"
+			  },
+			  {
+				"name": "Riding Boots",
+				"level": 25,
+				"materials": {
+				  "royal-samite": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "kingswood-oak": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season5/dornish/boots.png"
+			  },
+			  {
+				"name": "Serpent Ring",
+				"level": 25,
+				"materials": {
+				  "royal-samite": 1200,
+				  "hide": 1200,
+				  "silk": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season5/dornish/ring.png"
+			  },
+			  {
+				"name": "Serpent Rapier",
+				"level": 25,
+				"materials": {
+				  "royal-samite": 1200,
+				  "wildfire": 1200,
+				  "copper-bar": 1200,
+				  "black-iron": 1200
+				},
+				"img": "item/season5/dornish/weapon.png"
+			  }
+			]
+		},
 	]
 };

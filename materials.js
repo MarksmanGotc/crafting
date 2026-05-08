@@ -480,6 +480,10 @@ const materials = {
 		season: 13,
 		//flux: { "name": "Season 13 Flux", "img": "materials/season13/season_13_flux.webp" },
 		mats: {
+			"cleansed-lock-of-hair": {
+				"img": "materials/season13/cleansed-lock-of-hair.png",
+				"Original-name": "Cleansed Lock of Hair"
+			},
 			"flea-bottom-linen": {
 				"img": "materials/season13/flea-bottom-linen.png",
 				"Original-name": "Flea Bottom Linen"

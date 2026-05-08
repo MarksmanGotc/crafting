@@ -3,6 +3,324 @@ const season2 = {
         extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
         sets: [
 		{
+			"setName": "Whent",
+			"setMat": "Golden Thread",
+			"products": [
+				{
+				"name": "Embroidered Scarf",
+				"level": 5,
+				"materials": {
+					"golden-thread": 10,
+					"kingswood-oak": 10,
+					"wildfire": 10
+				},
+				"img": "item/season2/whent/head.png"
+				},
+				{
+				"name": "Embroidered Doublet",
+				"level": 5,
+				"materials": {
+					"golden-thread": 10,
+					"silk": 10,
+					"black-iron": 10
+				},
+				"img": "item/season2/whent/chest.png"
+				},
+				{
+				"name": "Gold-Trimmed Skirts",
+				"level": 5,
+				"materials": {
+					"golden-thread": 10,
+					"weirwood": 10,
+					"leather-straps": 10
+				},
+				"img": "item/season2/whent/pants.png"
+				},
+				{
+				"name": "Gold-Trimmed Boots",
+				"level": 5,
+				"materials": {
+					"golden-thread": 10,
+					"milk-of-the-poppy": 10,
+					"hide": 10
+				},
+				"img": "item/season2/whent/boots.png"
+				},
+				{
+				"name": "Sigil Ring",
+				"level": 5,
+				"materials": {
+					"golden-thread": 10,
+					"ironwood": 10,
+					"kingswood-oak": 10
+				},
+				"img": "item/season2/whent/ring.png"
+				},
+				{
+				"name": "Gold-Trimmed Dagger",
+				"level": 5,
+				"materials": {
+					"golden-thread": 10,
+					"copper-bar": 10,
+					"milk-of-the-poppy": 10
+				},
+				"img": "item/season2/whent/weapon.png"
+				},
+				{
+				"name": "Embroidered Scarf",
+				"level": 10,
+				"materials": {
+					"golden-thread": 20,
+					"kingswood-oak": 20,
+					"wildfire": 20
+				},
+				"img": "item/season2/whent/head.png"
+				},
+				{
+				"name": "Embroidered Doublet",
+				"level": 10,
+				"materials": {
+					"golden-thread": 20,
+					"silk": 20,
+					"black-iron": 20
+				},
+				"img": "item/season2/whent/chest.png"
+				},
+				{
+				"name": "Gold-Trimmed Skirts",
+				"level": 10,
+				"materials": {
+					"golden-thread": 20,
+					"weirwood": 20,
+					"leather-straps": 20
+				},
+				"img": "item/season2/whent/pants.png"
+				},
+				{
+				"name": "Gold-Trimmed Boots",
+				"level": 10,
+				"materials": {
+					"golden-thread": 20,
+					"milk-of-the-poppy": 20,
+					"hide": 20
+				},
+				"img": "item/season2/whent/boots.png"
+				},
+				{
+				"name": "Sigil Ring",
+				"level": 10,
+				"materials": {
+					"golden-thread": 20,
+					"ironwood": 20,
+					"kingswood-oak": 20
+				},
+				"img": "item/season2/whent/ring.png"
+				},
+				{
+				"name": "Gold-Trimmed Dagger",
+				"level": 10,
+				"materials": {
+					"golden-thread": 20,
+					"copper-bar": 20,
+					"milk-of-the-poppy": 20
+				},
+				"img": "item/season2/whent/weapon.png"
+				},
+				{
+				"name": "Embroidered Scarf",
+				"level": 15,
+				"materials": {
+					"golden-thread": 120,
+					"kingswood-oak": 120,
+					"wildfire": 120
+				},
+				"img": "item/season2/whent/head.png"
+				},
+				{
+				"name": "Embroidered Doublet",
+				"level": 15,
+				"materials": {
+					"golden-thread": 120,
+					"silk": 120,
+					"black-iron": 120
+				},
+				"img": "item/season2/whent/chest.png"
+				},
+				{
+				"name": "Gold-Trimmed Skirts",
+				"level": 15,
+				"materials": {
+					"golden-thread": 120,
+					"weirwood": 120,
+					"leather-straps": 120
+				},
+				"img": "item/season2/whent/pants.png"
+				},
+				{
+				"name": "Gold-Trimmed Boots",
+				"level": 15,
+				"materials": {
+					"golden-thread": 120,
+					"milk-of-the-poppy": 120,
+					"hide": 120
+				},
+				"img": "item/season2/whent/boots.png"
+				},
+				{
+				"name": "Sigil Ring",
+				"level": 15,
+				"materials": {
+					"golden-thread": 120,
+					"ironwood": 120,
+					"kingswood-oak": 120
+				},
+				"img": "item/season2/whent/ring.png"
+				},
+				{
+				"name": "Gold-Trimmed Dagger",
+				"level": 15,
+				"materials": {
+					"golden-thread": 120,
+					"copper-bar": 120,
+					"milk-of-the-poppy": 120
+				},
+				"img": "item/season2/whent/weapon.png"
+				},
+				{
+				"name": "Embroidered Scarf",
+				"level": 20,
+				"materials": {
+					"golden-thread": 400,
+					"kingswood-oak": 400,
+					"wildfire": 400
+				},
+				"img": "item/season2/whent/head.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Embroidered Doublet",
+				"level": 20,
+				"materials": {
+					"golden-thread": 400,
+					"silk": 400,
+					"black-iron": 400
+				},
+				"img": "item/season2/whent/chest.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Gold-Trimmed Skirts",
+				"level": 20,
+				"materials": {
+					"golden-thread": 400,
+					"weirwood": 400,
+					"leather-straps": 400
+				},
+				"img": "item/season2/whent/pants.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Gold-Trimmed Boots",
+				"level": 20,
+				"materials": {
+					"golden-thread": 400,
+					"milk-of-the-poppy": 400,
+					"hide": 400
+				},
+				"img": "item/season2/whent/boots.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Sigil Ring",
+				"level": 20,
+				"materials": {
+					"golden-thread": 400,
+					"ironwood": 400,
+					"kingswood-oak": 400
+				},
+				"img": "item/season2/whent/ring.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Gold-Trimmed Dagger",
+				"level": 20,
+				"materials": {
+					"golden-thread": 400,
+					"copper-bar": 400,
+					"milk-of-the-poppy": 400
+				},
+				"img": "item/season2/whent/weapon.png",
+				"odds": "medium"
+				},
+				{
+				"name": "Embroidered Scarf",
+				"level": 25,
+				"materials": {
+					"golden-thread": 1200,
+					"kingswood-oak": 1200,
+					"wildfire": 1200,
+					"black-iron": 1200
+				},
+				"img": "item/season2/whent/head.png"
+				},
+				{
+				"name": "Embroidered Doublet",
+				"level": 25,
+				"materials": {
+					"golden-thread": 1200,
+					"silk": 1200,
+					"black-iron": 1200,
+					"milk-of-the-poppy": 1200
+				},
+				"img": "item/season2/whent/chest.png"
+				},
+				{
+				"name": "Gold-Trimmed Skirts",
+				"level": 25,
+				"materials": {
+					"golden-thread": 1200,
+					"weirwood": 1200,
+					"leather-straps": 1200,
+					"dragonglass": 1200
+				},
+				"img": "item/season2/whent/pants.png"
+				},
+				{
+				"name": "Gold-Trimmed Boots",
+				"level": 25,
+				"materials": {
+					"golden-thread": 1200,
+					"milk-of-the-poppy": 1200,
+					"hide": 1200,
+					"silk": 1200
+				},
+				"img": "item/season2/whent/boots.png"
+				},
+				{
+				"name": "Sigil Ring",
+				"level": 25,
+				"materials": {
+					"golden-thread": 1200,
+					"ironwood": 1200,
+					"kingswood-oak": 1200,
+					"copper-bar": 1200
+				},
+				"img": "item/season2/whent/ring.png"
+				},
+				{
+				"name": "Gold-Trimmed Dagger",
+				"level": 25,
+				"materials": {
+					"golden-thread": 1200,
+					"copper-bar": 1200,
+					"milk-of-the-poppy": 1200,
+					"ironwood": 1200
+				},
+				"img": "item/season2/whent/weapon.png"
+				}
+			]
+		},
+		{
 		  "setName": "Siege Engineer's",
 		  "setMat": "Bucket of Tar",
 		  "products": [
@@ -321,322 +639,330 @@ const season2 = {
 		  ]
 		},
 		{
-		  "setName": "Braavosi Trader's",
-		  "setMat": "Cockle Shell",
-		  "products": [
-			{
-			  "name": "Titan Helm",
-			  "level": 5,
-			  "materials": {
-				"cockle-shell": 10,
-				"copper-bar": 10,
-				"weirwood": 10
+			"setName": "Dornish",
+			"setMat": "Horsehair Tassel",
+			"products": [
+			  {
+				"name": "Silk Headscarf",
+				"level": 5,
+				"materials": {
+				  "horsehair-tassel": 10,
+				  "black-iron": 10,
+				  "milk-of-the-poppy": 10
+				},
+				"img": "item/season2/dornish/head.png"
 			  },
-			  "img": "item/season2/braavosi/head.png"
-			},
-			{
-			  "name": "Ruff",
-			  "level": 5,
-			  "materials": {
-				"cockle-shell": 10,
-				"kingswood-oak": 10,
-				"black-iron": 10
+			  {
+				"name": "Samite Robes",
+				"level": 5,
+				"materials": {
+				  "horsehair-tassel": 10,
+				  "milk-of-the-poppy": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season2/dornish/chest.png"
 			  },
-			  "img": "item/season2/braavosi/chest.png"
-			},
-			{
-			  "name": "Belted Trouser",
-			  "level": 5,
-			  "materials": {
-				"cockle-shell": 10,
-				"black-iron": 10,
-				"silk": 10
+			  {
+				"name": "Samite Sash",
+				"level": 5,
+				"materials": {
+				  "horsehair-tassel": 10,
+				  "copper-bar": 10,
+				  "dragonglass": 10
+				},
+				"img": "item/season2/dornish/pants.png"
 			  },
-			  "img": "item/season2/braavosi/pants.png"
-			},
-			{
-			  "name": "Calfskin Boot",
-			  "level": 5,
-			  "materials": {
-				"cockle-shell": 10,
-				"dragonglass": 10,
-				"wildfire": 10
+			  {
+				"name": "Sand Striders",
+				"level": 5,
+				"materials": {
+				  "horsehair-tassel": 10,
+				  "hide": 10,
+				  "goldenheart-wood": 10
+				},
+				"img": "item/season2/dornish/boots.png"
 			  },
-			  "img": "item/season2/braavosi/boots.png"
-			},
-			{
-			  "name": "Titan Signet",
-			  "level": 5,
-			  "materials": {
-				"cockle-shell": 10,
-				"copper-bar": 10,
-				"leather-straps": 10
+			  {
+				"name": "Sun Sigil Ring",
+				"level": 5,
+				"materials": {
+				  "horsehair-tassel": 10,
+				  "wildfire": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season2/dornish/ring.png"
 			  },
-			  "img": "item/season2/braavosi/ring.png"
-			},
-			{
-			  "name": "Javelin",
-			  "level": 5,
-			  "materials": {
-				"cockle-shell": 10,
-				"silk": 10,
-				"ironwood": 10
+			  {
+				"name": "Poison-Tripped Spear",
+				"level": 5,
+				"materials": {
+				  "horsehair-tassel": 10,
+				  "ironwood": 10,
+				  "hide": 10
+				},
+				"img": "item/season2/dornish/weapon.png"
 			  },
-			  "img": "item/season2/braavosi/weapon.png"
-			},
-			{
-			  "name": "Titan Helm",
-			  "level": 10,
-			  "materials": {
-				"cockle-shell": 20,
-				"copper-bar": 20,
-				"weirwood": 20
+  
+			  // level 10
+			  {
+				"name": "Silk Headscarf",
+				"level": 10,
+				"materials": {
+				  "horsehair-tassel": 20,
+				  "black-iron": 20,
+				  "milk-of-the-poppy": 20
+				},
+				"img": "item/season2/dornish/head.png"
 			  },
-			  "img": "item/season2/braavosi/head.png"
-			},
-			{
-			  "name": "Ruff",
-			  "level": 10,
-			  "materials": {
-				"cockle-shell": 20,
-				"kingswood-oak": 20,
-				"black-iron": 20
+			  {
+				"name": "Samite Robes",
+				"level": 10,
+				"materials": {
+				  "horsehair-tassel": 20,
+				  "milk-of-the-poppy": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season2/dornish/chest.png"
 			  },
-			  "img": "item/season2/braavosi/chest.png"
-			},
-			{
-			  "name": "Belted Trouser",
-			  "level": 10,
-			  "materials": {
-				"cockle-shell": 20,
-				"black-iron": 20,
-				"silk": 20
+			  {
+				"name": "Samite Sash",
+				"level": 10,
+				"materials": {
+				  "horsehair-tassel": 20,
+				  "copper-bar": 20,
+				  "dragonglass": 20
+				},
+				"img": "item/season2/dornish/pants.png"
 			  },
-			  "img": "item/season2/braavosi/pants.png"
-			},
-			{
-			  "name": "Calfskin Boot",
-			  "level": 10,
-			  "materials": {
-				"cockle-shell": 20,
-				"dragonglass": 20,
-				"wildfire": 20
+			  {
+				"name": "Sand Striders",
+				"level": 10,
+				"materials": {
+				  "horsehair-tassel": 20,
+				  "hide": 20,
+				  "goldenheart-wood": 20
+				},
+				"img": "item/season2/dornish/boots.png"
 			  },
-			  "img": "item/season2/braavosi/boots.png"
-			},
-			{
-			  "name": "Titan Signet",
-			  "level": 10,
-			  "materials": {
-				"cockle-shell": 20,
-				"copper-bar": 20,
-				"leather-straps": 20
+			  {
+				"name": "Sun Sigil Ring",
+				"level": 10,
+				"materials": {
+				  "horsehair-tassel": 20,
+				  "wildfire": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season2/dornish/ring.png"
 			  },
-			  "img": "item/season2/braavosi/ring.png"
-			},
-			{
-			  "name": "Javelin",
-			  "level": 10,
-			  "materials": {
-				"cockle-shell": 20,
-				"silk": 20,
-				"ironwood": 20
+			  {
+				"name": "Poison-Tripped Spear",
+				"level": 10,
+				"materials": {
+				  "horsehair-tassel": 20,
+				  "ironwood": 20,
+				  "hide": 20
+				},
+				"img": "item/season2/dornish/weapon.png"
 			  },
-			  "img": "item/season2/braavosi/weapon.png"
-			},
-			{
-			  "name": "Titan Helm",
-			  "level": 15,
-			  "materials": {
-				"cockle-shell": 120,
-				"copper-bar": 120,
-				"weirwood": 120
+  
+			  // level 15
+			  {
+				"name": "Silk Headscarf",
+				"level": 15,
+				"materials": {
+				  "horsehair-tassel": 120,
+				  "black-iron": 120,
+				  "milk-of-the-poppy": 120
+				},
+				"img": "item/season2/dornish/head.png"
 			  },
-			  "img": "item/season2/braavosi/head.png"
-			},
-			{
-			  "name": "Ruff",
-			  "level": 15,
-			  "materials": {
-				"cockle-shell": 120,
-				"kingswood-oak": 120,
-				"black-iron": 120
+			  {
+				"name": "Samite Robes",
+				"level": 15,
+				"materials": {
+				  "horsehair-tassel": 120,
+				  "milk-of-the-poppy": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season2/dornish/chest.png"
 			  },
-			  "img": "item/season2/braavosi/chest.png"
-			},
-			{
-			  "name": "Belted Trouser",
-			  "level": 15,
-			  "materials": {
-				"cockle-shell": 120,
-				"black-iron": 120,
-				"silk": 120
+			  {
+				"name": "Samite Sash",
+				"level": 15,
+				"materials": {
+				  "horsehair-tassel": 120,
+				  "copper-bar": 120,
+				  "dragonglass": 120
+				},
+				"img": "item/season2/dornish/pants.png"
 			  },
-			  "img": "item/season2/braavosi/pants.png"
-			},
-			{
-			  "name": "Calfskin Boot",
-			  "level": 15,
-			  "materials": {
-				"cockle-shell": 120,
-				"dragonglass": 120,
-				"wildfire": 120
+			  {
+				"name": "Sand Striders",
+				"level": 15,
+				"materials": {
+				  "horsehair-tassel": 120,
+				  "hide": 120,
+				  "goldenheart-wood": 120
+				},
+				"img": "item/season2/dornish/boots.png"
 			  },
-			  "img": "item/season2/braavosi/boots.png"
-			},
-			{
-			  "name": "Titan Signet",
-			  "level": 15,
-			  "materials": {
-				"cockle-shell": 120,
-				"copper-bar": 120,
-				"leather-straps": 120
+			  {
+				"name": "Sun Sigil Ring",
+				"level": 15,
+				"materials": {
+				  "horsehair-tassel": 120,
+				  "wildfire": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season2/dornish/ring.png"
 			  },
-			  "img": "item/season2/braavosi/ring.png"
-			},
-			{
-			  "name": "Javelin",
-			  "level": 15,
-			  "materials": {
-				"cockle-shell": 120,
-				"silk": 120,
-				"ironwood": 120
+			  {
+				"name": "Poison-Tripped Spear",
+				"level": 15,
+				"materials": {
+				  "horsehair-tassel": 120,
+				  "ironwood": 120,
+				  "hide": 120
+				},
+				"img": "item/season2/dornish/weapon.png"
 			  },
-			  "img": "item/season2/braavosi/weapon.png"
-			},
-			{
-			  "name": "Titan Helm",
-			  "level": 20,
-			  "materials": {
-				"cockle-shell": 400,
-				"copper-bar": 400,
-				"weirwood": 400
+  
+			  // level 20
+			  {
+				"name": "Silk Headscarf",
+				"level": 20,
+				"materials": {
+				  "horsehair-tassel": 400,
+				  "black-iron": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season2/dornish/head.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/braavosi/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Ruff",
-			  "level": 20,
-			  "materials": {
-				"cockle-shell": 400,
-				"kingswood-oak": 400,
-				"black-iron": 400
+			  {
+				"name": "Samite Robes",
+				"level": 20,
+				"materials": {
+				  "horsehair-tassel": 400,
+				  "milk-of-the-poppy": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season2/dornish/chest.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/braavosi/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Belted Trouser",
-			  "level": 20,
-			  "materials": {
-				"cockle-shell": 400,
-				"black-iron": 400,
-				"silk": 400
+			  {
+				"name": "Samite Sash",
+				"level": 20,
+				"materials": {
+				  "horsehair-tassel": 400,
+				  "copper-bar": 400,
+				  "dragonglass": 400
+				},
+				"img": "item/season2/dornish/pants.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/braavosi/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Calfskin Boot",
-			  "level": 20,
-			  "materials": {
-				"cockle-shell": 400,
-				"dragonglass": 400,
-				"wildfire": 400
+			  {
+				"name": "Sand Striders",
+				"level": 20,
+				"materials": {
+				  "horsehair-tassel": 400,
+				  "hide": 400,
+				  "goldenheart-wood": 400
+				},
+				"img": "item/season2/dornish/boots.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/braavosi/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Titan Signet",
-			  "level": 20,
-			  "materials": {
-				"cockle-shell": 400,
-				"copper-bar": 400,
-				"leather-straps": 400
+			  {
+				"name": "Sun Sigil Ring",
+				"level": 20,
+				"materials": {
+				  "horsehair-tassel": 400,
+				  "wildfire": 400,
+				  "ironwood": 400
+				},
+				"img": "item/season2/dornish/ring.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/braavosi/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Javelin",
-			  "level": 20,
-			  "materials": {
-				"cockle-shell": 400,
-				"silk": 400,
-				"ironwood": 400
+			  {
+				"name": "Poison-Tripped Spear",
+				"level": 20,
+				"materials": {
+				  "horsehair-tassel": 400,
+				  "ironwood": 400,
+				  "hide": 400
+				},
+				"img": "item/season2/dornish/weapon.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/braavosi/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Titan Helm",
-			  "level": 25,
-			  "materials": {
-				"cockle-shell": 1200,
-				"copper-bar": 1200,
-				"weirwood": 1200,
-				"ironwood": 1200
+  
+			  // level 25
+			  {
+				"name": "Silk Headscarf",
+				"level": 25,
+				"materials": {
+				  "horsehair-tassel": 1200,
+				  "black-iron": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "goldenheart-wood": 1200
+				},
+				"img": "item/season2/dornish/head.png"
 			  },
-			  "img": "item/season2/braavosi/head.png"
-			},
-			{
-			  "name": "Ruff",
-			  "level": 25,
-			  "materials": {
-				"cockle-shell": 1200,
-				"kingswood-oak": 1200,
-				"black-iron": 1200,
-				"milk-of-the-poppy": 1200
+			  {
+				"name": "Samite Robes",
+				"level": 25,
+				"materials": {
+				  "horsehair-tassel": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "leather-straps": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season2/dornish/chest.png"
 			  },
-			  "img": "item/season2/braavosi/chest.png"
-			},
-			{
-			  "name": "Belted Trouser",
-			  "level": 25,
-			  "materials": {
-				"cockle-shell": 1200,
-				"black-iron": 1200,
-				"silk": 1200,
-				"weirwood": 1200
+			  {
+				"name": "Samite Sash",
+				"level": 25,
+				"materials": {
+				  "horsehair-tassel": 1200,
+				  "copper-bar": 1200,
+				  "dragonglass": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season2/dornish/pants.png"
 			  },
-			  "img": "item/season2/braavosi/pants.png"
-			},
-			{
-			  "name": "Calfskin Boot",
-			  "level": 25,
-			  "materials": {
-				"cockle-shell": 1200,
-				"dragonglass": 1200,
-				"wildfire": 1200,
-				"hide": 1200
+			  {
+				"name": "Sand Striders",
+				"level": 25,
+				"materials": {
+				  "horsehair-tassel": 1200,
+				  "hide": 1200,
+				  "goldenheart-wood": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season2/dornish/boots.png"
 			  },
-			  "img": "item/season2/braavosi/boots.png"
-			},
-			{
-			  "name": "Titan Signet",
-			  "level": 25,
-			  "materials": {
-				"cockle-shell": 1200,
-				"copper-bar": 1200,
-				"leather-straps": 1200,
-				"hide": 1200
+			  {
+				"name": "Sun Sigil Ring",
+				"level": 25,
+				"materials": {
+				  "horsehair-tassel": 1200,
+				  "wildfire": 1200,
+				  "ironwood": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season2/dornish/ring.png"
 			  },
-			  "img": "item/season2/braavosi/ring.png"
-			},
-			{
-			  "name": "Javelin",
-			  "level": 25,
-			  "materials": {
-				"cockle-shell": 1200,
-				"silk": 1200,
-				"ironwood": 1200,
-				"weirwood": 1200
-			  },
-			  "img": "item/season2/braavosi/weapon.png"
-			}
-		  ]
+			  {
+				"name": "Poison-Tripped Spear",
+				"level": 25,
+				"materials": {
+				  "horsehair-tassel": 1200,
+				  "ironwood": 1200,
+				  "hide": 1200,
+				  "dragonglass": 1200
+				},
+				"img": "item/season2/dornish/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Dragon Knight's",
@@ -953,324 +1279,6 @@ const season2 = {
 				"kingswood-oak": 1200
 			  },
 			  "img": "item/season2/dragon/weapon.png"
-			}
-		  ]
-		},
-		{
-		  "setName": "Whent",
-		  "setMat": "Golden Thread",
-		  "products": [
-			{
-			  "name": "Embroidered Scarf",
-			  "level": 5,
-			  "materials": {
-				"golden-thread": 10,
-				"kingswood-oak": 10,
-				"wildfire": 10
-			  },
-			  "img": "item/season2/whent/head.png"
-			},
-			{
-			  "name": "Embroidered Doublet",
-			  "level": 5,
-			  "materials": {
-				"golden-thread": 10,
-				"silk": 10,
-				"black-iron": 10
-			  },
-			  "img": "item/season2/whent/chest.png"
-			},
-			{
-			  "name": "Gold-Trimmed Skirts",
-			  "level": 5,
-			  "materials": {
-				"golden-thread": 10,
-				"weirwood": 10,
-				"leather-straps": 10
-			  },
-			  "img": "item/season2/whent/pants.png"
-			},
-			{
-			  "name": "Gold-Trimmed Boots",
-			  "level": 5,
-			  "materials": {
-				"golden-thread": 10,
-				"milk-of-the-poppy": 10,
-				"hide": 10
-			  },
-			  "img": "item/season2/whent/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 5,
-			  "materials": {
-				"golden-thread": 10,
-				"ironwood": 10,
-				"kingswood-oak": 10
-			  },
-			  "img": "item/season2/whent/ring.png"
-			},
-			{
-			  "name": "Gold-Trimmed Dagger",
-			  "level": 5,
-			  "materials": {
-				"golden-thread": 10,
-				"copper-bar": 10,
-				"milk-of-the-poppy": 10
-			  },
-			  "img": "item/season2/whent/weapon.png"
-			},
-			{
-			  "name": "Embroidered Scarf",
-			  "level": 10,
-			  "materials": {
-				"golden-thread": 20,
-				"kingswood-oak": 20,
-				"wildfire": 20
-			  },
-			  "img": "item/season2/whent/head.png"
-			},
-			{
-			  "name": "Embroidered Doublet",
-			  "level": 10,
-			  "materials": {
-				"golden-thread": 20,
-				"silk": 20,
-				"black-iron": 20
-			  },
-			  "img": "item/season2/whent/chest.png"
-			},
-			{
-			  "name": "Gold-Trimmed Skirts",
-			  "level": 10,
-			  "materials": {
-				"golden-thread": 20,
-				"weirwood": 20,
-				"leather-straps": 20
-			  },
-			  "img": "item/season2/whent/pants.png"
-			},
-			{
-			  "name": "Gold-Trimmed Boots",
-			  "level": 10,
-			  "materials": {
-				"golden-thread": 20,
-				"milk-of-the-poppy": 20,
-				"hide": 20
-			  },
-			  "img": "item/season2/whent/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 10,
-			  "materials": {
-				"golden-thread": 20,
-				"ironwood": 20,
-				"kingswood-oak": 20
-			  },
-			  "img": "item/season2/whent/ring.png"
-			},
-			{
-			  "name": "Gold-Trimmed Dagger",
-			  "level": 10,
-			  "materials": {
-				"golden-thread": 20,
-				"copper-bar": 20,
-				"milk-of-the-poppy": 20
-			  },
-			  "img": "item/season2/whent/weapon.png"
-			},
-			{
-			  "name": "Embroidered Scarf",
-			  "level": 15,
-			  "materials": {
-				"golden-thread": 120,
-				"kingswood-oak": 120,
-				"wildfire": 120
-			  },
-			  "img": "item/season2/whent/head.png"
-			},
-			{
-			  "name": "Embroidered Doublet",
-			  "level": 15,
-			  "materials": {
-				"golden-thread": 120,
-				"silk": 120,
-				"black-iron": 120
-			  },
-			  "img": "item/season2/whent/chest.png"
-			},
-			{
-			  "name": "Gold-Trimmed Skirts",
-			  "level": 15,
-			  "materials": {
-				"golden-thread": 120,
-				"weirwood": 120,
-				"leather-straps": 120
-			  },
-			  "img": "item/season2/whent/pants.png"
-			},
-			{
-			  "name": "Gold-Trimmed Boots",
-			  "level": 15,
-			  "materials": {
-				"golden-thread": 120,
-				"milk-of-the-poppy": 120,
-				"hide": 120
-			  },
-			  "img": "item/season2/whent/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 15,
-			  "materials": {
-				"golden-thread": 120,
-				"ironwood": 120,
-				"kingswood-oak": 120
-			  },
-			  "img": "item/season2/whent/ring.png"
-			},
-			{
-			  "name": "Gold-Trimmed Dagger",
-			  "level": 15,
-			  "materials": {
-				"golden-thread": 120,
-				"copper-bar": 120,
-				"milk-of-the-poppy": 120
-			  },
-			  "img": "item/season2/whent/weapon.png"
-			},
-			{
-			  "name": "Embroidered Scarf",
-			  "level": 20,
-			  "materials": {
-				"golden-thread": 400,
-				"kingswood-oak": 400,
-				"wildfire": 400
-			  },
-			  "img": "item/season2/whent/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Embroidered Doublet",
-			  "level": 20,
-			  "materials": {
-				"golden-thread": 400,
-				"silk": 400,
-				"black-iron": 400
-			  },
-			  "img": "item/season2/whent/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Gold-Trimmed Skirts",
-			  "level": 20,
-			  "materials": {
-				"golden-thread": 400,
-				"weirwood": 400,
-				"leather-straps": 400
-			  },
-			  "img": "item/season2/whent/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Gold-Trimmed Boots",
-			  "level": 20,
-			  "materials": {
-				"golden-thread": 400,
-				"milk-of-the-poppy": 400,
-				"hide": 400
-			  },
-			  "img": "item/season2/whent/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 20,
-			  "materials": {
-				"golden-thread": 400,
-				"ironwood": 400,
-				"kingswood-oak": 400
-			  },
-			  "img": "item/season2/whent/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Gold-Trimmed Dagger",
-			  "level": 20,
-			  "materials": {
-				"golden-thread": 400,
-				"copper-bar": 400,
-				"milk-of-the-poppy": 400
-			  },
-			  "img": "item/season2/whent/weapon.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Embroidered Scarf",
-			  "level": 25,
-			  "materials": {
-				"golden-thread": 1200,
-				"kingswood-oak": 1200,
-				"wildfire": 1200,
-				"black-iron": 1200
-			  },
-			  "img": "item/season2/whent/head.png"
-			},
-			{
-			  "name": "Embroidered Doublet",
-			  "level": 25,
-			  "materials": {
-				"golden-thread": 1200,
-				"silk": 1200,
-				"black-iron": 1200,
-				"milk-of-the-poppy": 1200
-			  },
-			  "img": "item/season2/whent/chest.png"
-			},
-			{
-			  "name": "Gold-Trimmed Skirts",
-			  "level": 25,
-			  "materials": {
-				"golden-thread": 1200,
-				"weirwood": 1200,
-				"leather-straps": 1200,
-				"dragonglass": 1200
-			  },
-			  "img": "item/season2/whent/pants.png"
-			},
-			{
-			  "name": "Gold-Trimmed Boots",
-			  "level": 25,
-			  "materials": {
-				"golden-thread": 1200,
-				"milk-of-the-poppy": 1200,
-				"hide": 1200,
-				"silk": 1200
-			  },
-			  "img": "item/season2/whent/boots.png"
-			},
-			{
-			  "name": "Sigil Ring",
-			  "level": 25,
-			  "materials": {
-				"golden-thread": 1200,
-				"ironwood": 1200,
-				"kingswood-oak": 1200,
-				"copper-bar": 1200
-			  },
-			  "img": "item/season2/whent/ring.png"
-			},
-			{
-			  "name": "Gold-Trimmed Dagger",
-			  "level": 25,
-			  "materials": {
-				"golden-thread": 1200,
-				"copper-bar": 1200,
-				"milk-of-the-poppy": 1200,
-				"ironwood": 1200
-			  },
-			  "img": "item/season2/whent/weapon.png"
 			}
 		  ]
 		},
@@ -1593,330 +1601,322 @@ const season2 = {
 		  ]
 		},
 		{
-		  "setName": "Dornish",
-		  "setMat": "Horsehair Tassel",
-		  "products": [
-			{
-			  "name": "Silk Headscarf",
-			  "level": 5,
-			  "materials": {
-				"horsehair-tassel": 10,
-				"black-iron": 10,
-				"milk-of-the-poppy": 10
+			"setName": "Braavosi Trader's",
+			"setMat": "Cockle Shell",
+			"products": [
+			  {
+				"name": "Titan Helm",
+				"level": 5,
+				"materials": {
+				  "cockle-shell": 10,
+				  "copper-bar": 10,
+				  "weirwood": 10
+				},
+				"img": "item/season2/braavosi/head.png"
 			  },
-			  "img": "item/season2/dornish/head.png"
-			},
-			{
-			  "name": "Samite Robes",
-			  "level": 5,
-			  "materials": {
-				"horsehair-tassel": 10,
-				"milk-of-the-poppy": 10,
-				"leather-straps": 10
+			  {
+				"name": "Ruff",
+				"level": 5,
+				"materials": {
+				  "cockle-shell": 10,
+				  "kingswood-oak": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season2/braavosi/chest.png"
 			  },
-			  "img": "item/season2/dornish/chest.png"
-			},
-			{
-			  "name": "Samite Sash",
-			  "level": 5,
-			  "materials": {
-				"horsehair-tassel": 10,
-				"copper-bar": 10,
-				"dragonglass": 10
+			  {
+				"name": "Belted Trouser",
+				"level": 5,
+				"materials": {
+				  "cockle-shell": 10,
+				  "black-iron": 10,
+				  "silk": 10
+				},
+				"img": "item/season2/braavosi/pants.png"
 			  },
-			  "img": "item/season2/dornish/pants.png"
-			},
-			{
-			  "name": "Sand Striders",
-			  "level": 5,
-			  "materials": {
-				"horsehair-tassel": 10,
-				"hide": 10,
-				"goldenheart-wood": 10
+			  {
+				"name": "Calfskin Boot",
+				"level": 5,
+				"materials": {
+				  "cockle-shell": 10,
+				  "dragonglass": 10,
+				  "wildfire": 10
+				},
+				"img": "item/season2/braavosi/boots.png"
 			  },
-			  "img": "item/season2/dornish/boots.png"
-			},
-			{
-			  "name": "Sun Sigil Ring",
-			  "level": 5,
-			  "materials": {
-				"horsehair-tassel": 10,
-				"wildfire": 10,
-				"ironwood": 10
+			  {
+				"name": "Titan Signet",
+				"level": 5,
+				"materials": {
+				  "cockle-shell": 10,
+				  "copper-bar": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season2/braavosi/ring.png"
 			  },
-			  "img": "item/season2/dornish/ring.png"
-			},
-			{
-			  "name": "Poison-Tripped Spear",
-			  "level": 5,
-			  "materials": {
-				"horsehair-tassel": 10,
-				"ironwood": 10,
-				"hide": 10
+			  {
+				"name": "Javelin",
+				"level": 5,
+				"materials": {
+				  "cockle-shell": 10,
+				  "silk": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season2/braavosi/weapon.png"
 			  },
-			  "img": "item/season2/dornish/weapon.png"
-			},
-
-			// level 10
-			{
-			  "name": "Silk Headscarf",
-			  "level": 10,
-			  "materials": {
-				"horsehair-tassel": 20,
-				"black-iron": 20,
-				"milk-of-the-poppy": 20
+			  {
+				"name": "Titan Helm",
+				"level": 10,
+				"materials": {
+				  "cockle-shell": 20,
+				  "copper-bar": 20,
+				  "weirwood": 20
+				},
+				"img": "item/season2/braavosi/head.png"
 			  },
-			  "img": "item/season2/dornish/head.png"
-			},
-			{
-			  "name": "Samite Robes",
-			  "level": 10,
-			  "materials": {
-				"horsehair-tassel": 20,
-				"milk-of-the-poppy": 20,
-				"leather-straps": 20
+			  {
+				"name": "Ruff",
+				"level": 10,
+				"materials": {
+				  "cockle-shell": 20,
+				  "kingswood-oak": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season2/braavosi/chest.png"
 			  },
-			  "img": "item/season2/dornish/chest.png"
-			},
-			{
-			  "name": "Samite Sash",
-			  "level": 10,
-			  "materials": {
-				"horsehair-tassel": 20,
-				"copper-bar": 20,
-				"dragonglass": 20
+			  {
+				"name": "Belted Trouser",
+				"level": 10,
+				"materials": {
+				  "cockle-shell": 20,
+				  "black-iron": 20,
+				  "silk": 20
+				},
+				"img": "item/season2/braavosi/pants.png"
 			  },
-			  "img": "item/season2/dornish/pants.png"
-			},
-			{
-			  "name": "Sand Striders",
-			  "level": 10,
-			  "materials": {
-				"horsehair-tassel": 20,
-				"hide": 20,
-				"goldenheart-wood": 20
+			  {
+				"name": "Calfskin Boot",
+				"level": 10,
+				"materials": {
+				  "cockle-shell": 20,
+				  "dragonglass": 20,
+				  "wildfire": 20
+				},
+				"img": "item/season2/braavosi/boots.png"
 			  },
-			  "img": "item/season2/dornish/boots.png"
-			},
-			{
-			  "name": "Sun Sigil Ring",
-			  "level": 10,
-			  "materials": {
-				"horsehair-tassel": 20,
-				"wildfire": 20,
-				"ironwood": 20
+			  {
+				"name": "Titan Signet",
+				"level": 10,
+				"materials": {
+				  "cockle-shell": 20,
+				  "copper-bar": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season2/braavosi/ring.png"
 			  },
-			  "img": "item/season2/dornish/ring.png"
-			},
-			{
-			  "name": "Poison-Tripped Spear",
-			  "level": 10,
-			  "materials": {
-				"horsehair-tassel": 20,
-				"ironwood": 20,
-				"hide": 20
+			  {
+				"name": "Javelin",
+				"level": 10,
+				"materials": {
+				  "cockle-shell": 20,
+				  "silk": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season2/braavosi/weapon.png"
 			  },
-			  "img": "item/season2/dornish/weapon.png"
-			},
-
-			// level 15
-			{
-			  "name": "Silk Headscarf",
-			  "level": 15,
-			  "materials": {
-				"horsehair-tassel": 120,
-				"black-iron": 120,
-				"milk-of-the-poppy": 120
+			  {
+				"name": "Titan Helm",
+				"level": 15,
+				"materials": {
+				  "cockle-shell": 120,
+				  "copper-bar": 120,
+				  "weirwood": 120
+				},
+				"img": "item/season2/braavosi/head.png"
 			  },
-			  "img": "item/season2/dornish/head.png"
-			},
-			{
-			  "name": "Samite Robes",
-			  "level": 15,
-			  "materials": {
-				"horsehair-tassel": 120,
-				"milk-of-the-poppy": 120,
-				"leather-straps": 120
+			  {
+				"name": "Ruff",
+				"level": 15,
+				"materials": {
+				  "cockle-shell": 120,
+				  "kingswood-oak": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season2/braavosi/chest.png"
 			  },
-			  "img": "item/season2/dornish/chest.png"
-			},
-			{
-			  "name": "Samite Sash",
-			  "level": 15,
-			  "materials": {
-				"horsehair-tassel": 120,
-				"copper-bar": 120,
-				"dragonglass": 120
+			  {
+				"name": "Belted Trouser",
+				"level": 15,
+				"materials": {
+				  "cockle-shell": 120,
+				  "black-iron": 120,
+				  "silk": 120
+				},
+				"img": "item/season2/braavosi/pants.png"
 			  },
-			  "img": "item/season2/dornish/pants.png"
-			},
-			{
-			  "name": "Sand Striders",
-			  "level": 15,
-			  "materials": {
-				"horsehair-tassel": 120,
-				"hide": 120,
-				"goldenheart-wood": 120
+			  {
+				"name": "Calfskin Boot",
+				"level": 15,
+				"materials": {
+				  "cockle-shell": 120,
+				  "dragonglass": 120,
+				  "wildfire": 120
+				},
+				"img": "item/season2/braavosi/boots.png"
 			  },
-			  "img": "item/season2/dornish/boots.png"
-			},
-			{
-			  "name": "Sun Sigil Ring",
-			  "level": 15,
-			  "materials": {
-				"horsehair-tassel": 120,
-				"wildfire": 120,
-				"ironwood": 120
+			  {
+				"name": "Titan Signet",
+				"level": 15,
+				"materials": {
+				  "cockle-shell": 120,
+				  "copper-bar": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season2/braavosi/ring.png"
 			  },
-			  "img": "item/season2/dornish/ring.png"
-			},
-			{
-			  "name": "Poison-Tripped Spear",
-			  "level": 15,
-			  "materials": {
-				"horsehair-tassel": 120,
-				"ironwood": 120,
-				"hide": 120
+			  {
+				"name": "Javelin",
+				"level": 15,
+				"materials": {
+				  "cockle-shell": 120,
+				  "silk": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season2/braavosi/weapon.png"
 			  },
-			  "img": "item/season2/dornish/weapon.png"
-			},
-
-			// level 20
-			{
-			  "name": "Silk Headscarf",
-			  "level": 20,
-			  "materials": {
-				"horsehair-tassel": 400,
-				"black-iron": 400,
-				"milk-of-the-poppy": 400
+			  {
+				"name": "Titan Helm",
+				"level": 20,
+				"materials": {
+				  "cockle-shell": 400,
+				  "copper-bar": 400,
+				  "weirwood": 400
+				},
+				"img": "item/season2/braavosi/head.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/dornish/head.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Samite Robes",
-			  "level": 20,
-			  "materials": {
-				"horsehair-tassel": 400,
-				"milk-of-the-poppy": 400,
-				"leather-straps": 400
+			  {
+				"name": "Ruff",
+				"level": 20,
+				"materials": {
+				  "cockle-shell": 400,
+				  "kingswood-oak": 400,
+				  "black-iron": 400
+				},
+				"img": "item/season2/braavosi/chest.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/dornish/chest.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Samite Sash",
-			  "level": 20,
-			  "materials": {
-				"horsehair-tassel": 400,
-				"copper-bar": 400,
-				"dragonglass": 400
+			  {
+				"name": "Belted Trouser",
+				"level": 20,
+				"materials": {
+				  "cockle-shell": 400,
+				  "black-iron": 400,
+				  "silk": 400
+				},
+				"img": "item/season2/braavosi/pants.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/dornish/pants.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sand Striders",
-			  "level": 20,
-			  "materials": {
-				"horsehair-tassel": 400,
-				"hide": 400,
-				"goldenheart-wood": 400
+			  {
+				"name": "Calfskin Boot",
+				"level": 20,
+				"materials": {
+				  "cockle-shell": 400,
+				  "dragonglass": 400,
+				  "wildfire": 400
+				},
+				"img": "item/season2/braavosi/boots.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/dornish/boots.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Sun Sigil Ring",
-			  "level": 20,
-			  "materials": {
-				"horsehair-tassel": 400,
-				"wildfire": 400,
-				"ironwood": 400
+			  {
+				"name": "Titan Signet",
+				"level": 20,
+				"materials": {
+				  "cockle-shell": 400,
+				  "copper-bar": 400,
+				  "leather-straps": 400
+				},
+				"img": "item/season2/braavosi/ring.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/dornish/ring.png",
-			  "odds": "medium"
-			},
-			{
-			  "name": "Poison-Tripped Spear",
-			  "level": 20,
-			  "materials": {
-				"horsehair-tassel": 400,
-				"ironwood": 400,
-				"hide": 400
+			  {
+				"name": "Javelin",
+				"level": 20,
+				"materials": {
+				  "cockle-shell": 400,
+				  "silk": 400,
+				  "ironwood": 400
+				},
+				"img": "item/season2/braavosi/weapon.png",
+				"odds": "medium"
 			  },
-			  "img": "item/season2/dornish/weapon.png",
-			  "odds": "medium"
-			},
-
-			// level 25
-			{
-			  "name": "Silk Headscarf",
-			  "level": 25,
-			  "materials": {
-				"horsehair-tassel": 1200,
-				"black-iron": 1200,
-				"milk-of-the-poppy": 1200,
-				"goldenheart-wood": 1200
+			  {
+				"name": "Titan Helm",
+				"level": 25,
+				"materials": {
+				  "cockle-shell": 1200,
+				  "copper-bar": 1200,
+				  "weirwood": 1200,
+				  "ironwood": 1200
+				},
+				"img": "item/season2/braavosi/head.png"
 			  },
-			  "img": "item/season2/dornish/head.png"
-			},
-			{
-			  "name": "Samite Robes",
-			  "level": 25,
-			  "materials": {
-				"horsehair-tassel": 1200,
-				"milk-of-the-poppy": 1200,
-				"leather-straps": 1200,
-				"hide": 1200
+			  {
+				"name": "Ruff",
+				"level": 25,
+				"materials": {
+				  "cockle-shell": 1200,
+				  "kingswood-oak": 1200,
+				  "black-iron": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season2/braavosi/chest.png"
 			  },
-			  "img": "item/season2/dornish/chest.png"
-			},
-			{
-			  "name": "Samite Sash",
-			  "level": 25,
-			  "materials": {
-				"horsehair-tassel": 1200,
-				"copper-bar": 1200,
-				"dragonglass": 1200,
-				"weirwood": 1200
+			  {
+				"name": "Belted Trouser",
+				"level": 25,
+				"materials": {
+				  "cockle-shell": 1200,
+				  "black-iron": 1200,
+				  "silk": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season2/braavosi/pants.png"
 			  },
-			  "img": "item/season2/dornish/pants.png"
-			},
-			{
-			  "name": "Sand Striders",
-			  "level": 25,
-			  "materials": {
-				"horsehair-tassel": 1200,
-				"hide": 1200,
-				"goldenheart-wood": 1200,
-				"silk": 1200
+			  {
+				"name": "Calfskin Boot",
+				"level": 25,
+				"materials": {
+				  "cockle-shell": 1200,
+				  "dragonglass": 1200,
+				  "wildfire": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season2/braavosi/boots.png"
 			  },
-			  "img": "item/season2/dornish/boots.png"
-			},
-			{
-			  "name": "Sun Sigil Ring",
-			  "level": 25,
-			  "materials": {
-				"horsehair-tassel": 1200,
-				"wildfire": 1200,
-				"ironwood": 1200,
-				"copper-bar": 1200
+			  {
+				"name": "Titan Signet",
+				"level": 25,
+				"materials": {
+				  "cockle-shell": 1200,
+				  "copper-bar": 1200,
+				  "leather-straps": 1200,
+				  "hide": 1200
+				},
+				"img": "item/season2/braavosi/ring.png"
 			  },
-			  "img": "item/season2/dornish/ring.png"
-			},
-			{
-			  "name": "Poison-Tripped Spear",
-			  "level": 25,
-			  "materials": {
-				"horsehair-tassel": 1200,
-				"ironwood": 1200,
-				"hide": 1200,
-				"dragonglass": 1200
-			  },
-			  "img": "item/season2/dornish/weapon.png"
-			}
-		  ]
+			  {
+				"name": "Javelin",
+				"level": 25,
+				"materials": {
+				  "cockle-shell": 1200,
+				  "silk": 1200,
+				  "ironwood": 1200,
+				  "weirwood": 1200
+				},
+				"img": "item/season2/braavosi/weapon.png"
+			  }
+			]
 		},
 		{
 		  "setName": "Bolton",
