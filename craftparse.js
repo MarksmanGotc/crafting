@@ -87,8 +87,14 @@ const CALCULATION_STORAGE_KEY = 'noox-calculation-v1';
 const CALCULATION_STORAGE_VERSION = 1;
 const QUALITY_STORAGE_KEY_PREFIX = 'craftparse_quality_level_';
 const USE_ALL_PERCENT_STORAGE_KEY_PREFIX = 'craftparse_useall_percent_';
+const RESULT_SORT_SEASON_KEY = 'craftparse_result_sort_season';
+const RESULT_SORT_GROUP_KEY = 'craftparse_result_sort_group';
 const VALID_QUALITIES = new Set(['poor', 'common', 'fine', 'exquisite', 'epic', 'legendary']);
+const VALID_RESULT_SEASON_ORDERS = new Set(['oldest', 'newest']);
+const VALID_RESULT_GROUP_BY = new Set(['slot', 'set']);
 let latestCalculationPayload = null;
+let lastResultsRenderData = null;
+let resultSortRerender = false;
 let isViewingSavedCalculation = false;
 
 function getNormalizedKeyMap(source) {
@@ -228,6 +234,8 @@ let pendingFailedLevels = null;
 let requestedTemplates = {};
 let preserveRequestedTemplates = false;
 let remainingUse = {};
+/** Item keys (level + identity) marked done by user click; preserved across sort re-renders. */
+let completedResultItemKeys = new Set();
 /** When By count runs the planner and uses flux, store fluxUsed here so calculateMaterials can pass it to renderResults. */
 let pendingFluxUsedForResults = null;
 let ctwMediumNotice = false;
@@ -299,7 +307,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-05-08';
+    const storageKey = 'noox-update-log-2026-05-31';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
@@ -701,6 +709,7 @@ function handleClearSavedCalculation() {
     preserveRequestedTemplates = false;
     qualityMultipliers = {};
     remainingUse = {};
+    completedResultItemKeys = new Set();
     ctwMediumNotice = false;
     level20OnlyWarlordsActive = false;
     closeResults();
@@ -1765,13 +1774,15 @@ function addCalculateButton() {
 }
 
 // Funktio tulosten näyttämiseen (modifioi tämä toimimaan haluamallasi tavalla)
-function showResults() {
+function showResults(skipScrollToTop = false) {
         document.getElementById('results').style.display = 'block';
         document.getElementById('generatebychoice').style.display = 'none';
-        window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+        if (!skipScrollToTop) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
 
     deactivateSpinner();
 
@@ -1780,6 +1791,7 @@ function showResults() {
 function closeResults() {
         const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
+        completedResultItemKeys = new Set();
         document.getElementById('results').style.display = 'none';
         document.getElementById('generatebychoice').style.display = 'block';
         if (isViewingSavedCalculation) {
@@ -1861,7 +1873,7 @@ function handleContinueWithRemaining() {
     const remainingMaterials = {};
     const resultsDiv = document.getElementById('results');
     if (resultsDiv) {
-        const materialContainers = resultsDiv.querySelectorAll('.materials > div[data-material]');
+        const materialContainers = resultsDiv.querySelectorAll('.materials [data-material]');
         materialContainers.forEach(container => {
             const materialName = container.dataset.material;
             const availableMaterialsElement = container.querySelector('.available-materials');
@@ -2281,9 +2293,181 @@ function getFluxUsedForMaterial(fluxUsed, materialName) {
     return 0;
 }
 
+function getExplicitlyFilledMaterialKeys() {
+    const filled = new Set();
+    document.querySelectorAll('.my-material input[type="text"]').forEach(input => {
+        const raw = (input.value || '').replace(/,/g, '').trim();
+        if (raw === '') return;
+        const id = (input.getAttribute('id') || '').replace(/^my-/, '');
+        const materialName = materialKeyMap[normalizeKey(id)] || id;
+        if (materialName) {
+            filled.add(materialName);
+        }
+    });
+    return filled;
+}
+
+function getStoredExplicitMaterialKeys() {
+    if (
+        latestCalculationPayload &&
+        Array.isArray(latestCalculationPayload.explicitlyFilledMaterialKeys)
+    ) {
+        return new Set(latestCalculationPayload.explicitlyFilledMaterialKeys);
+    }
+    return getExplicitlyFilledMaterialKeys();
+}
+
+function getResultSortPreferences() {
+    const defaults = { seasonOrder: 'newest', groupBy: 'slot' };
+    if (typeof window === 'undefined' || !window.localStorage) return defaults;
+    try {
+        const seasonOrder = window.localStorage.getItem(RESULT_SORT_SEASON_KEY);
+        const groupBy = window.localStorage.getItem(RESULT_SORT_GROUP_KEY);
+        return {
+            seasonOrder: VALID_RESULT_SEASON_ORDERS.has(seasonOrder) ? seasonOrder : defaults.seasonOrder,
+            groupBy: VALID_RESULT_GROUP_BY.has(groupBy) ? groupBy : defaults.groupBy
+        };
+    } catch {
+        return defaults;
+    }
+}
+
+function saveResultSortPreferences(prefs) {
+    if (typeof window === 'undefined' || !window.localStorage || !prefs) return;
+    try {
+        if (VALID_RESULT_SEASON_ORDERS.has(prefs.seasonOrder)) {
+            window.localStorage.setItem(RESULT_SORT_SEASON_KEY, prefs.seasonOrder);
+        }
+        if (VALID_RESULT_GROUP_BY.has(prefs.groupBy)) {
+            window.localStorage.setItem(RESULT_SORT_GROUP_KEY, prefs.groupBy);
+        }
+    } catch {
+        /* ignore quota / private mode */
+    }
+}
+
+function analyzeResultItemDiversity(templateCounts) {
+    const seasons = new Set();
+    const setsBySeason = new Map();
+    if (!templateCounts || typeof templateCounts !== 'object') {
+        return { showSeasonSort: false, showGroupSort: false };
+    }
+    Object.values(templateCounts).forEach(templates => {
+        if (!Array.isArray(templates)) return;
+        templates.forEach(t => {
+            const season = t.warlord ? 3 : (t.season ?? 0);
+            seasons.add(season);
+            const setName = (t.setName || '').trim();
+            if (setName) {
+                if (!setsBySeason.has(season)) setsBySeason.set(season, new Set());
+                setsBySeason.get(season).add(setName);
+            }
+        });
+    });
+    const showGroupSort = Array.from(setsBySeason.values()).some(sets => sets.size > 1);
+    return {
+        showSeasonSort: seasons.size > 1,
+        showGroupSort
+    };
+}
+
+function createItemsSortControls(diversity) {
+    if (!diversity || (!diversity.showSeasonSort && !diversity.showGroupSort)) {
+        return null;
+    }
+
+    const prefs = getResultSortPreferences();
+    const bar = document.createElement('div');
+    bar.className = 'items-sort-bar';
+
+    let seasonSelect = null;
+    let groupSelect = null;
+
+    if (diversity.showSeasonSort) {
+        const seasonLabel = document.createElement('label');
+        seasonLabel.htmlFor = 'resultsSeasonSort';
+        seasonLabel.appendChild(document.createTextNode('Season: '));
+        seasonSelect = document.createElement('select');
+        seasonSelect.id = 'resultsSeasonSort';
+        [
+            ['oldest', 'Oldest first'],
+            ['newest', 'Newest first']
+        ].forEach(([value, text]) => {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = text;
+            if (prefs.seasonOrder === value) opt.selected = true;
+            seasonSelect.appendChild(opt);
+        });
+        seasonLabel.appendChild(seasonSelect);
+        bar.appendChild(seasonLabel);
+    }
+
+    if (diversity.showGroupSort) {
+        const groupLabel = document.createElement('label');
+        groupLabel.htmlFor = 'resultsGroupSort';
+        groupLabel.appendChild(document.createTextNode('Group by: '));
+        groupSelect = document.createElement('select');
+        groupSelect.id = 'resultsGroupSort';
+        [
+            ['slot', 'Item type'],
+            ['set', 'Set']
+        ].forEach(([value, text]) => {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = text;
+            if (prefs.groupBy === value) opt.selected = true;
+            groupSelect.appendChild(opt);
+        });
+        groupLabel.appendChild(groupSelect);
+        bar.appendChild(groupLabel);
+    }
+
+    const onChange = () => {
+        const current = getResultSortPreferences();
+        saveResultSortPreferences({
+            seasonOrder: seasonSelect ? seasonSelect.value : current.seasonOrder,
+            groupBy: groupSelect ? groupSelect.value : current.groupBy
+        });
+        if (lastResultsRenderData) {
+            resultSortRerender = true;
+            renderResults(
+                lastResultsRenderData.templateCounts,
+                lastResultsRenderData.materialCounts,
+                lastResultsRenderData.fluxUsed ?? null,
+                lastResultsRenderData.fluxUsedByGear ?? null
+            );
+        }
+    };
+    seasonSelect?.addEventListener('change', onChange);
+    groupSelect?.addEventListener('change', onChange);
+
+    return bar;
+}
+
+function getResultItemKey(level, template) {
+    const season = template.warlord ? 3 : (template.season ?? 0);
+    return [level, template.name || '', season, template.setName || '', template.warlord ? 1 : 0].join('\0');
+}
+
+function refreshRemainingUseDisplay(materialsContainer) {
+    if (!materialsContainer) return;
+    Object.entries(remainingUse).forEach(([mat, amt]) => {
+        const target = materialsContainer.querySelector(`div[data-material="${mat}"] .remaining-to-use`);
+        if (target) {
+            target.textContent = `-${new Intl.NumberFormat('en-US').format(amt)}`;
+        }
+    });
+}
+
 function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsedByGear = null) {
+    lastResultsRenderData = { templateCounts, materialCounts, fluxUsed, fluxUsedByGear };
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '';
+
+    if (!resultSortRerender) {
+        completedResultItemKeys = new Set();
+    }
 
     remainingUse = {};
     const previousSavedAt =
@@ -2307,25 +2491,37 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
 
     const initialMaterialMap = getNormalizedKeyMap(initialMaterials);
 
-    /* Näytetään vain materiaalit joiden määrä kerrottiin (alkumäärä > 0). Fluxit (basic + season) näytetään omissa lohkoissaan. */
-    const allMaterialsWithAmount = Object.entries(initialMaterials)
-        .filter(([key, amount]) => !isFluxKey(key) && Number(amount) > 0);
+    const explicitlyFilledMaterialKeys = getStoredExplicitMaterialKeys();
 
-    const basicMaterialsToShow = allMaterialsWithAmount
-        .filter(([name]) => (materialToSeason[name] || 0) === 0)
-        .sort(([a], [b]) => (a || '').localeCompare(b || ''));
+    /* Perusmateriaalit näytetään aina kokonaan, vaikka arvo olisi 0 eikä niitä käytettäisi. Fluxit näytetään omissa lohkoissaan. */
+    const basicMaterialOrder = Object.keys((materials[0] && materials[0].mats) ? materials[0].mats : {})
+        .filter(matKey => !isFluxKey(matKey));
+    const basicMaterialsToShow = basicMaterialOrder.map(materialName => {
+        const actualKey = initialMaterialMap[normalizeKey(materialName)] || materialName;
+        return {
+            materialName: actualKey,
+            originalAmount: Number(initialMaterials[actualKey]) || 0
+        };
+    });
 
-    const gearFromStock = allMaterialsWithAmount
-        .filter(([name]) => (materialToSeason[name] || 0) !== 0);
+    const gearFromUserInput = Array.from(explicitlyFilledMaterialKeys)
+        .map(name => initialMaterialMap[normalizeKey(name)] || materialKeyMap[normalizeKey(name)] || name)
+        .filter(name => !isFluxKey(name) && (materialToSeason[name] || materialToSeason[normalizeKey(name)] || 0) !== 0)
+        .map(materialName => ({
+            type: 'stock',
+            materialName,
+            originalAmount: Number(initialMaterials[materialName]) || 0
+        }));
+    const gearFromUserInputKeys = new Set(gearFromUserInput.map(entry => normalizeKey(entry.materialName)));
 
     const gearFromFluxOnly = (fluxUsedByGear && typeof fluxUsedByGear === 'object')
         ? Object.entries(fluxUsedByGear).filter(
-            ([gearKey, fluxReceived]) => fluxReceived > 0 && !gearFromStock.some(([name]) => name === gearKey)
+            ([gearKey, fluxReceived]) => fluxReceived > 0 && !gearFromUserInputKeys.has(normalizeKey(gearKey))
         )
         : [];
 
     const combinedGear = [
-        ...gearFromStock.map(([materialName, originalAmount]) => ({ type: 'stock', materialName, originalAmount })),
+        ...gearFromUserInput,
         ...gearFromFluxOnly.map(([gearKey, fluxReceived]) => ({ type: 'fluxOnly', materialName: gearKey, fluxReceived }))
     ].sort((a, b) => {
         const seasonA = materialToSeason[a.materialName] || 0;
@@ -2333,6 +2529,13 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         if (seasonA !== seasonB) return seasonA - seasonB;
         return (a.materialName || '').localeCompare(b.materialName || '');
     });
+
+    const basicSection = document.createElement('div');
+    basicSection.className = 'materials-section materials-basic';
+    const gearSection = document.createElement('div');
+    gearSection.className = 'materials-section materials-gear';
+    const fluxSection = document.createElement('div');
+    fluxSection.className = 'materials-section materials-flux';
 
     function renderOneMaterialRow(materialName, originalAmount, materialContainer, row1, row2) {
         const data = materialCounts[materialName];
@@ -2370,9 +2573,7 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         pMatAmount.textContent = `-${new Intl.NumberFormat('en-US').format(displayUsed)}`;
         pRemaining.textContent = pMatAmount.textContent;
         remainingUse[materialName] = usedAmount;
-        if (originalAmount > 0 || remainingAmount > 0) {
-            pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingAmount)}`;
-        }
+        pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingAmount)}`;
         row2.appendChild(pMatAmount);
         const fluxAddedGear = (fluxUsedByGear && matSeason !== 0 && (fluxUsedByGear[materialName] || 0) > 0)
             ? (fluxUsedByGear[materialName] || 0) : fluxAdded;
@@ -2397,17 +2598,19 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         row2.appendChild(pRemaining);
         materialContainer.appendChild(row2);
         materialContainer.appendChild(pAvailableMaterials);
+        materialContainer.className = 'material-card';
         materialContainer.dataset.material = materialName;
-        materialsDiv.appendChild(materialContainer);
+        materialContainer.dataset.materialKind = matSeason === 0 ? 'basic' : 'gear';
     }
 
-    basicMaterialsToShow.forEach(([materialName, originalAmount]) => {
+    basicMaterialsToShow.forEach(({ materialName, originalAmount }) => {
         const materialContainer = document.createElement('div');
         const row1 = document.createElement('div');
         row1.className = 'material-row-header';
         const row2 = document.createElement('div');
         row2.className = 'material-row-amounts';
         renderOneMaterialRow(materialName, originalAmount, materialContainer, row1, row2);
+        basicSection.appendChild(materialContainer);
     });
 
     combinedGear.forEach((entry) => {
@@ -2419,11 +2622,13 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
             const row2 = document.createElement('div');
             row2.className = 'material-row-amounts';
             renderOneMaterialRow(materialName, entry.originalAmount, materialContainer, row1, row2);
+            gearSection.appendChild(materialContainer);
             return;
         }
         const fluxReceived = entry.fluxReceived;
         const usedAmount = (materialCounts[materialName] && materialCounts[materialName].amount) ? materialCounts[materialName].amount : fluxReceived;
         const materialContainer = document.createElement('div');
+        materialContainer.className = 'material-card';
         const row1 = document.createElement('div');
         row1.className = 'material-row-header';
         const img = document.createElement('img');
@@ -2464,7 +2669,8 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         materialContainer.appendChild(row2);
         materialContainer.appendChild(pAvailableMaterials);
         materialContainer.dataset.material = materialName;
-        materialsDiv.appendChild(materialContainer);
+        materialContainer.dataset.materialKind = 'gear';
+        gearSection.appendChild(materialContainer);
     });
 
     /* Basic Flux -rivi: näytetään vain jos käyttäjä merkitsi fluxia > 0. Käytetty = vain basic-flux, ei season fluxeja. */
@@ -2473,6 +2679,7 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         const totalFluxUsed = getFluxUsedForMaterial(fluxUsed, BASIC_FLUX_KEY);
         const fluxData = allMaterials[BASIC_FLUX_KEY];
         const materialContainer = document.createElement('div');
+        materialContainer.className = 'material-card material-card-flux';
         const img = document.createElement('img');
         img.src = fluxData && fluxData.img ? fluxData.img : '';
         img.alt = 'Basic Flux';
@@ -2491,12 +2698,13 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         remainingUse[BASIC_FLUX_KEY] = totalFluxUsed;
         const remainingFlux = Math.max(0, Number(originalFlux) - totalFluxUsed);
         pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingFlux)}`;
-        materialContainer.dataset.material = BASIC_FLUX_KEY;
         materialContainer.appendChild(pMatName);
         materialContainer.appendChild(pMatAmount);
         materialContainer.appendChild(pRemaining);
         materialContainer.appendChild(pAvailableMaterials);
-        materialsDiv.appendChild(materialContainer);
+        materialContainer.dataset.material = BASIC_FLUX_KEY;
+        materialContainer.dataset.materialKind = 'flux';
+        fluxSection.appendChild(materialContainer);
     }
 
     /* Season Flux -rivit: punainen miinus = käytetty, sininen = jäljellä (sama logiikka kuin Basic Flux). */
@@ -2508,6 +2716,7 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         const fluxData = allMaterials[fluxKey];
         if (!fluxData) continue;
         const materialContainer = document.createElement('div');
+        materialContainer.className = 'material-card material-card-flux';
         const img = document.createElement('img');
         img.src = fluxData.img ? fluxData.img : '';
         img.alt = fluxData['Original-name'] || fluxKey;
@@ -2526,15 +2735,24 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         remainingUse[fluxKey] = seasonFluxUsed;
         const remainingSeasonFlux = Math.max(0, originalSeasonFlux - seasonFluxUsed);
         pAvailableMaterials.textContent = `${new Intl.NumberFormat('en-US').format(remainingSeasonFlux)}`;
-        materialContainer.dataset.material = fluxKey;
         materialContainer.appendChild(pMatName);
         materialContainer.appendChild(pMatAmount);
         materialContainer.appendChild(pRemaining);
         materialContainer.appendChild(pAvailableMaterials);
-        materialsDiv.appendChild(materialContainer);
+        materialContainer.dataset.material = fluxKey;
+        materialContainer.dataset.materialKind = 'flux';
+        fluxSection.appendChild(materialContainer);
     }
 
-    if (materialsDiv.children.length === 0) {
+    materialsDiv.appendChild(basicSection);
+    if (gearSection.childElementCount > 0) {
+        materialsDiv.appendChild(gearSection);
+    }
+    if (fluxSection.childElementCount > 0) {
+        materialsDiv.appendChild(fluxSection);
+    }
+
+    if (basicSection.childElementCount === 0 && gearSection.childElementCount === 0 && fluxSection.childElementCount === 0) {
         const msg = document.createElement('h3');
         msg.textContent = 'No items could be crafted with the available materials';
         resultsDiv.appendChild(msg);
@@ -2576,6 +2794,12 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         totalTemplatesHeader.after(generateDiv);
     } else {
         materialsDiv.after(generateDiv);
+    }
+
+    const resultDiversity = analyzeResultItemDiversity(templateCounts);
+    const itemsSortBar = createItemsSortControls(resultDiversity);
+    if (itemsSortBar) {
+        generateDiv.after(itemsSortBar);
     }
 
     const itemsDiv = document.createElement('div');
@@ -2693,10 +2917,24 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
                     templateDiv.dataset.materials = JSON.stringify(materialUsage);
                     templateDiv.appendChild(matsDiv);
 
+                    const itemKey = getResultItemKey(level, template);
+                    templateDiv.dataset.itemKey = itemKey;
+                    if (completedResultItemKeys.has(itemKey)) {
+                        templateDiv.classList.add('opacity');
+                        Object.entries(materialUsage).forEach(([mat, amt]) => {
+                            remainingUse[mat] = (remainingUse[mat] || 0) - amt;
+                        });
+                    }
+
                     templateDiv.addEventListener('click', function() {
                         this.classList.toggle('opacity');
                         const used = JSON.parse(this.dataset.materials);
                         const done = this.classList.contains('opacity');
+                        const key = this.dataset.itemKey;
+                        if (key) {
+                            if (done) completedResultItemKeys.add(key);
+                            else completedResultItemKeys.delete(key);
+                        }
                         Object.entries(used).forEach(([mat, amt]) => {
                             if (done) {
                                 remainingUse[mat] -= amt;
@@ -2720,6 +2958,10 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
             }
         }
     });
+
+    if (completedResultItemKeys.size > 0) {
+        refreshRemainingUseDisplay(materialsDiv);
+    }
 
     // Prepare a lighter share payload containing only the user inputs
     const minimalTemplates = {};
@@ -2745,6 +2987,7 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         materialCounts: materialCountsSnapshot,
         templates: minimalTemplatesSnapshot,
         initialMaterials: initialMaterialsSnapshot,
+        explicitlyFilledMaterialKeys: Array.from(explicitlyFilledMaterialKeys),
         requestedTemplates: requestedTemplatesSnapshot,
         qualityMultipliers: qualityMultipliersSnapshot,
         settings: getCurrentUserSettings(),
@@ -2766,7 +3009,11 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
     }
     latestCalculationPayload = payload;
 
-    generateDiv.after(itemsDiv);
+    if (itemsSortBar) {
+        itemsSortBar.after(itemsDiv);
+    } else {
+        generateDiv.after(itemsDiv);
+    }
     itemsDiv.after(itemsInfoPopup);
     // Luo alhaalla olevat toiminnot (Plan next batch -nappi) alhaalle
     createResultsActions(resultsDiv);
@@ -2796,7 +3043,9 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         console.log(`Käytetty Gear materiaali yhteensä: ${nf.format(totalAllSeason)}`);
     }
 
-    showResults();
+    const skipScroll = resultSortRerender;
+    resultSortRerender = false;
+    showResults(skipScroll);
 }
 
 /** Järjestys seasonX.js:n mukaan: kypärä, rintapanssari, housut, kengät, sormus, ase. */
@@ -2814,15 +3063,25 @@ function getSlotSortIndex(img) {
 /** `seasons`-datalle: avain "seasonNum|setName" -> indeksi kyseisen seasonin `sets`-taulukossa. */
 function buildSeasonSetOrderMap() {
     const m = new Map();
-    if (typeof seasons === 'undefined' || !Array.isArray(seasons)) return m;
-    seasons.forEach(seasonObj => {
-        if (!seasonObj || !Array.isArray(seasonObj.sets)) return;
-        seasonObj.sets.forEach((set, idx) => {
-            if (set && set.setName) {
-                m.set(`${seasonObj.season}|${set.setName}`, idx);
-            }
+    if (typeof seasons !== 'undefined' && Array.isArray(seasons)) {
+        seasons.forEach(seasonObj => {
+            if (!seasonObj || !Array.isArray(seasonObj.sets)) return;
+            seasonObj.sets.forEach((set, idx) => {
+                if (set && set.setName) {
+                    m.set(`${seasonObj.season}|${set.setName}`, idx);
+                }
+            });
         });
-    });
+    }
+    /* CTW on season 3:ssa Battle-Scarredin ja Night's Watch Rangerin välissä (ei season3.js sets-taulukossa). */
+    const ctwKey = `3|${ctwSetName}`;
+    if (!m.has(ctwKey)) {
+        const bsKey = "3|Battle-Scarred";
+        const nwKey = "3|Night's Watch Ranger";
+        const bsOrd = m.has(bsKey) ? m.get(bsKey) : 5;
+        const nwOrd = m.has(nwKey) ? m.get(nwKey) : 6;
+        m.set(ctwKey, (bsOrd + nwOrd) / 2);
+    }
     return m;
 }
 
@@ -2847,22 +3106,29 @@ function stackTemplatesInLevel(templates) {
     });
     const stacked = Object.values(byKey);
     const setOrderMap = buildSeasonSetOrderMap();
+    const { seasonOrder, groupBy } = getResultSortPreferences();
+    const seasonAsc = seasonOrder !== 'newest';
+    const groupBySet = groupBy === 'set';
     const setOrderIdx = (seasonNum, setName) => {
         if (!setName || seasonNum == null || seasonNum === 0) return 9999;
         const key = `${seasonNum}|${setName}`;
         return setOrderMap.has(key) ? setOrderMap.get(key) : 9999;
     };
-    /* Järjestä: season nouseva; seasonin sisällä slot; saman slotin sisällä sets-järjestys seasonX.js:ssä; viimeisenä nimi. */
     stacked.sort((a, b) => {
         const seasonA = a.season ?? 0;
         const seasonB = b.season ?? 0;
-        if (seasonA !== seasonB) return seasonA - seasonB;
+        if (seasonA !== seasonB) return seasonAsc ? seasonA - seasonB : seasonB - seasonA;
         const slotA = getSlotSortIndex(a.img);
         const slotB = getSlotSortIndex(b.img);
-        if (slotA !== slotB) return slotA - slotB;
         const setOrdA = setOrderIdx(seasonA, a.setName);
         const setOrdB = setOrderIdx(seasonB, b.setName);
-        if (setOrdA !== setOrdB) return setOrdA - setOrdB;
+        if (groupBySet) {
+            if (setOrdA !== setOrdB) return setOrdA - setOrdB;
+            if (slotA !== slotB) return slotA - slotB;
+        } else {
+            if (slotA !== slotB) return slotA - slotB;
+            if (setOrdA !== setOrdB) return setOrdA - setOrdB;
+        }
         return (a.name || '').localeCompare(b.name || '');
     });
     return stacked;

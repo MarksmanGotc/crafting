@@ -632,6 +632,46 @@ p.craft-extra-info {
     fill: var(--primary-color);
 }
 
+.items-sort-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px 20px;
+    width: 100%;
+    margin: 16px 0 8px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 13px;
+}
+
+:root.theme-dark .items-sort-bar {
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.items-sort-bar label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.items-sort-bar select {
+    font-size: 13px;
+    padding: 3px 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+}
+
+:root.theme-dark .items-sort-bar select {
+    background: var(--input-bg, #1a2234);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-color, #e8ecf4);
+}
+
 .section-title span {
     position: relative;
     padding: 0 10px;
@@ -1381,17 +1421,50 @@ div#results h3 ~ #closeResults {
 
 .materials {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     margin-bottom: 10px;
     font-size: 16px;
+    gap: 0;
 }
 
 .materials, .items {
+    margin-bottom: 20px; /* VÃ¤li materiaaliluetteloiden ja item-luetteloiden vÃ¤lillÃ¤ */
+}
+
+.materials-section {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* VÃ¤li materiaalien/itemien vÃ¤lillÃ¤ */
+    gap: 20px;
     justify-content: center;
-    margin-bottom: 20px; /* VÃ¤li materiaaliluetteloiden ja item-luetteloiden vÃ¤lillÃ¤ */
+    align-items: stretch;
+    width: 100%;
+}
+
+.materials-section + .materials-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:root.theme-dark .materials-section + .materials-section {
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.materials-flux {
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:root.theme-dark .materials-flux {
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
     align-items: stretch;
 }
 
@@ -1406,7 +1479,7 @@ div#results h3 ~ #closeResults {
     align-items: center;
 }
 
-.material img, .item img {
+.material img, .material-card img, .item img {
     width: 50px;
     height: 50px;
     margin-bottom: 5px; /* VÃ¤li kuvan ja tekstin vÃ¤lillÃ¤ */
@@ -1465,40 +1538,42 @@ h4{
     content: "Materials";
     display: block;
     width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 20px;
     text-align: center;
     color: var(--primary-color);
     font-size: 20px;
     font-weight: bold;
 }
 
-.materials > div:not(.results-actions) {
+.materials-section > .material-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: calc(100% / 6);
-    flex: 1 1 10%;
+    box-sizing: border-box;
+    flex: 0 0 calc((100% - 100px) / 6);
+    max-width: calc((100% - 100px) / 6);
+    min-width: 0;
     justify-content: space-between;
 }
 
+@media only screen and (max-width: 900px) {
+  .materials-section > .material-card {
+    flex: 0 0 calc((100% - 60px) / 4);
+    max-width: calc((100% - 60px) / 4);
+  }
+}
+
 @media only screen and (max-width: 620px) {
-  .materials > div:not(.results-actions) {
-  flex: 1 1 20%;
-  max-width: initial;
+  .materials-section > .material-card {
+    flex: 0 0 calc((100% - 40px) / 3);
+    max-width: calc((100% - 40px) / 3);
   }
 }
 
 @media only screen and (max-width: 420px) {
-  .materials > div:not(.results-actions) {
-  flex: 1 1 25%;
-  max-width: initial;
-  }
-}
-
-@media only screen and (max-width: 325px) {
-  .materials > div:not(.results-actions) {
-  flex: 1 1 30%;
-  max-width: initial;
+  .materials-section > .material-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+    max-width: calc((100% - 20px) / 2);
   }
 }
 

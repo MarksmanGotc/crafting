@@ -488,6 +488,10 @@ const materials = {
 				"img": "materials/season13/flea-bottom-linen.png",
 				"Original-name": "Flea Bottom Linen"
 			},
+			"lannisport-gold-bar": {
+				"img": "materials/season13/lannisport-gold-bar.png",
+				"Original-name": "Lannisport Gold Bar"
+			},
 			"raging-horse-hide": {
 				"img": "materials/season13/raging-horse-hide.png",
 				"Original-name": "Raging Horse Hide"

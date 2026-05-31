@@ -3,6 +3,324 @@ const season13 = {
 	extraLevels: {30: 3000, 35: 12000, 40: 45000, 45: 120000},
 	sets: [
 		{
+			"setName": "Lion of the West's",
+			"setMat": "Lannisport Gold Bar",
+			"products": [
+			  {
+				"name": "Mane",
+				"level": 5,
+				"materials": {
+				  "lannisport-gold-bar": 10,
+				  "copper-bar": 10,
+				  "leather-straps": 10
+				},
+				"img": "item/season13/lion_wests/head.webp"
+			  },
+			  {
+				"name": "Ornate Cuirass",
+				"level": 5,
+				"materials": {
+				  "lannisport-gold-bar": 10,
+				  "goldenheart-wood": 10,
+				  "weirwood": 10
+				},
+				"img": "item/season13/lion_wests/chest.webp"
+			  },
+			  {
+				"name": "Faulds",
+				"level": 5,
+				"materials": {
+				  "lannisport-gold-bar": 10,
+				  "wildfire": 10,
+				  "hide": 10
+				},
+				"img": "item/season13/lion_wests/pants.webp"
+			  },
+			  {
+				"name": "Boots",
+				"level": 5,
+				"materials": {
+				  "lannisport-gold-bar": 10,
+				  "dragonglass": 10,
+				  "kingswood-oak": 10
+				},
+				"img": "item/season13/lion_wests/boots.webp"
+			  },
+			  {
+				"name": "Sigiled Band",
+				"level": 5,
+				"materials": {
+				  "lannisport-gold-bar": 10,
+				  "silk": 10,
+				  "black-iron": 10
+				},
+				"img": "item/season13/lion_wests/ring.webp"
+			  },
+			  {
+				"name": "Greatsword",
+				"level": 5,
+				"materials": {
+				  "lannisport-gold-bar": 10,
+				  "milk-of-the-poppy": 10,
+				  "ironwood": 10
+				},
+				"img": "item/season13/lion_wests/weapon.webp"
+			  },
+			  {
+				"name": "Mane",
+				"level": 10,
+				"materials": {
+				  "lannisport-gold-bar": 20,
+				  "copper-bar": 20,
+				  "leather-straps": 20
+				},
+				"img": "item/season13/lion_wests/head.webp"
+			  },
+			  {
+				"name": "Ornate Cuirass",
+				"level": 10,
+				"materials": {
+				  "lannisport-gold-bar": 20,
+				  "goldenheart-wood": 20,
+				  "weirwood": 20
+				},
+				"img": "item/season13/lion_wests/chest.webp"
+			  },
+			  {
+				"name": "Faulds",
+				"level": 10,
+				"materials": {
+				  "lannisport-gold-bar": 20,
+				  "wildfire": 20,
+				  "hide": 20
+				},
+				"img": "item/season13/lion_wests/pants.webp"
+			  },
+			  {
+				"name": "Boots",
+				"level": 10,
+				"materials": {
+				  "lannisport-gold-bar": 20,
+				  "dragonglass": 20,
+				  "kingswood-oak": 20
+				},
+				"img": "item/season13/lion_wests/boots.webp"
+			  },
+			  {
+				"name": "Sigiled Band",
+				"level": 10,
+				"materials": {
+				  "lannisport-gold-bar": 20,
+				  "silk": 20,
+				  "black-iron": 20
+				},
+				"img": "item/season13/lion_wests/ring.webp"
+			  },
+			  {
+				"name": "Greatsword",
+				"level": 10,
+				"materials": {
+				  "lannisport-gold-bar": 20,
+				  "milk-of-the-poppy": 20,
+				  "ironwood": 20
+				},
+				"img": "item/season13/lion_wests/weapon.webp"
+			  },
+			  {
+				"name": "Mane",
+				"level": 15,
+				"materials": {
+				  "lannisport-gold-bar": 120,
+				  "copper-bar": 120,
+				  "leather-straps": 120
+				},
+				"img": "item/season13/lion_wests/head.webp"
+			  },
+			  {
+				"name": "Ornate Cuirass",
+				"level": 15,
+				"materials": {
+				  "lannisport-gold-bar": 120,
+				  "goldenheart-wood": 120,
+				  "weirwood": 120
+				},
+				"img": "item/season13/lion_wests/chest.webp"
+			  },
+			  {
+				"name": "Faulds",
+				"level": 15,
+				"materials": {
+				  "lannisport-gold-bar": 120,
+				  "wildfire": 120,
+				  "hide": 120
+				},
+				"img": "item/season13/lion_wests/pants.webp"
+			  },
+			  {
+				"name": "Boots",
+				"level": 15,
+				"materials": {
+				  "lannisport-gold-bar": 120,
+				  "dragonglass": 120,
+				  "kingswood-oak": 120
+				},
+				"img": "item/season13/lion_wests/boots.webp"
+			  },
+			  {
+				"name": "Sigiled Band",
+				"level": 15,
+				"materials": {
+				  "lannisport-gold-bar": 120,
+				  "silk": 120,
+				  "black-iron": 120
+				},
+				"img": "item/season13/lion_wests/ring.webp"
+			  },
+			  {
+				"name": "Greatsword",
+				"level": 15,
+				"materials": {
+				  "lannisport-gold-bar": 120,
+				  "milk-of-the-poppy": 120,
+				  "ironwood": 120
+				},
+				"img": "item/season13/lion_wests/weapon.webp"
+			  },
+			  {
+				"name": "Mane",
+				"level": 20,
+				"materials": {
+				  "lannisport-gold-bar": 400,
+				  "copper-bar": 400,
+				  "leather-straps": 400,
+				  "wildfire": 400
+				},
+				"img": "item/season13/lion_wests/head.webp"
+			  },
+			  {
+				"name": "Ornate Cuirass",
+				"level": 20,
+				"materials": {
+				  "lannisport-gold-bar": 400,
+				  "goldenheart-wood": 400,
+				  "weirwood": 400,
+				  "milk-of-the-poppy": 400
+				},
+				"img": "item/season13/lion_wests/chest.webp"
+			  },
+			  {
+				"name": "Faulds",
+				"level": 20,
+				"materials": {
+				  "lannisport-gold-bar": 400,
+				  "wildfire": 400,
+				  "hide": 400,
+				  "dragonglass": 400
+				},
+				"img": "item/season13/lion_wests/pants.webp"
+			  },
+			  {
+				"name": "Boots",
+				"level": 20,
+				"materials": {
+				  "lannisport-gold-bar": 400,
+				  "dragonglass": 400,
+				  "kingswood-oak": 400,
+				  "silk": 400
+				},
+				"img": "item/season13/lion_wests/boots.webp"
+			  },
+			  {
+				"name": "Sigiled Band",
+				"level": 20,
+				"materials": {
+				  "lannisport-gold-bar": 400,
+				  "silk": 400,
+				  "black-iron": 400,
+				  "goldenheart-wood": 400
+				},
+				"img": "item/season13/lion_wests/ring.webp"
+			  },
+			  {
+				"name": "Greatsword",
+				"level": 20,
+				"materials": {
+				  "lannisport-gold-bar": 400,
+				  "milk-of-the-poppy": 400,
+				  "ironwood": 400,
+				  "copper-bar": 400
+				},
+				"img": "item/season13/lion_wests/weapon.webp"
+			  },
+			  {
+				"name": "Mane",
+				"level": 25,
+				"materials": {
+				  "lannisport-gold-bar": 1200,
+				  "copper-bar": 1200,
+				  "leather-straps": 1200,
+				  "wildfire": 1200
+				},
+				"img": "item/season13/lion_wests/head.webp"
+			  },
+			  {
+				"name": "Ornate Cuirass",
+				"level": 25,
+				"materials": {
+				  "lannisport-gold-bar": 1200,
+				  "goldenheart-wood": 1200,
+				  "weirwood": 1200,
+				  "milk-of-the-poppy": 1200
+				},
+				"img": "item/season13/lion_wests/chest.webp"
+			  },
+			  {
+				"name": "Faulds",
+				"level": 25,
+				"materials": {
+				  "lannisport-gold-bar": 1200,
+				  "wildfire": 1200,
+				  "hide": 1200,
+				  "dragonglass": 1200
+				},
+				"img": "item/season13/lion_wests/pants.webp"
+			  },
+			  {
+				"name": "Boots",
+				"level": 25,
+				"materials": {
+				  "lannisport-gold-bar": 1200,
+				  "dragonglass": 1200,
+				  "kingswood-oak": 1200,
+				  "silk": 1200
+				},
+				"img": "item/season13/lion_wests/boots.webp"
+			  },
+			  {
+				"name": "Sigiled Band",
+				"level": 25,
+				"materials": {
+				  "lannisport-gold-bar": 1200,
+				  "silk": 1200,
+				  "black-iron": 1200,
+				  "goldenheart-wood": 1200
+				},
+				"img": "item/season13/lion_wests/ring.webp"
+			  },
+			  {
+				"name": "Greatsword",
+				"level": 25,
+				"materials": {
+				  "lannisport-gold-bar": 1200,
+				  "milk-of-the-poppy": 1200,
+				  "ironwood": 1200,
+				  "copper-bar": 1200
+				},
+				"img": "item/season13/lion_wests/weapon.webp"
+			  }
+			]
+		},
+		{
 			"setName": "Cleansed Faith Militant",
 			"setMat": "Cleansed Lock Of Hair",
 			"products": [
