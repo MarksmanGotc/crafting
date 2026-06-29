@@ -1451,15 +1451,6 @@ div#results h3 ~ #closeResults {
     border-top-color: rgba(255, 255, 255, 0.12);
 }
 
-.materials-flux {
-    padding-bottom: 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-:root.theme-dark .materials-flux {
-    border-bottom-color: rgba(255, 255, 255, 0.12);
-}
-
 .items {
     display: flex;
     flex-wrap: wrap;
