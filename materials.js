@@ -509,6 +509,16 @@ const materials = {
 				"Original-name": "Strom's End Fabric"
 			},
 		}
+	},
+	14: {
+		season: 14,
+		//flux: { "name": "Season 14 Flux", "img": "materials/season14/season_14_flux.webp" },
+		mats: {
+			"driftmark-fabric": {
+				"img": "materials/season14/driftmark-fabric.png",
+				"Original-name": "Driftmark Fabric"
+			}
+		}
 	}
 }
 

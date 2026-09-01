@@ -236,6 +236,14 @@ let preserveRequestedTemplates = false;
 let remainingUse = {};
 /** Item keys (level + identity) marked done by user click; preserved across sort re-renders. */
 let completedResultItemKeys = new Set();
+/** Hidden feature: item keys excluded from material usage (7 rapid clicks). */
+let excludedResultItemKeys = new Set();
+/** Snapshot before exclude so restore can revert amount/done state. */
+let excludedItemSnapshots = new Map();
+/** Rapid-click counter per result item for hidden exclude/restore. */
+let resultItemClickTracker = new Map();
+const HIDDEN_ITEM_CLICKS = 7;
+const HIDDEN_ITEM_CLICK_TIMEOUT_MS = 2500;
 /** When By count runs the planner and uses flux, store fluxUsed here so calculateMaterials can pass it to renderResults. */
 let pendingFluxUsedForResults = null;
 let ctwMediumNotice = false;
@@ -307,7 +315,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-06-29';
+    const storageKey = 'noox-update-log-2026-09-01';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
@@ -710,6 +718,9 @@ function handleClearSavedCalculation() {
     qualityMultipliers = {};
     remainingUse = {};
     completedResultItemKeys = new Set();
+    excludedResultItemKeys = new Set();
+    excludedItemSnapshots = new Map();
+    resultItemClickTracker = new Map();
     ctwMediumNotice = false;
     level20OnlyWarlordsActive = false;
     closeResults();
@@ -1132,7 +1143,6 @@ function applyTheme(isDark, checkbox) {
 }
 
 function initializeTheme() {
-    const root = document.documentElement;
     const checkbox = document.getElementById('themeCheckbox');
     if (!checkbox) return;
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
@@ -1143,6 +1153,12 @@ function initializeTheme() {
         isDark = prefersDarkMode();
     }
     applyTheme(isDark, checkbox);
+    // Enable slider transitions only after initial sync (avoids load-time thumb jump)
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            document.documentElement.classList.add('theme-transitions');
+        });
+    });
     checkbox.addEventListener('change', () => {
         const dark = checkbox.checked;
         localStorage.setItem(THEME_STORAGE_KEY, dark ? 'true' : 'false');
@@ -1192,31 +1208,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Kun footerin sisällä olevaa SVG:tä painetaan
-    document.querySelectorAll('footer svg, #openGiftFromHeader').forEach(element => {
-		element.addEventListener('click', function() {
-			const pageDivs = document.querySelectorAll('.wrapper > div');
-			const giftDiv = document.querySelector('.wrapper .gift');
-
-			pageDivs.forEach(div => {
-				div.style.display = 'none';
-			});
-			giftDiv.style.display = 'flex';
-			gtag('event', 'donate_click', {
-				'event_label_gift': 'Open domnate views'
-			});
-		});
-	});
-
-    document.querySelector('.gift button').addEventListener('click', function() {
-        const pageDivs = document.querySelectorAll('.wrapper > div');
-        const wrapperDiv = document.querySelector('#generatebychoice');
-
-        pageDivs.forEach(div => {
-            div.style.display = 'none';
+    document.querySelectorAll('#bmcHeaderLink, #bmcFooterLink').forEach(element => {
+        element.addEventListener('click', function() {
+            gtag('event', 'donate_click', {
+                'event_label_gift': 'Buy me a coffee link'
+            });
         });
-
-        wrapperDiv.style.display = 'block';
     });
 
     const ctwBtn = document.getElementById('ctwInfoBtn');
@@ -1792,6 +1789,9 @@ function closeResults() {
         const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Tyhjennä aiemmat tulokset
         completedResultItemKeys = new Set();
+        excludedResultItemKeys = new Set();
+        excludedItemSnapshots = new Map();
+        resultItemClickTracker = new Map();
         document.getElementById('results').style.display = 'none';
         document.getElementById('generatebychoice').style.display = 'block';
         if (isViewingSavedCalculation) {
@@ -2450,14 +2450,78 @@ function getResultItemKey(level, template) {
     return [level, template.name || '', season, template.setName || '', template.warlord ? 1 : 0].join('\0');
 }
 
-function refreshRemainingUseDisplay(materialsContainer) {
+function refreshMaterialRowsFromRemainingUse(materialsContainer) {
     if (!materialsContainer) return;
-    Object.entries(remainingUse).forEach(([mat, amt]) => {
-        const target = materialsContainer.querySelector(`div[data-material="${mat}"] .remaining-to-use`);
-        if (target) {
-            target.textContent = `-${new Intl.NumberFormat('en-US').format(amt)}`;
+    materialsContainer.querySelectorAll('.material-card[data-material]').forEach(card => {
+        const mat = card.dataset.material;
+        const originalAmount = Number(initialMaterials[mat]) || 0;
+        const currentUse = remainingUse[mat] ?? 0;
+        const usedFromStock = Math.min(originalAmount, currentUse);
+        const remainingAmount = Math.max(0, originalAmount - usedFromStock);
+        const remainingEl = card.querySelector('.remaining-to-use');
+        const availableEl = card.querySelector('.available-materials');
+        if (remainingEl) {
+            remainingEl.textContent = `-${new Intl.NumberFormat('en-US').format(currentUse)}`;
+        }
+        if (availableEl) {
+            availableEl.textContent = `${new Intl.NumberFormat('en-US').format(remainingAmount)}`;
         }
     });
+}
+
+function adjustRemainingUseForItem(materialsContainer, materialUsage, multiplier) {
+    Object.entries(materialUsage).forEach(([mat, amt]) => {
+        remainingUse[mat] = (remainingUse[mat] || 0) + multiplier * amt;
+    });
+    refreshMaterialRowsFromRemainingUse(materialsContainer);
+}
+
+function registerResultItemClick(itemKey) {
+    const now = Date.now();
+    let tracker = resultItemClickTracker.get(itemKey);
+    if (!tracker || now - tracker.lastAt > HIDDEN_ITEM_CLICK_TIMEOUT_MS) {
+        tracker = { count: 0, lastAt: now };
+    }
+    tracker.count += 1;
+    tracker.lastAt = now;
+    resultItemClickTracker.set(itemKey, tracker);
+    if (tracker.count >= HIDDEN_ITEM_CLICKS) {
+        tracker.count = 0;
+        return true;
+    }
+    return false;
+}
+
+function toggleResultItemExcluded(templateDiv, materialsDiv, itemKey, materialUsage, originalAmount) {
+    const amountEl = templateDiv.querySelector('.amount');
+    if (!excludedResultItemKeys.has(itemKey)) {
+        const wasCompleted = templateDiv.classList.contains('opacity');
+        excludedItemSnapshots.set(itemKey, { amount: originalAmount, wasCompleted });
+        excludedResultItemKeys.add(itemKey);
+        templateDiv.classList.add('item-excluded');
+        templateDiv.classList.remove('opacity');
+        completedResultItemKeys.delete(itemKey);
+        if (amountEl) amountEl.textContent = '0';
+        adjustRemainingUseForItem(materialsDiv, materialUsage, -1);
+        return;
+    }
+
+    const snap = excludedItemSnapshots.get(itemKey);
+    excludedResultItemKeys.delete(itemKey);
+    excludedItemSnapshots.delete(itemKey);
+    templateDiv.classList.remove('item-excluded');
+    if (amountEl && snap) {
+        amountEl.textContent = `${new Intl.NumberFormat('en-US').format(snap.amount)}`;
+    }
+    if (snap?.wasCompleted) {
+        templateDiv.classList.add('opacity');
+        completedResultItemKeys.add(itemKey);
+    }
+    adjustRemainingUseForItem(materialsDiv, materialUsage, 1);
+}
+
+function refreshRemainingUseDisplay(materialsContainer) {
+    refreshMaterialRowsFromRemainingUse(materialsContainer);
 }
 
 function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsedByGear = null) {
@@ -2467,6 +2531,9 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
 
     if (!resultSortRerender) {
         completedResultItemKeys = new Set();
+        excludedResultItemKeys = new Set();
+        excludedItemSnapshots = new Map();
+        resultItemClickTracker = new Map();
     }
 
     remainingUse = {};
@@ -2915,37 +2982,38 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
                         matsDiv.appendChild(pLine);
                     });
                     templateDiv.dataset.materials = JSON.stringify(materialUsage);
+                    templateDiv.dataset.originalAmount = String(template.amount);
                     templateDiv.appendChild(matsDiv);
 
                     const itemKey = getResultItemKey(level, template);
                     templateDiv.dataset.itemKey = itemKey;
-                    if (completedResultItemKeys.has(itemKey)) {
-                        templateDiv.classList.add('opacity');
+                    if (excludedResultItemKeys.has(itemKey)) {
+                        templateDiv.classList.add('item-excluded');
+                        pTemplateamount.textContent = '0';
                         Object.entries(materialUsage).forEach(([mat, amt]) => {
                             remainingUse[mat] = (remainingUse[mat] || 0) - amt;
                         });
+                    } else if (completedResultItemKeys.has(itemKey)) {
+                        templateDiv.classList.add('opacity');
                     }
 
                     templateDiv.addEventListener('click', function() {
-                        this.classList.toggle('opacity');
-                        const used = JSON.parse(this.dataset.materials);
-                        const done = this.classList.contains('opacity');
                         const key = this.dataset.itemKey;
+                        const used = JSON.parse(this.dataset.materials);
+                        const originalAmount = Number(this.dataset.originalAmount) || 0;
+                        if (key && registerResultItemClick(key)) {
+                            toggleResultItemExcluded(this, materialsDiv, key, used, originalAmount);
+                            return;
+                        }
+                        if (excludedResultItemKeys.has(key)) {
+                            return;
+                        }
+                        this.classList.toggle('opacity');
+                        const done = this.classList.contains('opacity');
                         if (key) {
                             if (done) completedResultItemKeys.add(key);
                             else completedResultItemKeys.delete(key);
                         }
-                        Object.entries(used).forEach(([mat, amt]) => {
-                            if (done) {
-                                remainingUse[mat] -= amt;
-                            } else {
-                                remainingUse[mat] += amt;
-                            }
-                            const target = materialsDiv.querySelector(`div[data-material="${mat}"] .remaining-to-use`);
-                            if (target) {
-                                target.textContent = `-${new Intl.NumberFormat('en-US').format(remainingUse[mat])}`;
-                            }
-                        });
                     });
 
                     levelGroup.appendChild(templateDiv);
@@ -2959,8 +3027,8 @@ function renderResults(templateCounts, materialCounts, fluxUsed = null, fluxUsed
         }
     });
 
-    if (completedResultItemKeys.size > 0) {
-        refreshRemainingUseDisplay(materialsDiv);
+    if (excludedResultItemKeys.size > 0) {
+        refreshMaterialRowsFromRemainingUse(materialsDiv);
     }
 
     // Prepare a lighter share payload containing only the user inputs

@@ -104,6 +104,13 @@ let craftItem = {
 							setName: product.setName || set.setName,
 							season: season13.season
 					}))
+			),
+			...season14.sets.flatMap(set =>
+					set.products.map(product => ({
+							...product,
+							setName: product.setName || set.setName,
+							season: season14.season
+					}))
 			)
         ]
 };
@@ -123,6 +130,7 @@ const seasonsMap = {
   11: season11,
   12: season12,
   13: season13,
+  14: season14,
 };
 
 const extraProducts = [];
