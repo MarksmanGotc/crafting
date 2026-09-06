@@ -1352,6 +1352,10 @@ footer div {
         font-size: 13px;
         line-height: 1.35;
     }
+    footer p.made-by .made-by-discord {
+        display: block;
+        margin-top: 2px;
+    }
 }
 
 /* Tulosten tyyli */
