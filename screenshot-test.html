@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenshot parse test</title>
+    <script src="materials.js"></script>
+    <script defer src="screenshotparse.js?v=43"></script>
+    <style>
+        :root {
+            --bg: #111827;
+            --panel: #171e2f;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --accent: #60a5fa;
+            --line: #222c41;
+            --ok: #86efac;
+            --err: #fca5a5;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.45;
+        }
+        main {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 24px 16px 48px;
+        }
+        h1 { font-size: 22px; margin: 0 0 8px; }
+        p.lead { color: var(--muted); margin: 0 0 20px; }
+        .drop {
+            border: 1px dashed var(--accent);
+            border-radius: 10px;
+            padding: 28px 16px;
+            text-align: center;
+            background: var(--panel);
+            cursor: pointer;
+        }
+        .drop.is-drag {
+            background: #1d4ed8;
+        }
+        .drop input { display: none; }
+        button {
+            background: #1560BD;
+            color: #fff;
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button:disabled { opacity: 0.6; cursor: wait; }
+        button.secondary {
+            background: #334155;
+            font-weight: 600;
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        .debug-toolbar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin: 12px 0 8px;
+            flex-wrap: wrap;
+        }
+        .status { margin: 14px 0; min-height: 1.4em; color: var(--accent); }
+        .status.is-error { color: var(--err); }
+        .status.is-ok { color: var(--ok); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: var(--panel);
+        }
+        th, td {
+            border-bottom: 1px solid var(--line);
+            padding: 8px 6px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th { color: var(--accent); font-size: 11px; text-transform: uppercase; }
+        .warn { color: #fbbf24; }
+        .skip { color: var(--err); }
+        pre {
+            background: var(--panel);
+            padding: 12px;
+            overflow: auto;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+        .thumbs img { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; }
+        .note { font-size: 13px; color: var(--muted); }
+        a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Screenshot parse test</h1><br /><br />
+        <label class="drop" id="dropZone">
+            <strong>Drop screenshots here or click to choose</strong>
+            <input id="files" type="file" accept="image/*" multiple>
+        </label>
+        <div class="thumbs" id="thumbs"></div>
+        <p class="status" id="status">Waiting for screenshots.</p>
+        <div id="results"></div>
+        <h2>Parser self-check</h2>
+        <pre id="selfCheck"></pre>
+        <p class="note">Back to the calculator: <a href="index.html">index.html</a></p>
+    </main>
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const filesInput = document.getElementById('files');
+        const statusEl = document.getElementById('status');
+        const thumbsEl = document.getElementById('thumbs');
+        const resultsEl = document.getElementById('results');
+        const selfCheckEl = document.getElementById('selfCheck');
+
+        function setStatus(message, kind) {
+            statusEl.textContent = message;
+            statusEl.className = 'status' + (kind ? ' ' + kind : '');
+        }
+
+        let sessionByKey = {};
+        let lastDebugLog = '';
+
+        function renderThumbs(fileList, append) {
+            if (!append) thumbsEl.innerHTML = '';
+            Array.from(fileList).forEach(file => {
+                const img = document.createElement('img');
+                img.alt = file.name;
+                img.src = URL.createObjectURL(file);
+                thumbsEl.appendChild(img);
+            });
+        }
+
+        function buildDebugLog(result) {
+            const lines = [];
+            const materials = result.materials || [];
+            lines.push('=== Summary table ===');
+            materials.forEach(function (item) {
+                const tiers = (item.tiers || []).map(function (value, index) {
+                    const text = ScreenshotParse.formatAmount(value);
+                    return (item.exactTiers && item.exactTiers[index]) ? text + '*' : text;
+                }).join(' | ');
+                lines.push(
+                    item.label
+                    + ' [' + (ScreenshotParse.formatSeasonLabel ? ScreenshotParse.formatSeasonLabel(item.season) : '') + ']'
+                    + ' => ' + tiers
+                    + ' | poor ' + ScreenshotParse.formatAmount(item.poorTotal)
+                    + (item.warnings && item.warnings.length ? ' | ' + item.warnings.join(', ') : '')
+                );
+            });
+            (result.images || []).forEach(function (image) {
+                const debug = image.debug || {};
+                lines.push('');
+                lines.push('=== ' + (image.fileName || 'screenshot') + ' ===');
+                if (debug.engine) {
+                    lines.push('Engine: ' + debug.engine);
+                }
+                lines.push('Catalog: ' + (debug.kind || image.kind || ''));
+                if (debug.rawMaterials && debug.rawMaterials.length) {
+                    lines.push('Gemini rows: ' + debug.rawMaterials.map(function (row) {
+                        const exact = row.exact
+                            ? (' exact=' + (row.exact.quality || '?') + ':' + (row.exact.amount || '?'))
+                            : '';
+                        const inferred = row.nameInferred ? ' (inferred)' : '';
+                        return (row.name || '?') + inferred + ' => [' + (row.amounts || []).join(', ') + ']' + exact;
+                    }).join(' | '));
+                }
+                if (debug.seasonHeaders && debug.seasonHeaders.length) {
+                    lines.push('Season headers: ' + debug.seasonHeaders.join(', '));
+                }
+                if (debug.scopedCatalog && debug.scopedCatalog.length) {
+                    lines.push('Scoped catalog: ' + debug.scopedCatalog.join(', '));
+                }
+                if (debug.namesBeforePairs && debug.namesBeforePairs.length) {
+                    lines.push('OCR names before pairing: ' + debug.namesBeforePairs.join(', '));
+                }
+                if (debug.matchedNames && debug.matchedNames.length) {
+                    lines.push('Name positions: ' + debug.matchedNames.join(', '));
+                }
+                if (debug.amountRows && debug.amountRows.length) {
+                    lines.push('Amount rows: ' + debug.amountRows.map(function (row) {
+                        return '@' + row.y + ' [' + (row.texts || []).join(' ') + ']';
+                    }).join(' | '));
+                }
+                if (debug.pairs && debug.pairs.length) {
+                    lines.push('OCR raw on icon rows: ' + debug.pairs.join(' | '));
+                }
+                if (debug.assigned && debug.assigned.length) {
+                    lines.push('After column pick: ' + debug.assigned.join(' | '));
+                }
+                lines.push('Words: ' + (debug.wordCount || 0));
+                if (debug.exactDetails && debug.exactDetails.length) {
+                    lines.push('Exact Available: ' + debug.exactDetails.map(function (item) {
+                        return item.label + ' ' + ScreenshotParse.TIER_NAMES[item.qualityIndex] + ' = ' + ScreenshotParse.formatAmount(item.amount);
+                    }).join('; '));
+                }
+                lines.push('--- OCR full text ---');
+                lines.push(String(debug.fullText || image.rawText || '(no OCR text)'));
+            });
+            return lines.join('\n');
+        }
+
+        function renderResults(result) {
+            const materials = result.materials || [];
+            const images = result.images || [];
+            const parts = [];
+            lastDebugLog = buildDebugLog(result);
+
+            parts.push(
+                '<div class="debug-toolbar">' +
+                '<button type="button" class="secondary" id="copyDebugBtn">Copy debug log</button>' +
+                '<span class="note" id="copyDebugStatus"></span>' +
+                '</div>'
+            );
+
+            if (materials.length) {
+                const rows = materials.map(item => {
+                    const tiers = (item.tiers || []).map(function (value, index) {
+                        const text = ScreenshotParse.formatAmount(value);
+                        return (item.exactTiers && item.exactTiers[index]) ? text + '*' : text;
+                    }).join('</td><td>');
+                    const warn = (item.warnings || []).join(', ');
+                    const season = ScreenshotParse.formatSeasonLabel
+                        ? ScreenshotParse.formatSeasonLabel(item.season)
+                        : (item.season > 0 ? ('season' + item.season) : 'season0');
+                    return '<tr>' +
+                        '<td>' + item.label + '</td>' +
+                        '<td>' + season + '</td>' +
+                        '<td>' + tiers + '</td>' +
+                        '<td>' + ScreenshotParse.formatAmount(item.poorTotal) + '</td>' +
+                        '<td>' + (item.source || '') + '</td>' +
+                        '<td class="warn">' + warn + '</td>' +
+                        '</tr>';
+                }).join('');
+                parts.push(
+                    '<table><thead><tr><th>Material</th><th>Season</th><th>Grey</th><th>Green</th><th>Blue</th><th>Purple</th><th>Orange</th><th>Gold</th><th>Poor total</th><th>Source</th><th>Notes</th></tr></thead><tbody>' +
+                    rows + '</tbody></table>'
+                );
+            } else {
+                parts.push('<p class="status is-error">No materials recognised yet. OCR text is below — that shows what the engine actually read.</p>');
+            }
+
+            images.forEach(image => {
+                const detected = (image.materials || []).map(item => {
+                    const flag = item.skipped ? ' (skipped: ' + (item.reason || '') + ')' : '';
+                    const season = ScreenshotParse.formatSeasonLabel
+                        ? ScreenshotParse.formatSeasonLabel(item.season)
+                        : '';
+                    return item.label + (season ? ' [' + season + ']' : '') + flag;
+                }).join(', ');
+                parts.push('<h3>' + (image.fileName || 'screenshot') + '</h3>');
+                parts.push('<p class="note">Matched names: ' + (detected || 'none') + '</p>');
+                const debug = image.debug || {};
+                if (debug.kind) {
+                    parts.push('<p class="note">Catalog: ' + debug.kind + '</p>');
+                }
+                if (debug.seasonHeaders && debug.seasonHeaders.length) {
+                    parts.push('<p class="note">Season headers: ' + debug.seasonHeaders.join(', ') + '</p>');
+                }
+                if (debug.scopedCatalog && debug.scopedCatalog.length) {
+                    parts.push('<p class="note">Scoped catalog: ' + debug.scopedCatalog.join(', ') + '</p>');
+                }
+                if (debug.namesBeforePairs && debug.namesBeforePairs.length) {
+                    parts.push('<p class="note">OCR names before pairing: ' + debug.namesBeforePairs.join(', ') + '</p>');
+                }
+                if (debug.matchedNames && debug.matchedNames.length) {
+                    parts.push('<p class="note">Name positions: ' + debug.matchedNames.join(', ') + '</p>');
+                }
+                if (debug.amountRows && debug.amountRows.length) {
+                    parts.push('<p class="note">Amount rows: ' + debug.amountRows.map(function (row) {
+                        return '@' + row.y + ' [' + (row.texts || []).join(' ') + ']';
+                    }).join(' | ') + '</p>');
+                }
+                if (debug.pairs && debug.pairs.length) {
+                    parts.push('<p class="note">OCR raw on icon rows (can invent ghosts): ' + debug.pairs.join(' | ') + '</p>');
+                }
+                if (debug.assigned && debug.assigned.length) {
+                    parts.push('<p class="note">After column pick: ' + debug.assigned.join(' | ') + '</p>');
+                }
+                parts.push('<p class="note">Words: ' + (debug.wordCount || 0) + '</p>');
+                if (debug.exactDetails && debug.exactDetails.length) {
+                    parts.push('<p class="note">Exact Available: ' + debug.exactDetails.map(function (item) {
+                        return item.label + ' ' + ScreenshotParse.TIER_NAMES[item.qualityIndex] + ' = ' + ScreenshotParse.formatAmount(item.amount);
+                    }).join('; ') + '</p>');
+                }
+                parts.push('<pre>' + String(debug.fullText || image.rawText || '(no OCR text)').replace(/</g, '&lt;') + '</pre>');
+            });
+
+            resultsEl.innerHTML = parts.join('');
+            const copyBtn = document.getElementById('copyDebugBtn');
+            const copyStatus = document.getElementById('copyDebugStatus');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function () {
+                    const text = lastDebugLog || '';
+                    const done = function (ok) {
+                        if (copyStatus) copyStatus.textContent = ok ? 'Copied.' : 'Copy failed — select the log manually.';
+                    };
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(false); });
+                    } else {
+                        done(false);
+                    }
+                });
+            }
+        }
+
+        async function run(fileList) {
+            const files = Array.from(fileList || []);
+            if (!files.length) return;
+            // Fresh parse each drop so stale inferred rows cannot stick in the table.
+            sessionByKey = {};
+            renderThumbs(files, false);
+            setStatus('Loading OCR engine…');
+            try {
+                const result = await ScreenshotParse.parseImages(files, {
+                    debug: true,
+                    onProgress: function (info) {
+                        setStatus(info.message);
+                    }
+                });
+                ScreenshotParse.mergeIntoMaterialMap(sessionByKey, result.materials);
+                result.materials = Object.keys(sessionByKey).map(function (key) { return sessionByKey[key]; });
+                renderResults(result);
+                setStatus('Recognised ' + result.materials.length + ' material(s). Session reset on each drop so debug stays fresh.', 'is-ok');
+            } catch (error) {
+                console.error(error);
+                setStatus(error && error.message ? error.message : 'OCR failed.', 'is-error');
+            }
+        }
+
+        dropZone.addEventListener('dragover', function (event) {
+            event.preventDefault();
+            dropZone.classList.add('is-drag');
+        });
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('is-drag');
+        });
+        dropZone.addEventListener('drop', function (event) {
+            event.preventDefault();
+            dropZone.classList.remove('is-drag');
+            run(event.dataTransfer.files);
+        });
+        filesInput.addEventListener('change', function () {
+            run(filesInput.files);
+        });
+
+        window.addEventListener('load', function () {
+            const cases = [
+                ['6.2M', 6200000],
+                ['15.3M', 15300000],
+                ['2.7M', 2700000],
+                ['3.3M', 3300000],
+                ['708', 708],
+                ['196', 196],
+                ['0', 0],
+                ['8.4K', 8400],
+                ['1.1K', 1100],
+                ['85.8K', 85800],
+                ['4.1M', 4100000],
+                ['7.9M', 7900000]
+            ];
+            const lines = cases.map(function (item) {
+                const got = ScreenshotParse.parseGameAmount(item[0]);
+                const ok = got === item[1];
+                return (ok ? 'OK  ' : 'FAIL') + '  ' + item[0] + ' → ' + got + (ok ? '' : ' (expected ' + item[1] + ')');
+            });
+            const sampleTiers = [6200000, 708, 196, 0, 0, 0];
+            const poor = ScreenshotParse.tiersToPoor(sampleTiers);
+            const expectedPoor = 6200000 + 708 * 4 + 196 * 16;
+            const poorOk = poor === expectedPoor;
+            lines.push((poorOk ? 'OK  ' : 'FAIL') + '  Poor total for 6.2M + 708 + 196 = ' + ScreenshotParse.formatAmount(poor) + (poorOk ? '' : ' (expected ' + ScreenshotParse.formatAmount(expectedPoor) + ')'));
+            lines.push('Proxy: ' + ScreenshotParse.getGeminiProxyUrl());
+            selfCheckEl.textContent = lines.join('\n');
+        });
+    </script>
+</body>
+</html>

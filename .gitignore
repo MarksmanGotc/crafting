@@ -1,0 +1,14 @@
+# Cloudflare Wrangler local cache / deploy artifacts
+.wrangler/
+**/node_modules/
+
+# Local env / secrets (never commit API keys)
+.env
+.env.*
+!.env.example
+*.pem
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+Desktop.ini

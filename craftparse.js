@@ -613,6 +613,8 @@ function resetUserInputs() {
             parent.classList.remove('active');
         }
     });
+    updateGearMaterialSummary();
+    setGearMaterialsOpen(false);
 
     LEVELS.forEach(level => {
         const amountInput = document.getElementById(`templateAmount${level}`);
@@ -1207,6 +1209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+    updateGearMaterialSummary({ openIfFilled: true });
 
     document.querySelectorAll('#bmcHeaderLink, #bmcFooterLink').forEach(element => {
         element.addEventListener('click', function() {
@@ -1278,6 +1281,19 @@ document.addEventListener('DOMContentLoaded', function() {
     materialsInfoPopup?.addEventListener('click', (e) => {
         if (e.target === materialsInfoPopup || e.target.closest('.close-popup')) {
             materialsInfoPopup.style.display = 'none';
+        }
+    });
+
+    const gearMaterialsInfoBtn = document.getElementById('gearMaterialsInfoBtn');
+    const gearMaterialsInfoPopup = document.getElementById('gearMaterialsInfoPopup');
+    gearMaterialsInfoBtn?.addEventListener('click', () => {
+        if (gearMaterialsInfoPopup) {
+            gearMaterialsInfoPopup.style.display = 'flex';
+        }
+    });
+    gearMaterialsInfoPopup?.addEventListener('click', (e) => {
+        if (e.target === gearMaterialsInfoPopup || e.target.closest('.close-popup')) {
+            gearMaterialsInfoPopup.style.display = 'none';
         }
     });
 
@@ -1756,6 +1772,7 @@ function populateInputsFromShare(data) {
         url.searchParams.delete('share');
         history.replaceState({}, '', url.pathname + url.search);
     }
+    updateGearMaterialSummary({ openIfFilled: true });
 }
 
 // Oletetaan, että addCalculateButton-funktio on jo määritelty ja se lisää sekä Laske että Generoi 480 -napit
@@ -1772,6 +1789,8 @@ function addCalculateButton() {
 
 // Funktio tulosten näyttämiseen (modifioi tämä toimimaan haluamallasi tavalla)
 function showResults(skipScrollToTop = false) {
+        const wrapper = document.querySelector('.wrapper');
+        if (wrapper) wrapper.classList.add('has-results');
         document.getElementById('results').style.display = 'block';
         document.getElementById('generatebychoice').style.display = 'none';
         if (!skipScrollToTop) {
@@ -1794,6 +1813,8 @@ function closeResults() {
         resultItemClickTracker = new Map();
         document.getElementById('results').style.display = 'none';
         document.getElementById('generatebychoice').style.display = 'block';
+        const wrapper = document.querySelector('.wrapper');
+        if (wrapper) wrapper.classList.remove('has-results');
         if (isViewingSavedCalculation) {
             const scaleSelect = document.getElementById('scaleSelect');
             if (scaleSelect) {
@@ -5027,16 +5048,138 @@ function inputActive(){
 	});
 }
 
+function countFilledNumericInputs(root) {
+    if (!root) return 0;
+    let filled = 0;
+    root.querySelectorAll('.numeric-input').forEach(input => {
+        const raw = String(input.value || '').replace(/[^0-9]/g, '');
+        if (raw !== '' && Number(raw) > 0) {
+            filled += 1;
+        }
+    });
+    return filled;
+}
+
+function setGearMaterialsOpen(open) {
+    const toggle = document.getElementById('toggleAdvMaterials');
+    const container = document.getElementById('advMaterials');
+    const section = document.getElementById('gearMaterialsSection');
+    if (!toggle || !container) return;
+
+    container.style.display = open ? 'block' : 'none';
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    section?.classList.toggle('is-open', open);
+}
+
+function updateGearMaterialSummary(options = {}) {
+    const container = document.getElementById('advMaterials');
+    const toggle = document.getElementById('toggleAdvMaterials');
+    const hint = document.getElementById('gearMaterialsHint');
+    if (!container) return;
+
+    const filled = countFilledNumericInputs(container);
+    toggle?.classList.toggle('has-values', filled > 0);
+    if (hint) {
+        hint.textContent = filled > 0 ? `${filled} added` : 'Optional';
+        hint.classList.toggle('has-values', filled > 0);
+    }
+
+    container.querySelectorAll('h4[data-season]').forEach(header => {
+        const body = header.nextElementSibling;
+        const countEl = header.querySelector('.gear-season-count');
+        const seasonFilled = countFilledNumericInputs(body);
+        if (countEl) {
+            countEl.textContent = seasonFilled > 0 ? String(seasonFilled) : '';
+        }
+        header.classList.toggle('has-values', seasonFilled > 0);
+        if (options.openIfFilled && seasonFilled > 0) {
+            if (body) body.style.display = 'block';
+            header.classList.add('open');
+        }
+    });
+
+    if (options.openIfFilled && filled > 0) {
+        setGearMaterialsOpen(true);
+    }
+}
+
 function initAdvMaterialSection() {
     const toggle = document.getElementById('toggleAdvMaterials');
     const container = document.getElementById('advMaterials');
     if (!toggle || !container || typeof seasons === 'undefined') return;
 
     toggle.addEventListener('click', () => {
-        const isHidden = container.style.display === 'none';
-        container.style.display = isHidden ? 'block' : 'none';
-        toggle.classList.toggle('open', isHidden);
+        const isHidden = container.style.display === 'none' || container.style.display === '';
+        setGearMaterialsOpen(isHidden);
     });
+
+    const infoHeader = document.createElement('div');
+    infoHeader.className = 'gear-levels-heading';
+    const infoInner = document.createElement('div');
+    infoInner.className = 'checkbox-header';
+    const infoSpan = document.createElement('span');
+    infoSpan.textContent = 'Use at levels';
+    const infoBtn = document.createElement('button');
+    infoBtn.type = 'button';
+    infoBtn.id = 'gearLevelsInfoBtn';
+    infoBtn.className = 'info-btn';
+    infoBtn.setAttribute('aria-label', 'Gear materials at levels info');
+    infoBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>';
+    infoInner.appendChild(infoSpan);
+    infoInner.appendChild(infoBtn);
+    infoHeader.appendChild(infoInner);
+    container.appendChild(infoHeader);
+
+    const infoPopup = document.createElement('div');
+    infoPopup.id = 'gearLevelsInfoPopup';
+    infoPopup.className = 'info-overlay';
+    infoPopup.innerHTML = '<div class="info-content"><button class="close-popup" type="button" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path></svg></button><p>Select the levels where gear set materials may be used. Other levels craft only with basic materials, allowing you to save gear materials for later levels. Filled chips are active.</p></div>';
+    container.appendChild(infoPopup);
+
+    const levelWrap = document.createElement('div');
+    levelWrap.className = 'level-select-container';
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'level-dropdown';
+    const select = document.createElement('select');
+    select.id = 'gearMaterialLevels';
+    select.multiple = true;
+    select.style.display = 'none';
+
+    const defaultGearLevels = [20, 25, 30, 35, 40, 45];
+    [5,10,15,20,25,30,35,40,45].forEach(l => {
+        const optionDiv = document.createElement('div');
+        optionDiv.dataset.value = l;
+        optionDiv.textContent = l;
+        if (defaultGearLevels.includes(l)) {
+            optionDiv.classList.add('selected');
+        }
+        dropdown.appendChild(optionDiv);
+
+        const opt = document.createElement('option');
+        opt.value = l;
+        opt.textContent = l;
+        if (defaultGearLevels.includes(l)) {
+            opt.selected = true;
+        }
+        select.appendChild(opt);
+    });
+
+    dropdown.addEventListener('click', e => {
+        const value = e.target.dataset.value;
+        if (!value) return;
+        e.target.classList.toggle('selected');
+        Array.from(select.options).forEach(opt => {
+            if (opt.value === value) {
+                opt.selected = !opt.selected;
+            }
+        });
+    });
+
+    levelWrap.appendChild(dropdown);
+    levelWrap.appendChild(select);
+    container.appendChild(levelWrap);
 
     const seasonData = seasons.filter(s => s.season !== 0).sort((a, b) => b.season - a.season);
 
@@ -5044,10 +5187,12 @@ function initAdvMaterialSection() {
 
     seasonData.forEach(season => {
         const header = document.createElement('h4');
-        header.innerHTML = `Season ${season.season}${arrowSvg}`;
+        header.dataset.season = String(season.season);
+        header.innerHTML = `<span class="gear-season-label">Season ${season.season}</span><span class="gear-season-count"></span>${arrowSvg}`;
         container.appendChild(header);
 
         const seasonDiv = document.createElement('div');
+        seasonDiv.className = 'gear-season-body';
         seasonDiv.style.display = 'none';
         container.appendChild(seasonDiv);
 
@@ -5140,74 +5285,6 @@ function initAdvMaterialSection() {
         }
     });
 
-    const infoHeader = document.createElement('div');
-    infoHeader.className = 'section-title';
-    const infoInner = document.createElement('div');
-    infoInner.className = 'checkbox-header';
-    const infoSpan = document.createElement('span');
-    infoSpan.textContent = 'Gear materials at levels';
-    const infoBtn = document.createElement('button');
-    infoBtn.id = 'gearLevelsInfoBtn';
-    infoBtn.className = 'info-btn';
-    infoBtn.setAttribute('aria-label', 'Gear materials info');
-    infoBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>';
-    infoInner.appendChild(infoSpan);
-    infoInner.appendChild(infoBtn);
-    infoHeader.appendChild(infoInner);
-    container.appendChild(infoHeader);
-
-    const infoPopup = document.createElement('div');
-    infoPopup.id = 'gearLevelsInfoPopup';
-    infoPopup.className = 'info-overlay';
-    infoPopup.innerHTML = '<div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"></path></svg></button><p>Select the levels where gear set materials may be used. Other levels craft only with basic materials, allowing you to save gear materials for later levels. Levels with a dark background are active.</p></div>';
-    container.appendChild(infoPopup);
-
-    const levelWrap = document.createElement('div');
-    levelWrap.className = 'level-select-container';
-
-    const dropdown = document.createElement('div');
-    dropdown.className = 'level-dropdown';
-    const select = document.createElement('select');
-    select.id = 'gearMaterialLevels';
-    select.multiple = true;
-    select.style.display = 'none';
-
-    const defaultGearLevels = [20, 25, 30, 35, 40, 45];
-    [5,10,15,20,25,30,35,40,45].forEach(l => {
-        const optionDiv = document.createElement('div');
-        optionDiv.dataset.value = l;
-        optionDiv.textContent = l;
-        if (defaultGearLevels.includes(l)) {
-            optionDiv.classList.add('selected');
-        }
-        dropdown.appendChild(optionDiv);
-
-        const opt = document.createElement('option');
-        opt.value = l;
-        opt.textContent = l;
-        if (defaultGearLevels.includes(l)) {
-            opt.selected = true;
-        }
-        select.appendChild(opt);
-    });
-
-    dropdown.addEventListener('click', e => {
-        const value = e.target.dataset.value;
-        if (!value) return;
-        e.target.classList.toggle('selected');
-        Array.from(select.options).forEach(opt => {
-            if (opt.value === value) {
-                opt.selected = !opt.selected;
-            }
-        });
-    });
-
-    levelWrap.appendChild(dropdown);
-    levelWrap.appendChild(select);
-    container.appendChild(levelWrap);
-
-    const seasonZeroSection = document.querySelector('.season-zero-section');
-    if (seasonZeroSection) {
-        container.appendChild(seasonZeroSection);
-    }
+    container.addEventListener('input', () => updateGearMaterialSummary());
+    updateGearMaterialSummary();
 }

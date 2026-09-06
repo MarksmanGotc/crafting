@@ -522,3 +522,6 @@ const materials = {
 	}
 }
 
+if (typeof window !== 'undefined') {
+	window.materials = materials;
+}
