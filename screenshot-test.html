@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Screenshot parse test</title>
     <script src="materials.js"></script>
-    <script defer src="screenshotparse.js?v=43"></script>
+    <script defer src="screenshotparse.js?v=48"></script>
     <style>
         :root {
             --bg: #111827;
@@ -103,6 +103,7 @@
         <h1>Screenshot parse test</h1><br /><br />
         <label class="drop" id="dropZone">
             <strong>Drop screenshots here or click to choose</strong>
+            <span class="note" style="display:block;margin-top:8px;">Max 4 images per upload. Same free-AI rate limits as the calculator.</span>
             <input id="files" type="file" accept="image/*" multiple>
         </label>
         <div class="thumbs" id="thumbs"></div>
@@ -312,12 +313,24 @@
         }
 
         async function run(fileList) {
-            const files = Array.from(fileList || []);
-            if (!files.length) return;
+            let files = Array.from(fileList || []).filter(function (file) {
+                const type = String(file.type || '').toLowerCase();
+                if (/^image\/(png|jpe?g|webp|gif)$/.test(type)) return true;
+                if (type && type.indexOf('image/') === 0) return false;
+                return /\.(png|jpe?g|webp|gif)$/i.test(file.name || '');
+            });
+            if (!files.length) {
+                setStatus('Only image files are allowed (PNG, JPG, WebP, GIF).', 'is-error');
+                return;
+            }
+            if (files.length > 4) {
+                setStatus('You can add up to 4 screenshots at a time.', 'is-error');
+                return;
+            }
             // Fresh parse each drop so stale inferred rows cannot stick in the table.
             sessionByKey = {};
             renderThumbs(files, false);
-            setStatus('Loading OCR engine…');
+            setStatus('Reading screenshot with AI…');
             try {
                 const result = await ScreenshotParse.parseImages(files, {
                     debug: true,

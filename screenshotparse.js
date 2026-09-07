@@ -610,10 +610,33 @@
     }
 
     async function parseImages(files, options) {
-        const list = Array.from(files || []).filter(isScreenshotImageFile);
+        let list = Array.from(files || []).filter(isScreenshotImageFile);
         if (!list.length) {
             throw new Error('Only image files are allowed (' + ALLOWED_SCREENSHOT_FORMATS + ').');
         }
+        if (list.length > MAX_SCREENSHOTS_PER_BATCH) {
+            const error = new Error(MSG_BATCH_LIMIT);
+            error.code = 'batch_limit';
+            throw error;
+        }
+        const remaining = getClientRateRemaining();
+        if (remaining <= 0) {
+            const error = new Error(MSG_CLIENT_RATE_LIMIT);
+            error.code = 'client_rate_limit';
+            error.showBmc = true;
+            throw error;
+        }
+        if (list.length > remaining) {
+            const error = new Error(
+                'Only ' + remaining + ' more screenshot' + (remaining === 1 ? '' : 's') +
+                ' allowed in this 15-minute window.'
+            );
+            error.code = 'client_rate_limit';
+            error.showBmc = true;
+            throw error;
+        }
+        recordClientRateUsage(list.length);
+
         const onProgress = options && options.onProgress;
         const images = [];
         for (let i = 0; i < list.length; i++) {
@@ -803,7 +826,6 @@
             if (dropZone.disabled != null) dropZone.disabled = true;
             appendThumbs(thumbsEl, files);
             setStatus(statusEl, notice || 'Reading screenshot with AI…', 'is-busy');
-            recordClientRateUsage(files.length);
             try {
                 const result = await parseImages(files, {
                     onProgress: function (info) {

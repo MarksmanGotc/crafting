@@ -1052,17 +1052,17 @@ button.info-btn:hover {
 .theme-dark button#calculateWithPreferences{background: var(--color1);color: var(--button-text-color);}
 
 .theme-dark .level-dropdown div {
-    background: var(--light-bg);
-    border-color: var(--color-border);
+    background: var(--color2);
+    border-color: rgba(96, 165, 250, 0.35);
     color: var(--text-color);
 }
 
 .theme-dark .level-dropdown div:hover {
-    background: var(--hover-bg);
     border-color: var(--header-color);
 }
 
-.theme-dark .level-dropdown div.selected {
+.theme-dark .level-dropdown div.selected,
+.theme-dark .level-dropdown div.selected:hover {
     background: var(--color1);
     border-color: var(--color1);
     color: #fff;
@@ -1172,10 +1172,6 @@ html.theme-transitions .theme-toggle .theme-checkbox:after {
 
 .theme-toggle .theme-checkbox:checked {
     background: var(--primary-color);
-}
-
-.theme-dark .level-dropdown div:hover {
-    background: var(--light-bg);
 }
 
 .theme-dark h3, .theme-dark h4 {
@@ -2131,7 +2127,6 @@ button.gear-materials-toggle.has-values {
 }
 
 .level-dropdown div:hover {
-    background: #ececec;
     border-color: #c7c7c7;
 }
 
@@ -2139,6 +2134,10 @@ button.gear-materials-toggle.has-values {
     background: var(--primary-color);
     color: #fff;
     border: 1px solid var(--primary-color);
+}
+
+.level-dropdown div.selected:hover {
+    border-color: var(--primary-color);
 }
 
 button#calculateWithPreferences {
