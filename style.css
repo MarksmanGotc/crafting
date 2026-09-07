@@ -2669,6 +2669,12 @@ button.screenshot-import__button:disabled {
     color: #920b0b;
 }
 
+.screenshot-status a.bmc-link {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 :root.theme-dark .screenshot-drop {
     background: var(--color2);
     border-color: rgba(96, 165, 250, 0.35);

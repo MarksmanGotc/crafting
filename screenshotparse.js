@@ -6,8 +6,19 @@
     'use strict';
 
     const GEMINI_PROXY_URL = 'https://gotc-gemini-proxy.nooxel.workers.dev';
+    const BMC_URL = 'https://buymeacoffee.com/nooxel';
+    const MAX_SCREENSHOTS_PER_BATCH = 4;
+    const CLIENT_RATE_MAX_IMAGES = 10;
+    const CLIENT_RATE_WINDOW_MS = 15 * 60 * 1000;
+    const CLIENT_RATE_STORAGE_KEY = 'gotc-screenshot-ai-window';
     const TIER_MULTIPLIERS = [1, 4, 16, 64, 256, 1024];
     const TIER_NAMES = ['poor', 'common', 'fine', 'exquisite', 'epic', 'legendary'];
+    const MSG_BATCH_LIMIT = 'You can add up to 4 screenshots at a time.';
+    const MSG_CLIENT_RATE_LIMIT =
+        'Easy tiger — free AI only goes so far. Try again in a few minutes.';
+    const MSG_QUOTA_EXCEEDED =
+        'Free AI daily limit reached. Recognition is paused for a while.';
+    const MSG_BMC_TAIL = '— that helps me raise the limits later ☕';
     const FALLBACK_BASIC_MATERIALS = [
         { key: 'black-iron', label: 'Black Iron' },
         { key: 'copper-bar', label: 'Copper Bar' },
@@ -559,11 +570,9 @@
             payload = null;
         }
         if (response.status === 429) {
-            const error = new Error(
-                (payload && payload.message)
-                    || 'Daily AI usage limit reached. Please try again later.'
-            );
+            const error = new Error(MSG_QUOTA_EXCEEDED);
             error.code = (payload && payload.error) || 'quota_exceeded';
+            error.showBmc = true;
             throw error;
         }
         if (!response.ok) {
@@ -590,16 +599,6 @@
     }
 
     const ALLOWED_SCREENSHOT_FORMATS = 'PNG, JPG, WebP, GIF';
-
-    function isScreenshotImportEnabled() {
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const value = String(params.get('screenshot') || '').toLowerCase();
-            return value === 'true' || value === '1' || value === 'yes';
-        } catch (err) {
-            return false;
-        }
-    }
 
     function isScreenshotImageFile(file) {
         if (!file) return false;
@@ -686,12 +685,60 @@
         return applyParsedMaterials(materials, options);
     }
 
-    function setStatus(element, message, kind) {
+    function readClientRateTimestamps() {
+        try {
+            const raw = localStorage.getItem(CLIENT_RATE_STORAGE_KEY);
+            const list = raw ? JSON.parse(raw) : [];
+            if (!Array.isArray(list)) return [];
+            const cutoff = Date.now() - CLIENT_RATE_WINDOW_MS;
+            return list.map(Number).filter(function (ts) {
+                return Number.isFinite(ts) && ts >= cutoff;
+            });
+        } catch (_) {
+            return [];
+        }
+    }
+
+    function writeClientRateTimestamps(list) {
+        try {
+            localStorage.setItem(CLIENT_RATE_STORAGE_KEY, JSON.stringify(list));
+        } catch (_) {
+            /* ignore quota / private mode */
+        }
+    }
+
+    function getClientRateRemaining() {
+        return Math.max(0, CLIENT_RATE_MAX_IMAGES - readClientRateTimestamps().length);
+    }
+
+    function recordClientRateUsage(count) {
+        const n = Math.max(0, Number(count) || 0);
+        if (!n) return;
+        const now = Date.now();
+        const next = readClientRateTimestamps();
+        for (let i = 0; i < n; i++) next.push(now);
+        writeClientRateTimestamps(next);
+    }
+
+    function setStatus(element, message, kind, options) {
         if (!element) return;
         element.hidden = !message;
-        element.textContent = message || '';
         element.classList.remove('is-error', 'is-ok', 'is-busy');
         if (kind) element.classList.add(kind);
+        element.textContent = '';
+        if (!message) return;
+        element.appendChild(document.createTextNode(message));
+        if (options && options.showBmc) {
+            element.appendChild(document.createTextNode(' '));
+            const link = document.createElement('a');
+            link.href = BMC_URL;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.className = 'bmc-link';
+            link.textContent = 'Buy me a coffee';
+            element.appendChild(link);
+            element.appendChild(document.createTextNode(' ' + MSG_BMC_TAIL));
+        }
     }
 
     function appendThumbs(container, files) {
@@ -707,14 +754,6 @@
     function bindCalculatorUi() {
         const root = document.getElementById('screenshotImport');
         if (!root) return;
-        const screenshotInfo = document.getElementById('yourMaterialsScreenshotInfo');
-        if (!isScreenshotImportEnabled()) {
-            root.hidden = true;
-            if (screenshotInfo) screenshotInfo.hidden = true;
-            return;
-        }
-        root.hidden = false;
-        if (screenshotInfo) screenshotInfo.hidden = false;
         const fileInput = document.getElementById('screenshotFiles');
         const dropZone = document.getElementById('screenshotDropZone') || document.getElementById('screenshotPickBtn');
         const statusEl = document.getElementById('screenshotStatus');
@@ -724,7 +763,7 @@
 
         async function handleFiles(fileList) {
             const incoming = Array.from(fileList || []);
-            const files = incoming.filter(isScreenshotImageFile);
+            let files = incoming.filter(isScreenshotImageFile);
             if (!files.length) {
                 if (incoming.length) {
                     setStatus(
@@ -735,17 +774,36 @@
                 }
                 return;
             }
+
+            let notice = '';
             if (files.length < incoming.length) {
-                setStatus(
-                    statusEl,
-                    'Skipped non-image files. Allowed formats: ' + ALLOWED_SCREENSHOT_FORMATS + '.',
-                    'is-busy'
-                );
+                notice = 'Skipped non-image files. Allowed formats: ' + ALLOWED_SCREENSHOT_FORMATS + '.';
             }
+            if (files.length > MAX_SCREENSHOTS_PER_BATCH) {
+                files = files.slice(0, MAX_SCREENSHOTS_PER_BATCH);
+                notice = notice
+                    ? notice + ' ' + MSG_BATCH_LIMIT + ' Using the first 4.'
+                    : MSG_BATCH_LIMIT + ' Using the first 4.';
+            }
+
+            const remaining = getClientRateRemaining();
+            if (remaining <= 0) {
+                setStatus(statusEl, MSG_CLIENT_RATE_LIMIT, 'is-error', { showBmc: true });
+                return;
+            }
+            if (files.length > remaining) {
+                files = files.slice(0, remaining);
+                notice = notice
+                    ? notice + ' Only ' + remaining + ' more in this 15-minute window.'
+                    : 'Only ' + remaining + ' more screenshot' + (remaining === 1 ? '' : 's') +
+                        ' in this 15-minute window.';
+            }
+
             dropZone.classList.add('is-busy');
             if (dropZone.disabled != null) dropZone.disabled = true;
             appendThumbs(thumbsEl, files);
-            setStatus(statusEl, 'Reading screenshot with AI…', 'is-busy');
+            setStatus(statusEl, notice || 'Reading screenshot with AI…', 'is-busy');
+            recordClientRateUsage(files.length);
             try {
                 const result = await parseImages(files, {
                     onProgress: function (info) {
@@ -783,7 +841,12 @@
                 );
             } catch (error) {
                 console.error(error);
-                setStatus(statusEl, error && error.message ? error.message : 'Could not read the screenshots.', 'is-error');
+                setStatus(
+                    statusEl,
+                    error && error.message ? error.message : 'Could not read the screenshots.',
+                    'is-error',
+                    { showBmc: !!(error && error.showBmc) }
+                );
             } finally {
                 dropZone.classList.remove('is-busy');
                 if (dropZone.disabled != null) dropZone.disabled = false;

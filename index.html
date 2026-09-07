@@ -65,8 +65,8 @@
 	<script src="seasons/season14.js"></script>
     <script src="products.js"></script>
     <script src="materials.js"></script>
-    <script defer src="screenshotparse.js?v=45"></script>
-    <script defer src="craftparse.js?v=14"></script>
+    <script defer src="screenshotparse.js?v=47"></script>
+    <script defer src="craftparse.js?v=15"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KDS4M7C1F"></script>
     <script>
 	  window.dataLayer = window.dataLayer || [];
@@ -122,11 +122,22 @@
                                         <h2 id="updateLogTitle">What&rsquo;s new</h2>
                                         <div class="changelog-entries">
                                                 <div class="changelog-entry">
-                                                        <button class="changelog-toggle" id="changelog-toggle-2026-09-01" aria-expanded="true" aria-controls="changelog-panel-2026-09-01">
+                                                        <button class="changelog-toggle" id="changelog-toggle-2026-09-07" aria-expanded="true" aria-controls="changelog-panel-2026-09-07">
+                                                                <span class="changelog-date">September 7, 2026</span>
+                                                                <svg class="changelog-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M41.4 150.6c12.5-12.5 32.8-12.5 45.3 0L160 223.9l73.4-73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-96 96c-12.5 12.5-32.8 12.5-45.3 0l-96-96c-12.5-12.5-12.5-32.8 0-45.3z"/></svg>
+                                                        </button>
+                                                        <div id="changelog-panel-2026-09-07" class="changelog-panel open" role="region" aria-labelledby="changelog-toggle-2026-09-07">
+                                                                <ul>
+                                                                        <li><strong>Screenshot import:</strong> Fill materials from a Materials screenshot.</li>
+                                                                </ul>
+                                                        </div>
+                                                </div>
+                                                <div class="changelog-entry">
+                                                        <button class="changelog-toggle" id="changelog-toggle-2026-09-01" aria-expanded="false" aria-controls="changelog-panel-2026-09-01">
                                                                 <span class="changelog-date">September 1, 2026</span>
                                                                 <svg class="changelog-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M41.4 150.6c12.5-12.5 32.8-12.5 45.3 0L160 223.9l73.4-73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-96 96c-12.5 12.5-32.8 12.5-45.3 0l-96-96c-12.5-12.5-12.5-32.8 0-45.3z"/></svg>
                                                         </button>
-                                                        <div id="changelog-panel-2026-09-01" class="changelog-panel open" role="region" aria-labelledby="changelog-toggle-2026-09-01">
+                                                        <div id="changelog-panel-2026-09-01" class="changelog-panel" role="region" aria-labelledby="changelog-toggle-2026-09-01">
                                                                 <ul>
                                                                         <li><strong>Dragonseed&rsquo;s items:</strong> Added the first Season 14 equipment lineup to planning calculations.</li>
                                                                         <li><strong>Project support:</strong> Donations have moved from PayPal to Buy Me a Coffee.</li>
@@ -303,12 +314,12 @@
                                 <div class="section-title"><div class="checkbox-header"><span>Your materials</span><button id="yourMaterialsInfoBtn" class="info-btn" aria-label="Your materials info">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
                                 </button></div></div>
-                                <div id="yourMaterialsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p>Enter the total amount of each material at <b>Poor</b> quality. If your inventory is in higher tiers, downgrade them in-game and use the resulting Poor total here.</p><p id="yourMaterialsScreenshotInfo" hidden>You can also fill these fields from a Materials screenshot. Image recognition converts all qualities into the equivalent Poor total automatically.</p></div></div>
-                                <div id="screenshotImport" class="screenshot-import" hidden>
+                                <div id="yourMaterialsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p>Enter the total amount of each material at <b>Poor</b> quality. If your inventory is in higher tiers, downgrade them in-game and use the resulting Poor total here.</p><p id="yourMaterialsScreenshotInfo">You can also fill these fields from a Materials screenshot (up to 4 at a time). Material names in the image must be in English. Image recognition sums every quality tier into one Poor total using the usual conversion rates. This runs on a free AI plan, so if things get busy it may pause for a bit. A coffee helps keep the limits from drying up ☕</p></div></div>
+                                <div id="screenshotImport" class="screenshot-import">
                                         <input id="screenshotFiles" type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" multiple hidden>
                                         <label id="screenshotDropZone" class="screenshot-drop" for="screenshotFiles">
-                                                <strong>Add material screenshots</strong>
-                                                <span>Drop Materials screenshots here, or tap to choose. Basic and gear lists both work.</span>
+                                                <strong>Add material screenshots (Beta)</strong>
+                                                <span>Drop Materials screenshots (max 4), or tap to choose.</span>
                                         </label>
                                         <div id="screenshotThumbs" class="screenshot-thumbs" aria-hidden="true"></div>
                                         <p id="screenshotStatus" class="screenshot-status" hidden></p>

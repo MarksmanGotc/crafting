@@ -315,7 +315,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-09-01';
+    const storageKey = 'noox-update-log-2026-09-07';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
