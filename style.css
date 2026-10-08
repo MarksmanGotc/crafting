@@ -776,9 +776,17 @@ p.craft-extra-info {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     fill: var(--primary-color);
     width: 16px;
     height: 16px;
+}
+
+.info-btn svg {
+    width: 16px;
+    height: 16px;
+    display: block;
 }
 
 .info-overlay {
@@ -2563,6 +2571,60 @@ button#calculateWithPreferences {
 
 .screenshot-import {
     margin: 10px 0 16px;
+}
+
+.materials-from-packs__divider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0 12px;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.materials-from-packs__divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--button-bg-hover);
+}
+
+.materials-from-packs__divider .checkbox-header {
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.materials-from-packs__divider .checkbox-header span {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.materials-list .my-material.materials-from-packs {
+    padding-bottom: 8px;
+}
+
+:root.theme-dark .materials-from-packs__divider {
+    color: var(--text-color);
+}
+
+:root.theme-dark .materials-from-packs__divider::before {
+    background: rgba(96, 165, 250, 0.35);
+}
+
+:root.theme-dark .materials-from-packs__divider .checkbox-header {
+    background: var(--color2);
+}
+
+:root.theme-dark .materials-from-packs__divider .checkbox-header span {
+    color: var(--text-color);
 }
 
 .screenshot-drop {

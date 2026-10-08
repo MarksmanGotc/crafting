@@ -478,7 +478,7 @@ const materials = {
 	},
 	13: {
 		season: 13,
-		//flux: { "name": "Season 13 Flux", "img": "materials/season13/season_13_flux.webp" },
+		flux: { "name": "Season 13 Flux", "img": "materials/season13/season_13_flux.webp" },
 		mats: {
 			"blazing-gilded-mail": {
 				"img": "materials/season13/blazing-gilded-mail.png",
@@ -517,6 +517,10 @@ const materials = {
 			"driftmark-fabric": {
 				"img": "materials/season14/driftmark-fabric.png",
 				"Original-name": "Driftmark Fabric"
+			},
+			"stitched-pelt": {
+				"img": "materials/season14/stitched-pelt.png",
+				"Original-name": "Stitched Pelt"
 			}
 		}
 	}

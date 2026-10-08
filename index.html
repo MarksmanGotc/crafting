@@ -37,7 +37,7 @@
 	<meta property="og:description" content="Discover a versatile tool designed to optimize your material management and production planning. This website offers an intuitive solution for handling materials, providing real-time calculations and plans that support effective decision-making and resource management">
 	<meta property="og:site_name" content="Crafting calculator">
 	<link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="style.css?v=22">
+    <link rel="stylesheet" href="style.css?v=27">
         <script>
                 (function () {
                         const params = new URLSearchParams(window.location.search);
@@ -66,7 +66,7 @@
     <script src="products.js"></script>
     <script src="materials.js"></script>
     <script defer src="screenshotparse.js?v=48"></script>
-    <script defer src="craftparse.js?v=15"></script>
+    <script defer src="craftparse.js?v=18"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KDS4M7C1F"></script>
     <script>
 	  window.dataLayer = window.dataLayer || [];
@@ -122,11 +122,23 @@
                                         <h2 id="updateLogTitle">What&rsquo;s new</h2>
                                         <div class="changelog-entries">
                                                 <div class="changelog-entry">
-                                                        <button class="changelog-toggle" id="changelog-toggle-2026-09-07" aria-expanded="true" aria-controls="changelog-panel-2026-09-07">
+                                                        <button class="changelog-toggle" id="changelog-toggle-2026-10-08" aria-expanded="true" aria-controls="changelog-panel-2026-10-08">
+                                                                <span class="changelog-date">October 8, 2026</span>
+                                                                <svg class="changelog-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M41.4 150.6c12.5-12.5 32.8-12.5 45.3 0L160 223.9l73.4-73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-96 96c-12.5 12.5-32.8 12.5-45.3 0l-96-96c-12.5-12.5-12.5-32.8 0-45.3z"/></svg>
+                                                        </button>
+                                                        <div id="changelog-panel-2026-10-08" class="changelog-panel open" role="region" aria-labelledby="changelog-toggle-2026-10-08">
+                                                                <ul>
+                                                                        <li><strong>Materials from packs:</strong> Add the same amount on top of every basic material for packs you still plan to open.</li>
+                                                                        <li><strong>Free Folk&rsquo;s items:</strong> Added the full equipment lineup to planning calculations.</li>
+                                                                </ul>
+                                                        </div>
+                                                </div>
+                                                <div class="changelog-entry">
+                                                        <button class="changelog-toggle" id="changelog-toggle-2026-09-07" aria-expanded="false" aria-controls="changelog-panel-2026-09-07">
                                                                 <span class="changelog-date">September 7, 2026</span>
                                                                 <svg class="changelog-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M41.4 150.6c12.5-12.5 32.8-12.5 45.3 0L160 223.9l73.4-73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-96 96c-12.5 12.5-32.8 12.5-45.3 0l-96-96c-12.5-12.5-12.5-32.8 0-45.3z"/></svg>
                                                         </button>
-                                                        <div id="changelog-panel-2026-09-07" class="changelog-panel open" role="region" aria-labelledby="changelog-toggle-2026-09-07">
+                                                        <div id="changelog-panel-2026-09-07" class="changelog-panel" role="region" aria-labelledby="changelog-toggle-2026-09-07">
                                                                 <ul>
                                                                         <li><strong>Screenshot import:</strong> Fill materials from a Materials screenshot.</li>
                                                                 </ul>
@@ -314,7 +326,7 @@
                                 <div class="section-title"><div class="checkbox-header"><span>Your materials</span><button id="yourMaterialsInfoBtn" class="info-btn" aria-label="Your materials info">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
                                 </button></div></div>
-                                <div id="yourMaterialsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p>Enter the total amount of each material at <b>Poor</b> quality. If your inventory is in higher tiers, downgrade them in-game and use the resulting Poor total here.</p><p id="yourMaterialsScreenshotInfo">You can also fill these fields from a Materials screenshot (up to 4 at a time). Material names in the image must be in English. Image recognition sums every quality tier into one Poor total using the usual conversion rates. This runs on a free AI plan, so if things get busy it may pause for a bit. A coffee helps keep the limits from drying up ☕</p></div></div>
+                                <div id="yourMaterialsInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p>Enter the total amount of each material at <b>Poor</b> quality. If your inventory is in higher tiers, downgrade them in-game and use the resulting Poor total here.</p><p><b>Materials from packs</b>: enter how many of each basic material you expect from packs you plan to open. That amount is added on top of every basic material when you calculate (not Basic Flux). Inventory fields stay as your current totals.</p><p id="yourMaterialsScreenshotInfo">You can also fill these fields from a Materials screenshot (up to 4 at a time). Material names in the image must be in English. Image recognition sums every quality tier into one Poor total using the usual conversion rates. This runs on a free AI plan, so if things get busy it may pause for a bit. A coffee helps keep the limits from drying up ☕</p></div></div>
                                 <div id="screenshotImport" class="screenshot-import">
                                         <input id="screenshotFiles" type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" multiple hidden>
                                         <label id="screenshotDropZone" class="screenshot-drop" for="screenshotFiles">
@@ -337,6 +349,22 @@
 					<div class="my-material silk"><img src="materials/icon_crafting_silk.webp"><div><span>Silk</span><input type="text" class="numeric-input" id="my-silk" name="my-silk" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
 					<div class="my-material weirwood"><img src="materials/icon_crafting_weir_wood.webp"><div><span>Weirwood</span><input type="text" class="numeric-input" id="my-weirwood" name="my-weirwood" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
 					<div class="my-material wildfire"><img src="materials/icon_crafting_wild_fire.webp"><div><span>Wildfire</span><input type="text" class="numeric-input" id="my-wildfire" name="my-wildfire" placeholder="value" pattern="[0-9]*" inputmode="numeric"></div></div>
+					<div class="materials-from-packs__divider">
+						<div class="checkbox-header">
+							<span>Added to each basic material</span>
+							<button id="materialsFromPacksInfoBtn" class="info-btn" type="button" aria-label="Materials from packs and Basic Flux info">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+							</button>
+						</div>
+					</div>
+					<div id="materialsFromPacksInfoPopup" class="info-overlay"><div class="info-content"><button class="close-popup" type="button" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M345 137c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-119 119L73 103c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l119 119L39 375c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l119-119L311 409c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-119-119L345 137z"/></svg></button><p><b>Materials from packs</b>: the amount you enter is added on top of each of the 12 basic materials when you calculate. Inventory fields stay as they are — this is an extra bonus for packs you plan to open.</p><p><b>Basic Flux</b>: used when a basic material runs out during crafting. Flux covers whichever basic materials still need more at that point.</p></div></div>
+					<div id="materialsFromPacksRow" class="my-material materials-from-packs">
+						<img src="materials/materials-from-packs.png" alt="">
+						<div>
+							<span>Materials from packs</span>
+							<input type="text" class="numeric-input" id="materialsFromPacks" name="materialsFromPacks" placeholder="value" pattern="[0-9]*" inputmode="numeric" autocomplete="off" title="Added to each basic material">
+						</div>
+					</div>
 					<div class="my-material basic-flux"><img src="materials/icon_crafting_flux.webp" alt="Basic Flux"><div><span>Basic Flux</span><input type="text" class="numeric-input" id="my-basic-flux" name="my-basic-flux" placeholder="0" pattern="[0-9]*" inputmode="numeric"></div></div>
 				</div>
 			</div>

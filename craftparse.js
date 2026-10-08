@@ -315,7 +315,7 @@ function initializeUpdateLog() {
     }
 
     const closeButton = overlay.querySelector('.close-popup');
-    const storageKey = 'noox-update-log-2026-09-07';
+    const storageKey = 'noox-update-log-2026-10-08';
     const storageSupported = isLocalStorageAvailable();
     const hasSeenUpdate = storageSupported ? window.localStorage.getItem(storageKey) === 'seen' : false;
 
@@ -552,6 +552,20 @@ function applySettingsFromStorage(settings = {}, requestedTemplatesOverride = {}
             }
         }
 
+        if (typeof settings.materialsFromPacks !== 'undefined') {
+            const packsInput = getMaterialsFromPacksInput();
+            if (packsInput) {
+                const raw = settings.materialsFromPacks;
+                packsInput.value = raw === null || raw === undefined || raw === ''
+                    ? ''
+                    : String(raw);
+                const row = document.getElementById('materialsFromPacksRow');
+                if (row) {
+                    row.classList.toggle('active', !!(packsInput.value || '').trim());
+                }
+            }
+        }
+
         applyCheckboxState('includeWarlords', settings.includeWarlords);
         applyCheckboxState('level1OnlyWarlords', settings.level1OnlyWarlords);
         applyCheckboxState('level20OnlyWarlords', settings.level20OnlyWarlords);
@@ -605,6 +619,66 @@ function applySettingsFromStorage(settings = {}, requestedTemplatesOverride = {}
     }
 }
 
+function getMaterialsFromPacksInput() {
+    return document.getElementById('materialsFromPacks');
+}
+
+/** Parse a material amount field; supports plain numbers and K/M/B (via ScreenshotParse when present). */
+function parseScaledMaterialAmount(raw, scale) {
+    const text = String(raw || '').replace(/,/g, '').trim();
+    if (!text) return 0;
+    const compact = text.replace(/\s+/g, '');
+    const hasSuffix = /[kmb]$/i.test(compact);
+    const parser = (typeof ScreenshotParse !== 'undefined' && ScreenshotParse.parseGameAmount)
+        ? ScreenshotParse.parseGameAmount
+        : null;
+    if (parser) {
+        const parsed = parser(text);
+        if (parsed != null && Number.isFinite(parsed)) {
+            return hasSuffix ? parsed : parsed * scale;
+        }
+    }
+    const amount = parseFloat(compact);
+    return !isNaN(amount) ? amount * scale : 0;
+}
+
+function getMaterialsFromPacksBonus(scale) {
+    const input = getMaterialsFromPacksInput();
+    if (!input) return 0;
+    const resolvedScale = scale != null
+        ? scale
+        : (document.getElementById('scaleSelect') ? parseFloat(document.getElementById('scaleSelect').value) || 1 : 1);
+    const bonus = parseScaledMaterialAmount(input.value, resolvedScale);
+    return bonus > 0 ? bonus : 0;
+}
+
+/** After restore fills absolute totals, peel pack bonus back out of basic material inputs. */
+function stripPackBonusFromBasicInputs() {
+    const scaleSelect = document.getElementById('scaleSelect');
+    const scale = scaleSelect ? parseFloat(scaleSelect.value) || 1 : 1;
+    const bonus = getMaterialsFromPacksBonus(scale);
+    if (!(bonus > 0)) return;
+    const basicMats = materials[0] && materials[0].mats ? materials[0].mats : {};
+    Object.keys(basicMats).forEach(matKey => {
+        if (matKey === BASIC_FLUX_KEY) return;
+        const input = document.getElementById('my-' + matKey);
+        if (!input) return;
+        const raw = (input.value || '').replace(/,/g, '').trim();
+        const current = parseFloat(raw);
+        if (isNaN(current)) return;
+        const next = current - bonus;
+        if (next > 0) {
+            input.value = formatPlaceholderWithCommas(next);
+            const parent = input.closest('.my-material');
+            if (parent) parent.classList.add('active');
+        } else {
+            input.value = '';
+            const parent = input.closest('.my-material');
+            if (parent) parent.classList.remove('active');
+        }
+    });
+}
+
 function resetUserInputs() {
     document.querySelectorAll('.my-material input.numeric-input').forEach(input => {
         input.value = '';
@@ -613,6 +687,12 @@ function resetUserInputs() {
             parent.classList.remove('active');
         }
     });
+    const packsInput = getMaterialsFromPacksInput();
+    if (packsInput) {
+        packsInput.value = '';
+        const row = document.getElementById('materialsFromPacksRow');
+        if (row) row.classList.remove('active');
+    }
     updateGearMaterialSummary();
     setGearMaterialsOpen(false);
 
@@ -655,14 +735,15 @@ function restoreSavedCalculation(savedData) {
             useAllMaterialsAttemptedByLevel = null;
         }
 
+        applySettingsFromStorage(savedData.settings || {}, savedData.requestedTemplates || {});
+
         if (savedData.templates || savedData.initialMaterials) {
             populateInputsFromShare({
                 initialMaterials: savedData.initialMaterials || {},
                 templates: savedData.templates || {}
             });
+            stripPackBonusFromBasicInputs();
         }
-
-        applySettingsFromStorage(savedData.settings || {}, savedData.requestedTemplates || {});
 
         renderResults(savedData.templateCounts || {}, savedData.materialCounts || {}, savedData.fluxUsed || null, savedData.fluxUsedByGear || null);
         return true;
@@ -1190,7 +1271,13 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const data = JSON.parse(atob(shareParam));
             initialMaterials = data.initialMaterials || {};
+            if (data.settings) {
+                applySettingsFromStorage(data.settings, data.requestedTemplates || {});
+            }
             populateInputsFromShare(data);
+            if (data.settings && data.settings.materialsFromPacks) {
+                stripPackBonusFromBasicInputs();
+            }
             // Show loading overlay before automatic calculation
             const spinnerWrap = document.querySelector('.spinner-wrap');
             if (spinnerWrap) spinnerWrap.classList.add('active');
@@ -1281,6 +1368,19 @@ document.addEventListener('DOMContentLoaded', function() {
     materialsInfoPopup?.addEventListener('click', (e) => {
         if (e.target === materialsInfoPopup || e.target.closest('.close-popup')) {
             materialsInfoPopup.style.display = 'none';
+        }
+    });
+
+    const materialsFromPacksInfoBtn = document.getElementById('materialsFromPacksInfoBtn');
+    const materialsFromPacksInfoPopup = document.getElementById('materialsFromPacksInfoPopup');
+    materialsFromPacksInfoBtn?.addEventListener('click', () => {
+        if (materialsFromPacksInfoPopup) {
+            materialsFromPacksInfoPopup.style.display = 'flex';
+        }
+    });
+    materialsFromPacksInfoPopup?.addEventListener('click', (e) => {
+        if (e.target === materialsFromPacksInfoPopup || e.target.closest('.close-popup')) {
+            materialsFromPacksInfoPopup.style.display = 'none';
         }
     });
 
@@ -2288,8 +2388,10 @@ function getCurrentUserSettings() {
         }
     });
 
+    const packsInput = getMaterialsFromPacksInput();
     return {
         scale: scaleSelect ? scaleSelect.value : '1',
+        materialsFromPacks: packsInput ? (packsInput.value || '') : '',
         includeWarlords: parseCheckbox('includeWarlords', true),
         level1OnlyWarlords: parseCheckbox('level1OnlyWarlords', false),
         level20OnlyWarlords: parseCheckbox('level20OnlyWarlords', false),
@@ -3752,6 +3854,16 @@ function gatherMaterialsFromInputs() {
         });
     }
 
+    /* Pack-bonus: sama määrä jokaiselle perusmateriaalille, ei Basic Fluxille. */
+    const packBonus = getMaterialsFromPacksBonus(scale);
+    if (packBonus > 0) {
+        Object.keys(basicMats).forEach(matKey => {
+            if (matKey === BASIC_FLUX_KEY) return;
+            const canonicalName = materialKeyMap[normalizeKey(matKey)] || matKey;
+            materialsInput[canonicalName] = (Number(materialsInput[canonicalName]) || 0) + packBonus;
+        });
+    }
+
     return materialsInput;
 }
 
@@ -5012,6 +5124,10 @@ function inputActive(){
                 const parent = e.target.closest('.my-material');
                 if (parent) parent.classList.remove('active');
             }
+            if (e.target.id === 'materialsFromPacks') {
+                const row = document.getElementById('materialsFromPacksRow');
+                if (row) row.classList.toggle('active', !!(e.target.value || '').trim());
+            }
         }
     }, true);
 	
@@ -5025,8 +5141,20 @@ function inputActive(){
             });
             const myMat = e.target.closest('.my-material');
             if (myMat) myMat.classList.add('active');
+            if (e.target.id === 'materialsFromPacks') {
+                const row = document.getElementById('materialsFromPacksRow');
+                if (row) row.classList.add('active');
+            }
         }
-    });		
+    });
+
+    const packsInput = getMaterialsFromPacksInput();
+    if (packsInput) {
+        packsInput.addEventListener('input', () => {
+            const row = document.getElementById('materialsFromPacksRow');
+            if (row) row.classList.toggle('active', !!(packsInput.value || '').trim());
+        });
+    }
 
 	// Uusi osa: käsittele kaikki templateAmount-inputit tasoittain (1,5,10,...)
         const levels = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45];
