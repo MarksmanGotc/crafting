@@ -514,9 +514,17 @@ const materials = {
 		season: 14,
 		//flux: { "name": "Season 14 Flux", "img": "materials/season14/season_14_flux.webp" },
 		mats: {
+			"boar-slayers-leathers": {
+				"img": "materials/season14/boar-slayers-leathers.png",
+				"Original-name": "Boar-Slayer's Leathers"
+			},
 			"driftmark-fabric": {
 				"img": "materials/season14/driftmark-fabric.png",
 				"Original-name": "Driftmark Fabric"
+			},
+			"highgarden-chainmail": {
+				"img": "materials/season14/highgarden-chainmail.png",
+				"Original-name": "Highgarden Chainmail"
 			},
 			"stitched-pelt": {
 				"img": "materials/season14/stitched-pelt.png",
